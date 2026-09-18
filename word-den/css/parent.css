@@ -8,6 +8,71 @@ body.parent-body {
   user-select: text;
 }
 
+.lock-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.lock-screen[hidden] {
+  display: none;
+}
+
+.lock-card {
+  background: var(--card);
+  border-radius: 20px;
+  padding: 32px 28px;
+  max-width: 320px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.06);
+}
+
+.lock-icon {
+  font-size: 2.4rem;
+  margin-bottom: 8px;
+}
+
+.lock-card p {
+  font-size: 0.95rem;
+  color: var(--ink);
+  margin: 0 0 16px;
+}
+
+.pin-input {
+  width: 100%;
+  font-size: 1.8rem;
+  letter-spacing: 0.6em;
+  text-align: center;
+  padding: 10px 0 10px 0.6em;
+  border-radius: 12px;
+  border: 1px solid #cfe6d9;
+  margin-bottom: 10px;
+}
+
+.pin-input.pin-shake {
+  animation: pin-shake 0.4s ease;
+}
+
+@keyframes pin-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+.pin-error {
+  color: #a13c3c;
+  font-size: 0.85rem;
+  margin: 0 0 14px;
+}
+
+.lock-card .back-link {
+  display: inline-block;
+  margin-top: 6px;
+}
+
 .parent-header {
   display: flex;
   align-items: baseline;

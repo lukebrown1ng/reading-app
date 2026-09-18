@@ -123,11 +123,62 @@ var WordDen = window.WordDen || {};
     });
   }
 
-  document.addEventListener("DOMContentLoaded", function () {
+  // Fixed 4-digit PIN so a curious kid tapping the "parent" link doesn't
+  // land straight on the shaky/solid breakdown. Not meant to be a real
+  // security boundary — just a speed bump, so it lives as a constant
+  // rather than a settings screen for the MVP.
+  var PARENT_PIN = "3108";
+  var UNLOCK_KEY = "wordDenParentUnlocked";
+
+  function unlock() {
+    document.getElementById("lockScreen").hidden = true;
+    document.getElementById("parentContent").hidden = false;
     renderClusters();
     renderSessions();
     renderVoicePicker();
-  });
+  }
+
+  function initLock() {
+    var alreadyUnlocked = false;
+    try {
+      alreadyUnlocked = sessionStorage.getItem(UNLOCK_KEY) === "1";
+    } catch (e) {
+      alreadyUnlocked = false;
+    }
+    if (alreadyUnlocked) {
+      unlock();
+      return;
+    }
+
+    var input = document.getElementById("pinInput");
+    var error = document.getElementById("pinError");
+    input.focus();
+
+    input.addEventListener("input", function () {
+      input.value = input.value.replace(/\D/g, "").slice(0, 4);
+      if (input.value.length < 4) {
+        error.hidden = true;
+        return;
+      }
+      if (input.value === PARENT_PIN) {
+        try {
+          sessionStorage.setItem(UNLOCK_KEY, "1");
+        } catch (e) {
+          // Session storage unavailable — unlock still works for this load.
+        }
+        unlock();
+      } else {
+        error.hidden = false;
+        input.classList.add("pin-shake");
+        setTimeout(function () {
+          input.classList.remove("pin-shake");
+          input.value = "";
+        }, 400);
+      }
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", initLock);
 
   window.WordDen = WordDen;
 })();
