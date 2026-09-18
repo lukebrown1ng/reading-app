@@ -1,3 +1,16 @@
+:root {
+  --bg: #eafaf0;
+  --bg-deep: #cdf0da;
+  --ink: #234032;
+  --accent: #2f9e6b;
+  --accent-soft: #d7f5e3;
+  --card: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body.parent-body {
   font-family: "Segoe UI", system-ui, sans-serif;
   background: var(--bg);
@@ -97,6 +110,15 @@ body.parent-body {
   margin-bottom: 22px;
 }
 
+.section-heading {
+  font-size: 1.1rem;
+  margin: 30px 0 12px;
+}
+
+.section-heading:first-of-type {
+  margin-top: 6px;
+}
+
 .summary-row {
   display: flex;
   gap: 10px;
@@ -173,10 +195,13 @@ body.parent-body {
   opacity: 0.85;
 }
 
-.cluster-list {
+.cluster-list,
+.book-progress-list,
+.stumble-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-bottom: 26px;
 }
 
 .cluster-row {
@@ -200,3 +225,31 @@ body.parent-body {
 .status-shaky { background: #ffe1e1; color: #a13c3c; }
 .status-learning { background: #fff3cd; color: #8a6d1d; }
 .status-solid { background: #d7f5e3; color: #237a4d; }
+
+.book-row {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 12px 16px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.book-row strong {
+  display: block;
+  font-size: 0.98rem;
+}
+
+.stumble-row {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 10px 16px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+}
+
+.empty-note {
+  color: #6f8f7c;
+  font-size: 0.88rem;
+  margin-bottom: 26px;
+}

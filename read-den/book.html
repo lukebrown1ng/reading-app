@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Reading Den — Read a Book</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="top-bar">
+      <a class="brand" href="index.html">📖 <span id="bookTitle">Read a Book</span></a>
+      <a class="brand-home" href="../index.html" aria-label="Reading Den home">🏠</a>
+    </header>
+
+    <main class="reader-area">
+      <div id="pageCard" class="page-card">
+        <p id="pageText" class="page-text"></p>
+        <button id="hearWordBtn" class="hear-word-btn" type="button" hidden>
+          🔊 hear this word
+        </button>
+      </div>
+
+      <button id="listenBtn" class="listen-toggle-btn" type="button" hidden>
+        🎤 Start reading
+      </button>
+      <button id="narrateBtn" class="narrate-btn" type="button" hidden>
+        🔊 Read this page to me
+      </button>
+    </main>
+
+    <footer class="reader-footer">
+      <div class="nav-row">
+        <button id="prevBtn" class="nav-btn" type="button">◀ Back</button>
+        <button id="nextBtn" class="nav-btn" type="button">Next ▶</button>
+      </div>
+      <a class="parent-link" href="../parent.html">parent</a>
+    </footer>
+  </div>
+
+  <script src="js/books.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/narration.js"></script>
+  <script src="js/speech-recognition.js"></script>
+  <script src="js/reader.js"></script>
+</body>
+</html>

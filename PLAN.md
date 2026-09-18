@@ -1,78 +1,95 @@
-# Word Den — Build Plan
+# Reading Den — Build Plan
 
-Tracking doc for building the sight-word recognition game described in
-`word-den-claude-code-prompt.md`. Check items off as they're completed.
-App lives in `word-den/` (plain HTML/CSS/JS, no build step, `localStorage`
-only, no backend).
+Tracking doc for the unified app described in
+`reading-den-unified-claude-code-prompt.md`, which merges the read-aloud
+reading tutor ("Reading Den") and the sight-word game ("Word Den", built
+first — see `word-den-claude-code-prompt.md`) behind one home screen.
+Plain HTML/CSS/JS throughout, no build step, `localStorage` only, no
+backend, works opened directly via `file://` or any static host.
 
-## Phase 0 — Scaffold
-- [x] Create `word-den/` directory structure (`index.html`, `parent.html`, `css/`, `js/`)
-- [x] Decide on plain global-namespace scripts (no bundler, no ES modules) so it
-      also works opened directly via `file://` on a tablet
+Layout:
+- `/index.html` — home screen, two-tile choice
+- `/word-den/` — Word Game mode (already built)
+- `/read-den/` — Read a Book mode (new)
+- `/parent.html` — unified parent log covering both modes (new; replaces
+  `word-den/parent.html`)
 
-## Phase 1 — Word bank data (`js/wordbank.js`)
-- [x] Year 1 common exception words (full list)
-- [x] Year 2 common exception words (full list)
-- [x] Year 3/4 statutory spelling list (full list)
-- [x] Supplementary high-frequency tricky words needed for the core
-      confusable clusters that aren't in the statutory lists (then, this,
-      that, these, them, their, they're, off, saw, etc.)
-- [x] Confusable clusters array (~30 clusters, 2-5 words each), covering the
-      explicit examples from the brief (then/they/these/there/them,
-      was/saw, of/off, were/where/we're) plus similar-shape/sound clusters
-      drawn from the Y1/Y2/Y3-4 lists (push/pull/full/put, could/should/would,
-      old/cold/gold/hold/told, etc.)
+## Phase A — Home screen
+- [x] Root `index.html` + `css/home.css`: two big calm tiles ("Read a
+      Book", "Word Game"), no default/recommended styling on either
+- [x] Subtle "parent" link, unobtrusive, same treatment as the existing
+      Word Game one
 
-## Phase 2 — State & spaced repetition (`js/state.js`)
-- [x] `localStorage`-backed state: per-word box level, seen/miss counts,
-      last-seen timestamp; session log (start/end timestamps only, no
-      score)
-- [x] Leitner-style weighting: lower box = picked more often; box 4
-      ("solid") words fade to occasional light review, never disappear
-      entirely
-- [x] Miss handling: no "wrong" signal anywhere — word's box resets down and
-      it's requeued to reappear within the next few rounds, not banished
-      and not immediately hammered
+## Phase B — Word Game mode (built previously, see below for detail)
+- [x] Fully built per the original `word-den-claude-code-prompt.md` (word
+      bank, spaced repetition, game engine, audio/text modes, dino
+      progress visual, styling) — all of Phases 0–6 from the old plan
+- [x] Re-point its "parent" footer link at the new unified `../parent.html`
+- [x] Add a small home link back to `/index.html`
 
-## Phase 3 — Game engine (`js/game.js`)
-- [x] Round generator: weighted-pick a target word, find a cluster
-      containing it, pick 2-5 options from that cluster including the
-      target, shuffle
-- [x] Tap-to-answer UI wiring, big touch-friendly buttons
-- [x] Correct → quiet positive feedback + advance; miss → neutral,
-      no reveal, no shake, just moves on and requeues
-- [x] No visible score/streak/timer/level anywhere in this view
-- [x] "Stop" is just closing/navigating away — no confirmation dialog
+## Phase C — Read a Book mode (`read-den/`)
+- [x] Book content (`js/books.js`): a handful of short, dinosaur/animal/
+      nature-themed books at ~ATOS 2.1 (short sentences, plain
+      high-frequency vocabulary), each a few pages long
+- [x] State module (`js/state.js`): per-book last page reached, reread
+      count, per-word stumble log/counts, session start/end (app-open
+      time) plus accumulated active-listening time
+- [x] Speech-recognition follow-along (`js/speech-recognition.js` +
+      `js/reader.js`) where `SpeechRecognition` is available: page text
+      shown word-by-word, current word highlighted, spoken words matched
+      forward against the upcoming few words to advance — never flags a
+      miss, just waits or gently offers the word after a pause
+  - [x] Pause handling: after a few quiet seconds, a soft "hear this
+        word" bubble appears near the current word; tapping it (or the
+        word itself, any time) speaks it and moves on — logged silently
+        as a stumble, never shown to him as wrong
+  - [x] Low-friction Prev/Next page navigation, always available,
+        never gated on finishing a page
+- [x] Graceful fallback where `SpeechRecognition` isn't supported (e.g.
+      iPad Safari): plain page-through reading with an optional "read
+      this page to me" narration button (`SpeechSynthesis`), same nav,
+      no stumble tracking (can't detect it), clearly not pretending to
+      listen
+- [x] Book picker (`read-den/index.html` + `js/picker.js`): big covers,
+      resumes each book from its last page, no level/progress numbers
+- [x] Styling consistent with the Word Game's dinosaur/nature theme,
+      mobile/tablet-friendly
 
-## Phase 4 — Audio / text modes (`js/speech.js`)
-- [x] `SpeechSynthesis` wrapper with a replay button
-- [x] Session-level toggle (persisted) switching between audio mode (word
-      spoken, not shown as the prompt) and text mode (word shown, no
-      audio)
+## Phase D — Unified parent log (`parent.html`)
+- [x] Same 4-digit PIN speed-bump pattern as before, one shared unlock
+- [x] Word Game section: shaky/learning/solid breakdown, play time,
+      voice picker (moved from `word-den/parent.html`)
+- [x] Read a Book section: per-book last page / reread count, words he
+      stumbled on (aggregated), reading sessions (app-open time vs.
+      actual active-listening time where recognition was available)
+- [x] Remove the old `word-den/parent.html` + `word-den/js/parent.js` now
+      superseded by the unified view
 
-## Phase 5 — Dinosaur progress visual
-- [x] Simple no-numbers progress strip: a dinosaur walks across a path as
-      correct answers land in the session; reaching the end triggers a
-      small celebration and loops, no counters ever shown
-
-## Phase 6 — Styling / polish
-- [x] Big, colourful, low-text, mobile/tablet-friendly layout
-- [x] Dinosaur/animal visual theme throughout
-
-## Phase 7 — Parent view (`parent.html`, `js/parent.js`)
-- [x] List of clusters/words flagged shaky vs. learning vs. solid
-- [x] Rough play-time / session count, framed informationally not as a
-      performance metric
-- [x] Reachable via a small unobtrusive "parent" link, not shown during play
-
-## Phase 8 — Manual test pass
-- [x] Serve the static app locally and click through both modes in a
-      browser to confirm rounds generate correctly, misses requeue, audio
-      plays, progress visual animates, and parent view reflects state
-- [x] Quick mobile-width check (responsive layout via `clamp()`/grid
-      `minmax()`, confirmed no horizontal overflow in dev tools)
+## Phase E — Manual test pass
+- [x] Served locally, clicked through home → Read a Book (picker → reader
+      → page nav → tap-to-hear-word) → Word Game → parent, and back;
+      confirmed no console errors anywhere
+- [x] Read a Book: page nav and tap-to-hear-and-advance verified live
+      (logs a silent stumble, never shows "wrong"); mic follow-along
+      logic verified by code review — a real device/mic is needed to
+      exercise `SpeechRecognition` itself, which headless automation
+      can't provide
+- [x] Parent view reflects data from both modes correctly (word-game
+      clusters, book page/reread counts, stumbled-word list all matched
+      what was just done in-session), PIN gate works
+- [x] Mobile-width check: `resize_window` didn't actually shrink the
+      automated browser's viewport in this environment, so verified
+      instead by auditing every new stylesheet for fixed pixel widths —
+      all new CSS (`css/home.css`, `read-den/css/style.css`,
+      `css/parent.css`) reuses the same `clamp()`/`minmax()`/flex-wrap
+      patterns already confirmed overflow-free in the original Word Den
+      build; no fixed widths that could overflow a 375px viewport
 
 ## Stretch (explicitly not MVP — logged, not built now)
+- [ ] Feed words stumbled on while reading into the Word Game's practice
+      clusters automatically (data model below already tracks stumbled
+      words/counts in a shape that could support this later)
 - [ ] Additional game modes beyond pick-the-word
 - [ ] Import/export of word-mistake data
 - [ ] More visual themes beyond dinosaurs/animals
+- [ ] More book content
