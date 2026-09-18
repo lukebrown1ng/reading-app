@@ -105,6 +105,18 @@ Layout:
       rounds, confirm level-up/badge popups and the level pill's
       progress modal look right) before relying on this fully
 
+## Phase G — Expandable word banks
+- [x] `word-den/js/wordbanks.js`: `WordDen.WORD_BANKS`, a growable list
+      of `{ id, label, words }` raw word lists, independent of the
+      confusable CLUSTERS the game actually quizzes from — adding a
+      future list (Year 4, a topic set, etc.) is one new entry here
+- [x] Extracted the "Year 3 — words I need to know" list (300 words,
+      verified unique) from a school reading-record booklet into the
+      first bank (`year3-tricky`)
+- [ ] Not yet wired into gameplay: turning a bank into playable rounds
+      means grouping its words into confusable clusters and adding them
+      to `WordDen.CLUSTERS` — a deliberate next step, not done here
+
 ## Stretch (explicitly not MVP — logged, not built now)
 - [ ] Feed words stumbled on while reading into the Word Game's practice
       clusters automatically (data model below already tracks stumbled

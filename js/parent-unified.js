@@ -270,11 +270,10 @@
   }
 
   // --- PIN gate --------------------------------------------------------
-  // Same fixed 4-digit speed bump as before, not a real security
-  // boundary — just enough that a curious kid tapping "parent" doesn't
-  // land straight on the data.
+  // Fixed 4-digit speed bump, not a real security boundary — just enough
+  // that a curious kid tapping "parent" doesn't land straight on the
+  // data. Asked every time the page is opened, never remembered.
   var PARENT_PIN = "3108";
-  var UNLOCK_KEY = "readingDenParentUnlocked";
 
   function unlock() {
     document.getElementById("lockScreen").hidden = true;
@@ -290,17 +289,6 @@
   }
 
   function initLock() {
-    var alreadyUnlocked = false;
-    try {
-      alreadyUnlocked = sessionStorage.getItem(UNLOCK_KEY) === "1";
-    } catch (e) {
-      alreadyUnlocked = false;
-    }
-    if (alreadyUnlocked) {
-      unlock();
-      return;
-    }
-
     var input = document.getElementById("pinInput");
     var error = document.getElementById("pinError");
     input.focus();
@@ -312,11 +300,6 @@
         return;
       }
       if (input.value === PARENT_PIN) {
-        try {
-          sessionStorage.setItem(UNLOCK_KEY, "1");
-        } catch (e) {
-          // Session storage unavailable — unlock still works for this load.
-        }
         unlock();
       } else {
         error.hidden = false;
