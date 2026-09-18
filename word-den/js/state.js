@@ -29,11 +29,21 @@ var WordDen = window.WordDen || {};
         parsed = null;
       }
     }
-    cached = parsed || { words: {}, sessions: [], audioMode: true, voiceName: null };
+    cached = parsed || {
+      words: {}, sessions: [], audioMode: true, voiceName: null,
+      xp: 0, totalCorrect: 0, bestStreak: 0,
+      dailyStreak: { current: 0, best: 0, lastPlayDate: null },
+      badges: {}
+    };
     if (!cached.words) cached.words = {};
     if (!cached.sessions) cached.sessions = [];
     if (typeof cached.audioMode !== "boolean") cached.audioMode = true;
     if (typeof cached.voiceName !== "string") cached.voiceName = null;
+    if (typeof cached.xp !== "number") cached.xp = 0;
+    if (typeof cached.totalCorrect !== "number") cached.totalCorrect = 0;
+    if (typeof cached.bestStreak !== "number") cached.bestStreak = 0;
+    if (!cached.dailyStreak) cached.dailyStreak = { current: 0, best: 0, lastPlayDate: null };
+    if (!cached.badges) cached.badges = {};
     return cached;
   }
 
@@ -48,6 +58,10 @@ var WordDen = window.WordDen || {};
 
   function wordKey(word) {
     return word.toLowerCase();
+  }
+
+  function dateStr(d) {
+    return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
   }
 
   function getWordRecord(word) {
@@ -111,6 +125,8 @@ var WordDen = window.WordDen || {};
       record.correctFirstTry += 1;
       record.box = Math.min(MAX_BOX, record.box + 1);
       record.lastSeen = Date.now();
+      var state = load();
+      state.totalCorrect += 1;
       save();
     },
 
@@ -145,6 +161,108 @@ var WordDen = window.WordDen || {};
 
     getSessions: function () {
       return load().sessions.slice();
+    },
+
+    // --- Levels & gamification -------------------------------------
+
+    getXP: function () {
+      return load().xp;
+    },
+
+    getLevelInfo: function () {
+      return WordDen.levels.levelInfoForXp(load().xp);
+    },
+
+    // Adds XP and reports whether that pushed the level up, so the caller
+    // can trigger a level-up celebration.
+    addXP: function (amount) {
+      var state = load();
+      var before = WordDen.levels.levelInfoForXp(state.xp);
+      state.xp += amount;
+      var after = WordDen.levels.levelInfoForXp(state.xp);
+      save();
+      return { gained: amount, xp: state.xp, before: before, after: after, leveledUp: after.level > before.level };
+    },
+
+    getTotalCorrect: function () {
+      return load().totalCorrect;
+    },
+
+    getBestStreak: function () {
+      return load().bestStreak;
+    },
+
+    // Current in-session correct-in-a-row streak, tracked by the caller;
+    // this just remembers the personal best across all sessions.
+    recordStreak: function (current) {
+      var state = load();
+      if (current > state.bestStreak) {
+        state.bestStreak = current;
+        save();
+      }
+    },
+
+    // Call once per app-open. Bumps the day streak if today is a new day
+    // (consecutive to yesterday keeps it going, any bigger gap resets it).
+    touchDailyStreak: function () {
+      var state = load();
+      var ds = state.dailyStreak;
+      var today = dateStr(new Date());
+      if (ds.lastPlayDate !== today) {
+        var yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        ds.current = ds.lastPlayDate === dateStr(yesterday) ? ds.current + 1 : 1;
+        ds.lastPlayDate = today;
+        if (ds.current > ds.best) ds.best = ds.current;
+        save();
+      }
+      return { current: ds.current, best: ds.best };
+    },
+
+    getDailyStreak: function () {
+      var ds = load().dailyStreak;
+      return { current: ds.current, best: ds.best };
+    },
+
+    getBadges: function () {
+      var badges = load().badges;
+      var copy = {};
+      for (var id in badges) {
+        if (badges.hasOwnProperty(id)) copy[id] = badges[id];
+      }
+      return copy;
+    },
+
+    // Checks every badge condition against current state and unlocks any
+    // newly-earned ones. Returns the array of badge ids unlocked just now
+    // (empty if none), for the caller to show a celebration toast for.
+    evaluateBadges: function (sessionStreak) {
+      var state = load();
+      var newly = [];
+
+      function tryUnlock(id, earned) {
+        if (earned && !state.badges[id]) {
+          state.badges[id] = Date.now();
+          newly.push(id);
+        }
+      }
+
+      var solidCount = WordDen.ACTIVE_WORDS.filter(function (w) {
+        return WordDen.state.getWordStatus(w) === "solid";
+      }).length;
+
+      tryUnlock("first-correct", state.totalCorrect >= 1);
+      tryUnlock("streak-5", sessionStreak >= 5);
+      tryUnlock("streak-10", sessionStreak >= 10);
+      tryUnlock("streak-20", sessionStreak >= 20);
+      tryUnlock("solid-10", solidCount >= 10);
+      tryUnlock("solid-25", solidCount >= 25);
+      tryUnlock("solid-all", solidCount >= WordDen.ACTIVE_WORDS.length);
+      tryUnlock("daily-3", state.dailyStreak.current >= 3);
+      tryUnlock("daily-7", state.dailyStreak.current >= 7);
+
+      if (newly.length) save();
+      return newly;
     }
   };
 

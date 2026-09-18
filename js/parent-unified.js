@@ -82,6 +82,31 @@
     renderWordGameSummary(counts);
   }
 
+  function renderLevelAndBadges() {
+    var summary = document.getElementById("levelSummary");
+    var info = WordDen.state.getLevelInfo();
+    var daily = WordDen.state.getDailyStreak();
+    summary.innerHTML =
+      info.emoji + " <strong>Level " + info.level + " — " + info.title + "</strong><br>" +
+      info.xpIntoLevel + " / " + info.xpForNextLevel + " XP to the next level. " +
+      "Best streak: " + WordDen.state.getBestStreak() + " in a row. " +
+      "Day streak: " + daily.current + " (best " + daily.best + ").";
+
+    var earned = WordDen.state.getBadges();
+    var grid = document.getElementById("badgeRow");
+    grid.innerHTML = "";
+    WordDen.BADGES.forEach(function (badge) {
+      var unlocked = !!earned[badge.id];
+      var card = document.createElement("div");
+      card.className = "badge-card" + (unlocked ? "" : " badge-locked");
+      card.innerHTML =
+        '<div class="badge-icon">' + (unlocked ? badge.icon : "🔒") + "</div>" +
+        '<div class="badge-name">' + badge.name + "</div>" +
+        '<div class="badge-desc">' + badge.desc + "</div>";
+      grid.appendChild(card);
+    });
+  }
+
   function renderWordVoicePicker() {
     var select = document.getElementById("wordVoiceSelect");
     var testBtn = document.getElementById("wordVoiceTestBtn");
@@ -256,6 +281,7 @@
     document.getElementById("parentContent").hidden = false;
     renderClusters();
     renderWordGameSessions();
+    renderLevelAndBadges();
     renderWordVoicePicker();
     renderReadSessions();
     renderReadVoicePicker();

@@ -9,8 +9,11 @@ var WordDen = window.WordDen || {};
   var lastTarget = null;
   var sessionIndex = null;
   var correctInSession = 0;
+  var currentStreak = 0; // resets to 0 on any miss
   var STEPS_PER_LAP = 8;
   var animating = false;
+  var toastQueue = [];
+  var toastShowing = false;
 
   function shuffle(arr) {
     var copy = arr.slice();
@@ -140,9 +143,26 @@ var WordDen = window.WordDen || {};
         return e.word.toLowerCase() !== currentTarget.toLowerCase();
       });
       advanceProgress();
+
+      currentStreak += 1;
+      WordDen.state.recordStreak(currentStreak);
+      renderStreakIndicator();
+
+      // Streak bonus rewards staying in a row without punishing misses.
+      var xpGain = 10 + Math.min(currentStreak - 1, 10) * 2;
+      var xpResult = WordDen.state.addXP(xpGain);
+      renderLevelUI();
+      var newBadges = WordDen.state.evaluateBadges(currentStreak);
+
+      if (xpResult.leveledUp) {
+        showLevelUp(xpResult.after);
+      }
+      newBadges.forEach(queueBadgeToast);
     } else {
       btnEl.classList.add("option-tried");
       WordDen.state.recordMiss(currentTarget);
+      currentStreak = 0;
+      renderStreakIndicator();
       var already = retryQueue.some(function (e) {
         return e.word.toLowerCase() === currentTarget.toLowerCase();
       });
@@ -173,6 +193,108 @@ var WordDen = window.WordDen || {};
     }
   }
 
+  function renderLevelUI() {
+    var info = WordDen.state.getLevelInfo();
+    els.levelEmoji.textContent = info.emoji;
+    els.levelNum.textContent = "Lv " + info.level;
+    els.xpBarFill.style.width = info.progressPct + "%";
+  }
+
+  function renderStreakIndicator() {
+    if (currentStreak >= 3) {
+      els.streakFlame.hidden = false;
+      els.streakCount.textContent = currentStreak;
+    } else {
+      els.streakFlame.hidden = true;
+    }
+  }
+
+  function showLevelUp(info) {
+    els.levelUpEmoji.textContent = info.emoji;
+    els.levelUpTitle.textContent = info.title;
+    els.levelUpNum.textContent = "Level " + info.level + "!";
+    els.levelUpOverlay.hidden = false;
+    els.levelUpOverlay.classList.add("show");
+    setTimeout(function () {
+      els.levelUpOverlay.classList.remove("show");
+      setTimeout(function () {
+        els.levelUpOverlay.hidden = true;
+      }, 300);
+    }, 2200);
+  }
+
+  function queueBadgeToast(badgeId) {
+    var badge = WordDen.BADGES.filter(function (b) {
+      return b.id === badgeId;
+    })[0];
+    if (!badge) return;
+    toastQueue.push(badge);
+    if (!toastShowing) showNextToast();
+  }
+
+  function showNextToast() {
+    var badge = toastQueue.shift();
+    if (!badge) {
+      toastShowing = false;
+      return;
+    }
+    toastShowing = true;
+    els.badgeToastIcon.textContent = badge.icon;
+    els.badgeToastName.textContent = badge.name;
+    els.badgeToast.hidden = false;
+    els.badgeToast.classList.add("show");
+    setTimeout(function () {
+      els.badgeToast.classList.remove("show");
+      setTimeout(function () {
+        els.badgeToast.hidden = true;
+        showNextToast();
+      }, 300);
+    }, 2400);
+  }
+
+  function renderProgressModal() {
+    var info = WordDen.state.getLevelInfo();
+    els.modalEmoji.textContent = info.emoji;
+    els.modalTitle.textContent = info.title;
+    els.modalLevelNum.textContent = "Level " + info.level;
+    els.modalXpFill.style.width = info.progressPct + "%";
+    els.modalXpLabel.textContent = info.xpIntoLevel + " / " + info.xpForNextLevel + " XP to next level";
+
+    var daily = WordDen.state.getDailyStreak();
+    els.modalDailyStreak.textContent = daily.current === 1
+      ? "1 day so far — come back tomorrow!"
+      : daily.current + " days in a row (best: " + daily.best + ")";
+
+    els.modalBestStreak.textContent = "Best streak: " + WordDen.state.getBestStreak() + " in a row";
+
+    var solidCount = WordDen.ACTIVE_WORDS.filter(function (w) {
+      return WordDen.state.getWordStatus(w) === "solid";
+    }).length;
+    els.modalSolidCount.textContent = solidCount + " / " + WordDen.ACTIVE_WORDS.length + " words rock solid";
+
+    var earned = WordDen.state.getBadges();
+    els.modalBadgeGrid.innerHTML = "";
+    WordDen.BADGES.forEach(function (badge) {
+      var unlocked = !!earned[badge.id];
+      var card = document.createElement("div");
+      card.className = "badge-card" + (unlocked ? " badge-unlocked" : " badge-locked");
+      card.innerHTML =
+        '<div class="badge-icon">' + (unlocked ? badge.icon : "🔒") + "</div>" +
+        '<div class="badge-name">' + badge.name + "</div>" +
+        '<div class="badge-desc">' + badge.desc + "</div>";
+      els.modalBadgeGrid.appendChild(card);
+    });
+  }
+
+  function openProgressModal() {
+    renderProgressModal();
+    els.progressModal.hidden = false;
+  }
+
+  function closeProgressModal() {
+    els.progressModal.hidden = true;
+  }
+
   function init() {
     els.promptCard = document.getElementById("promptCard");
     els.promptWord = document.getElementById("promptWord");
@@ -181,6 +303,34 @@ var WordDen = window.WordDen || {};
     els.dino = document.getElementById("dino");
     els.progressTrack = document.getElementById("progressTrack");
     els.audioToggle = document.getElementById("audioToggle");
+
+    els.levelPill = document.getElementById("levelPill");
+    els.levelEmoji = document.getElementById("levelEmoji");
+    els.levelNum = document.getElementById("levelNum");
+    els.xpBarFill = document.getElementById("xpBarFill");
+    els.streakFlame = document.getElementById("streakFlame");
+    els.streakCount = document.getElementById("streakCount");
+
+    els.levelUpOverlay = document.getElementById("levelUpOverlay");
+    els.levelUpEmoji = document.getElementById("levelUpEmoji");
+    els.levelUpTitle = document.getElementById("levelUpTitle");
+    els.levelUpNum = document.getElementById("levelUpNum");
+
+    els.badgeToast = document.getElementById("badgeToast");
+    els.badgeToastIcon = document.getElementById("badgeToastIcon");
+    els.badgeToastName = document.getElementById("badgeToastName");
+
+    els.progressModal = document.getElementById("progressModal");
+    els.modalEmoji = document.getElementById("modalEmoji");
+    els.modalTitle = document.getElementById("modalTitle");
+    els.modalLevelNum = document.getElementById("modalLevelNum");
+    els.modalXpFill = document.getElementById("modalXpFill");
+    els.modalXpLabel = document.getElementById("modalXpLabel");
+    els.modalDailyStreak = document.getElementById("modalDailyStreak");
+    els.modalBestStreak = document.getElementById("modalBestStreak");
+    els.modalSolidCount = document.getElementById("modalSolidCount");
+    els.modalBadgeGrid = document.getElementById("modalBadgeGrid");
+    els.modalCloseBtn = document.getElementById("modalCloseBtn");
 
     els.audioToggle.checked = WordDen.state.getAudioMode();
     els.audioToggle.addEventListener("change", function () {
@@ -192,7 +342,14 @@ var WordDen = window.WordDen || {};
       if (currentTarget) WordDen.speech.speak(currentTarget);
     });
 
+    els.levelPill.addEventListener("click", openProgressModal);
+    els.modalCloseBtn.addEventListener("click", closeProgressModal);
+    els.progressModal.addEventListener("click", function (e) {
+      if (e.target === els.progressModal) closeProgressModal();
+    });
+
     sessionIndex = WordDen.state.startSession();
+    WordDen.state.touchDailyStreak();
     window.addEventListener("beforeunload", function () {
       WordDen.state.endSession(sessionIndex);
     });
@@ -204,6 +361,8 @@ var WordDen = window.WordDen || {};
       }
     });
 
+    renderLevelUI();
+    WordDen.state.evaluateBadges(0).forEach(queueBadgeToast);
     renderRound();
   }
 

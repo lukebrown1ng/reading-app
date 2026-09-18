@@ -10,14 +10,24 @@
   <div class="app">
     <header class="top-bar">
       <a class="brand" href="../index.html">🦕 <span>Word Den</span></a>
-      <label class="audio-switch">
-        <span class="audio-switch-icon" aria-hidden="true">🔊</span>
-        <input type="checkbox" id="audioToggle">
-        <span class="audio-switch-track"><span class="audio-switch-thumb"></span></span>
-      </label>
+      <div class="top-bar-right">
+        <button id="levelPill" class="level-pill" type="button" aria-label="See your progress">
+          <span id="levelEmoji" class="level-pill-emoji">🥚</span>
+          <span id="levelNum" class="level-pill-num">Lv 1</span>
+        </button>
+        <label class="audio-switch">
+          <span class="audio-switch-icon" aria-hidden="true">🔊</span>
+          <input type="checkbox" id="audioToggle">
+          <span class="audio-switch-track"><span class="audio-switch-thumb"></span></span>
+        </label>
+      </div>
     </header>
 
+    <div class="xp-bar-track"><div id="xpBarFill" class="xp-bar-fill"></div></div>
+
     <main class="game-area">
+      <div id="streakFlame" class="streak-flame" hidden>🔥 <span id="streakCount">0</span> in a row!</div>
+
       <div id="promptCard" class="prompt-card">
         <div id="promptWord" class="prompt-word"></div>
         <button id="promptListenBtn" class="listen-btn" type="button" aria-label="Play the word again">
@@ -42,7 +52,43 @@
     </footer>
   </div>
 
+  <div id="levelUpOverlay" class="level-up-overlay" hidden>
+    <div class="level-up-card">
+      <div class="level-up-confetti">🎉 ✨ 🎊 ✨ 🎉</div>
+      <div id="levelUpEmoji" class="level-up-emoji">🥚</div>
+      <div id="levelUpNum" class="level-up-num">Level 1!</div>
+      <div id="levelUpTitle" class="level-up-title">Egg</div>
+    </div>
+  </div>
+
+  <div id="badgeToast" class="badge-toast" hidden>
+    <span id="badgeToastIcon" class="badge-toast-icon">🏆</span>
+    <span class="badge-toast-text">New badge: <strong id="badgeToastName"></strong></span>
+  </div>
+
+  <div id="progressModal" class="progress-modal" hidden>
+    <div class="progress-modal-card">
+      <button id="modalCloseBtn" class="modal-close-btn" type="button" aria-label="Close">✕</button>
+      <div id="modalEmoji" class="modal-emoji">🥚</div>
+      <div id="modalLevelNum" class="modal-level-num">Level 1</div>
+      <div id="modalTitle" class="modal-title">Egg</div>
+
+      <div class="modal-xp-track"><div id="modalXpFill" class="modal-xp-fill"></div></div>
+      <div id="modalXpLabel" class="modal-xp-label">0 / 30 XP to next level</div>
+
+      <div class="modal-stats">
+        <div id="modalDailyStreak" class="modal-stat">📅 —</div>
+        <div id="modalBestStreak" class="modal-stat">🔥 —</div>
+        <div id="modalSolidCount" class="modal-stat">📚 —</div>
+      </div>
+
+      <h3 class="modal-badges-heading">Badges</h3>
+      <div id="modalBadgeGrid" class="badge-grid"></div>
+    </div>
+  </div>
+
   <script src="js/wordbank.js"></script>
+  <script src="js/levels.js"></script>
   <script src="js/state.js"></script>
   <script src="js/speech.js"></script>
   <script src="js/game.js"></script>

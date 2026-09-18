@@ -85,6 +85,26 @@ Layout:
       patterns already confirmed overflow-free in the original Word Den
       build; no fixed widths that could overflow a 375px viewport
 
+## Phase F — Word Game levels & gamification
+- [x] `word-den/js/levels.js`: XP curve + dino-evolution level stages
+      (Egg → Hatchling → Baby Dino → ... → Dino Legend) and a badge
+      catalogue
+- [x] `word-den/js/state.js`: persist XP, total correct, best streak,
+      daily play streak, and unlocked badges alongside existing word
+      records
+- [x] Game screen: level pill + XP bar in the header, in-round streak
+      flame indicator, full-screen level-up celebration, badge-unlock
+      toast, and a tap-to-open progress modal (level, XP, streaks,
+      badge grid)
+- [x] Unified parent view: level/title, XP-to-next-level, streak
+      numbers, and the same badge grid surfaced under the Word Game
+      section
+- [x] Manual QA: static syntax/ID cross-checks passed; live in-browser
+      click-through blocked by a Claude-in-Chrome extension disconnect
+      this session — recommend a manual smoke test (answer a few
+      rounds, confirm level-up/badge popups and the level pill's
+      progress modal look right) before relying on this fully
+
 ## Stretch (explicitly not MVP — logged, not built now)
 - [ ] Feed words stumbled on while reading into the Word Game's practice
       clusters automatically (data model below already tracks stumbled
