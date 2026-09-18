@@ -143,16 +143,31 @@ Layout:
         (reshuffles, same word) and "Next word" options
   - [x] Round-complete screen after all 10 words: score summary, replay
         this week, or back home
+  - [x] Round-complete also lists every word by outcome — "Got right"
+        (first-try or after a retry) vs. "To practise" (skipped without
+        ever getting it right that round)
 - [x] Home screen: third tile ("Spellings")
 - [x] Unified parent view: session time, voice picker, and a per-week
       word-status grid (same shaky/learning/solid/new chip styling as
       the Word Game section)
+- [x] Parent-added weeks: a form on the parent page (label + words, one
+      per line or comma-separated) calls `SpellDen.state.addCustomWeek`
+      to add a new week without touching code — `SpellDen.getAllWeeks()`
+      merges these with the built-in seed weeks (built-in first, so a
+      newly added week is always the default). Each parent-added week
+      lists its words with a delete button; built-in seed weeks aren't
+      deletable from the UI
+- [x] Parent page top nav: sticky row of hotlinks (Word Game / Read a
+      Book / Spellings) that jump to each section
 - [x] Manual QA: served locally, clicked through home → Spellings →
       heard a word, unjumbled it correctly (celebration + advance) and
       incorrectly (attempt + correct spelling shown, tried again and
       also used "next word"), switched weeks via the week picker,
-      finished a full round to the complete screen, checked parent view
-      reflects it — no console errors
+      finished a full round to the complete screen and checked the
+      correct/practice word lists matched what happened, added and then
+      deleted a custom week from the parent page and confirmed it
+      appeared/disappeared from the in-game week picker, used the parent
+      page's top nav hotlinks — no console errors
 
 ## Stretch (explicitly not MVP — logged, not built now)
 - [ ] Feed words stumbled on while reading into the Word Game's practice

@@ -29,12 +29,14 @@ var SpellDen = window.SpellDen || {};
       }
     }
     cached = parsed || {
-      words: {}, sessions: [], activeWeekId: null, voiceName: null
+      words: {}, sessions: [], activeWeekId: null, voiceName: null,
+      customWeeks: []
     };
     if (!cached.words) cached.words = {};
     if (!cached.sessions) cached.sessions = [];
     if (typeof cached.activeWeekId !== "string") cached.activeWeekId = null;
     if (typeof cached.voiceName !== "string") cached.voiceName = null;
+    if (!cached.customWeeks) cached.customWeeks = [];
     return cached;
   }
 
@@ -137,6 +139,38 @@ var SpellDen = window.SpellDen || {};
 
     getSessions: function () {
       return load().sessions.slice();
+    },
+
+    // --- Parent-added weeks -------------------------------------------
+    // Weeks added from the parent page, kept separate from the built-in
+    // seed list in weeks.js so new homework lists can be added on the fly
+    // without touching code. Appended after the built-in weeks, in the
+    // order added (see SpellDen.getAllWeeks).
+
+    getCustomWeeks: function () {
+      return load().customWeeks.slice();
+    },
+
+    addCustomWeek: function (label, words) {
+      var state = load();
+      var week = {
+        id: "custom-" + Date.now(),
+        label: label,
+        words: words,
+        custom: true
+      };
+      state.customWeeks.push(week);
+      save();
+      return week;
+    },
+
+    deleteCustomWeek: function (id) {
+      var state = load();
+      state.customWeeks = state.customWeeks.filter(function (w) {
+        return w.id !== id;
+      });
+      if (state.activeWeekId === id) state.activeWeekId = null;
+      save();
     }
   };
 

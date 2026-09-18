@@ -301,7 +301,7 @@
   function renderSpellingWeeks() {
     var list = document.getElementById("spellingWeekList");
     list.innerHTML = "";
-    SpellDen.WEEKS.forEach(function (week) {
+    SpellDen.getAllWeeks().forEach(function (week) {
       var block = document.createElement("div");
       block.className = "week-block";
 
@@ -369,6 +369,78 @@
     });
   }
 
+  function parseWordsInput(raw) {
+    return raw
+      .split(/[\n,]/)
+      .map(function (w) { return w.trim(); })
+      .filter(function (w) { return w.length > 0; });
+  }
+
+  function renderWeekManageList() {
+    var list = document.getElementById("weekManageList");
+    list.innerHTML = "";
+    SpellDen.getAllWeeks().forEach(function (week) {
+      var row = document.createElement("div");
+      row.className = "week-manage-row";
+
+      var info = document.createElement("div");
+      info.className = "week-manage-row-info";
+      info.innerHTML =
+        "<strong>" + week.label + "</strong>" +
+        "<span>" + week.words.length + " words: " + week.words.join(", ") + "</span>";
+      row.appendChild(info);
+
+      if (week.custom) {
+        var delBtn = document.createElement("button");
+        delBtn.type = "button";
+        delBtn.className = "week-manage-delete";
+        delBtn.setAttribute("aria-label", "Delete " + week.label);
+        delBtn.textContent = "✕";
+        delBtn.addEventListener("click", function () {
+          SpellDen.state.deleteCustomWeek(week.id);
+          renderWeekManageList();
+          renderSpellingWeeks();
+        });
+        row.appendChild(delBtn);
+      }
+
+      list.appendChild(row);
+    });
+  }
+
+  function initWeekForm() {
+    var labelInput = document.getElementById("newWeekLabel");
+    var wordsInput = document.getElementById("newWeekWords");
+    var countLabel = document.getElementById("newWeekCount");
+    var addBtn = document.getElementById("addWeekBtn");
+    var errorEl = document.getElementById("addWeekError");
+
+    wordsInput.addEventListener("input", function () {
+      var count = parseWordsInput(wordsInput.value).length;
+      countLabel.textContent = count + " word" + (count === 1 ? "" : "s") + " entered";
+    });
+
+    addBtn.addEventListener("click", function () {
+      var words = parseWordsInput(wordsInput.value);
+      if (words.length === 0) {
+        errorEl.textContent = "Add at least one word first.";
+        errorEl.hidden = false;
+        return;
+      }
+      var allWeeks = SpellDen.getAllWeeks();
+      var label = labelInput.value.trim() || ("Week " + (allWeeks.length + 1));
+
+      SpellDen.state.addCustomWeek(label, words);
+      errorEl.hidden = true;
+      labelInput.value = "";
+      wordsInput.value = "";
+      countLabel.textContent = "0 words entered";
+
+      renderWeekManageList();
+      renderSpellingWeeks();
+    });
+  }
+
   // --- PIN gate --------------------------------------------------------
   // Fixed 4-digit speed bump, not a real security boundary — just enough
   // that a curious kid tapping "parent" doesn't land straight on the
@@ -389,6 +461,8 @@
     renderSpellingSessions();
     renderSpellingVoicePicker();
     renderSpellingWeeks();
+    renderWeekManageList();
+    initWeekForm();
   }
 
   function initLock() {

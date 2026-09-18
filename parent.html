@@ -29,7 +29,13 @@
       none of this is framed as scores or targets.
     </p>
 
-    <h2 class="section-heading">Word Game</h2>
+    <nav class="section-nav">
+      <a href="#section-word-game">🦕 Word Game</a>
+      <a href="#section-read-a-book">📖 Read a Book</a>
+      <a href="#section-spellings">🔤 Spellings</a>
+    </nav>
+
+    <h2 id="section-word-game" class="section-heading">Word Game</h2>
     <div id="summaryRow" class="summary-row"></div>
     <div id="wordGameSessionSummary" class="session-summary"></div>
 
@@ -69,7 +75,7 @@
 
     <div id="clusterList" class="cluster-list"></div>
 
-    <h2 class="section-heading">Read a Book</h2>
+    <h2 id="section-read-a-book" class="section-heading">Read a Book</h2>
     <div id="readSessionSummary" class="session-summary"></div>
 
     <div class="voice-picker">
@@ -106,7 +112,7 @@
     <h3 class="section-heading">Words he's stumbled on while reading</h3>
     <div id="stumbleList" class="stumble-list"></div>
 
-    <h2 class="section-heading">Spellings</h2>
+    <h2 id="section-spellings" class="section-heading">Spellings</h2>
     <div id="spellingSessionSummary" class="session-summary"></div>
 
     <div class="voice-picker">
@@ -137,6 +143,29 @@
       </details>
     </div>
 
+    <h3 class="section-heading">Add a spelling week</h3>
+    <p class="parent-note voice-note">
+      Add this week's words and it becomes the one played by default —
+      earlier weeks stay available from the in-game week picker to
+      revisit.
+    </p>
+    <div class="week-form">
+      <label for="newWeekLabel">Week label</label>
+      <input id="newWeekLabel" type="text" placeholder="Week 4">
+
+      <label for="newWeekWords">Words (one per line, or comma-separated)</label>
+      <textarea id="newWeekWords" rows="4" placeholder="difficult
+beautiful
+..."></textarea>
+      <p id="newWeekCount" class="parent-note voice-note">0 words entered</p>
+
+      <button id="addWeekBtn" type="button">+ Add week</button>
+      <p id="addWeekError" class="pin-error" hidden></p>
+    </div>
+
+    <div id="weekManageList" class="week-manage-list"></div>
+
+    <h3 class="section-heading">Word status by week</h3>
     <div id="spellingWeekList" class="cluster-list"></div>
   </div>
 

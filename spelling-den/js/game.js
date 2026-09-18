@@ -13,7 +13,10 @@ var SpellDen = window.SpellDen || {};
   var currentWeek = null;
   var order = []; // shuffled word indices into currentWeek.words for this round
   var wordIndex = 0;
-  var results = []; // "first" | "retry" per completed word, in round order
+  // { word, status } per completed word, in round order. status is
+  // "first" (correct first try), "retry" (correct after a wrong go), or
+  // "skipped" (moved on without ever getting it right this round).
+  var results = [];
 
   var currentWord = "";
   var tray = []; // [{ ch, id, used }]
@@ -114,7 +117,7 @@ var SpellDen = window.SpellDen || {};
       var dot = document.createElement("span");
       var cls = "dot";
       if (i < results.length) {
-        cls += results[i] === "first" ? " dot-first" : " dot-retry";
+        cls += " dot-" + results[i].status;
       } else if (i === wordIndex) {
         cls += " dot-current";
       }
@@ -177,7 +180,7 @@ var SpellDen = window.SpellDen || {};
 
   function handleCorrect() {
     SpellDen.state.recordCorrect(currentWord, !missedThisWord);
-    results.push(missedThisWord ? "retry" : "first");
+    results.push({ word: currentWord, status: missedThisWord ? "retry" : "first" });
     renderProgress();
 
     els.blanksRow.classList.add("blanks-correct");
@@ -215,7 +218,7 @@ var SpellDen = window.SpellDen || {};
     animating = false;
     els.wrongFeedback.hidden = true;
     els.blanksRow.classList.remove("blanks-wrong");
-    results.push("retry");
+    results.push({ word: currentWord, status: "skipped" });
     renderProgress();
     nextWord();
   }
@@ -234,16 +237,40 @@ var SpellDen = window.SpellDen || {};
   function showRoundComplete() {
     els.playArea.hidden = true;
     els.roundComplete.hidden = false;
-    var firstTryCount = results.filter(function (r) { return r === "first"; }).length;
+
+    var firstTryCount = results.filter(function (r) { return r.status === "first"; }).length;
     els.roundCompleteScore.textContent =
       firstTryCount + " out of " + results.length + " spelled right first time!";
+
+    var correctWords = results.filter(function (r) {
+      return r.status === "first" || r.status === "retry";
+    }).map(function (r) { return r.word; });
+    var practiceWords = results.filter(function (r) {
+      return r.status === "skipped";
+    }).map(function (r) { return r.word; });
+
+    renderResultList(els.correctWordList, correctWords);
+    els.correctWordsBlock.hidden = correctWords.length === 0;
+
+    renderResultList(els.practiceWordList, practiceWords);
+    els.practiceWordsBlock.hidden = practiceWords.length === 0;
+  }
+
+  function renderResultList(container, words) {
+    container.innerHTML = "";
+    words.forEach(function (word) {
+      var chip = document.createElement("span");
+      chip.className = "result-word-chip";
+      chip.textContent = word;
+      container.appendChild(chip);
+    });
   }
 
   // --- Week picker ------------------------------------------------------
 
   function renderWeekPicker() {
     els.weekPickerList.innerHTML = "";
-    SpellDen.WEEKS.slice().reverse().forEach(function (week) {
+    SpellDen.getAllWeeks().slice().reverse().forEach(function (week) {
       var btn = document.createElement("button");
       btn.type = "button";
       btn.className = "week-option" + (currentWeek && week.id === currentWeek.id ? " week-option-active" : "");
@@ -291,6 +318,10 @@ var SpellDen = window.SpellDen || {};
     els.roundComplete = document.getElementById("roundComplete");
     els.roundCompleteScore = document.getElementById("roundCompleteScore");
     els.playAgainBtn = document.getElementById("playAgainBtn");
+    els.correctWordsBlock = document.getElementById("correctWordsBlock");
+    els.correctWordList = document.getElementById("correctWordList");
+    els.practiceWordsBlock = document.getElementById("practiceWordsBlock");
+    els.practiceWordList = document.getElementById("practiceWordList");
 
     els.weekPill.addEventListener("click", openWeekPicker);
     els.weekPickerCloseBtn.addEventListener("click", closeWeekPicker);

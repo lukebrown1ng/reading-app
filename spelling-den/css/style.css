@@ -117,6 +117,10 @@ html, body {
 }
 
 .dot-retry {
+  background: var(--tile-bg-2);
+}
+
+.dot-skipped {
   background: var(--wrong-ink);
   opacity: 0.7;
 }
@@ -339,6 +343,41 @@ html, body {
   font-size: 1.3rem;
   font-weight: 700;
   margin-bottom: 22px;
+}
+
+.result-block {
+  text-align: left;
+  margin-bottom: 18px;
+}
+
+.result-block[hidden] {
+  display: none;
+}
+
+.result-block-label {
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin: 0 0 8px;
+}
+
+.result-word-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.result-word-chip {
+  background: var(--accent-soft);
+  color: var(--ink);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 12px;
+}
+
+#practiceWordList .result-word-chip {
+  background: var(--wrong-soft);
+  color: var(--wrong-ink);
 }
 
 .play-again-btn {
