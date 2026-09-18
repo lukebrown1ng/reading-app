@@ -113,9 +113,16 @@ Layout:
 - [x] Extracted the "Year 3 — words I need to know" list (300 words,
       verified unique) from a school reading-record booklet into the
       first bank (`year3-tricky`)
-- [ ] Not yet wired into gameplay: turning a bank into playable rounds
-      means grouping its words into confusable clusters and adding them
-      to `WordDen.CLUSTERS` — a deliberate next step, not done here
+- [x] Wired 218 of those 300 words into gameplay: grouped into 77 new
+      genuine confusable clusters (look-alike pairs, homophones,
+      irregular-verb swaps, contractions, and rime families — same
+      spirit as the original clusters) appended to `WordDen.CLUSTERS`.
+      The other 82 words were left unclustered on purpose rather than
+      forced into a weak pairing (e.g. "narrator", "magic", "people" —
+      distinctive words with no genuine confusable partner in this
+      list); they still exist in the `year3-tricky` bank for later.
+      Verified programmatically: no duplicate cluster ids, no cluster
+      under 2 words, no misspelt words
 
 ## Stretch (explicitly not MVP — logged, not built now)
 - [ ] Feed words stumbled on while reading into the Word Game's practice
