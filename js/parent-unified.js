@@ -110,9 +110,11 @@
   function renderWordVoicePicker() {
     var select = document.getElementById("wordVoiceSelect");
     var testBtn = document.getElementById("wordVoiceTestBtn");
+    var refreshBtn = document.getElementById("wordVoiceRefreshBtn");
     if (!select || !WordDen.speech || !WordDen.speech.isSupported()) {
       if (select) select.disabled = true;
       if (testBtn) testBtn.disabled = true;
+      if (refreshBtn) refreshBtn.disabled = true;
       return;
     }
 
@@ -148,6 +150,11 @@
 
     testBtn.addEventListener("click", function () {
       WordDen.speech.speak("they");
+    });
+
+    refreshBtn.addEventListener("click", function () {
+      WordDen.speech.refresh();
+      populate();
     });
   }
 
@@ -188,9 +195,11 @@
   function renderReadVoicePicker() {
     var select = document.getElementById("readVoiceSelect");
     var testBtn = document.getElementById("readVoiceTestBtn");
+    var refreshBtn = document.getElementById("readVoiceRefreshBtn");
     if (!select || !ReadDen.narration || !ReadDen.narration.isSupported()) {
       if (select) select.disabled = true;
       if (testBtn) testBtn.disabled = true;
+      if (refreshBtn) refreshBtn.disabled = true;
       return;
     }
 
@@ -226,6 +235,11 @@
 
     testBtn.addEventListener("click", function () {
       ReadDen.narration.speak("the dinosaur went for a walk");
+    });
+
+    refreshBtn.addEventListener("click", function () {
+      ReadDen.narration.refresh();
+      populate();
     });
   }
 
@@ -328,9 +342,11 @@
   function renderSpellingVoicePicker() {
     var select = document.getElementById("spellingVoiceSelect");
     var testBtn = document.getElementById("spellingVoiceTestBtn");
+    var refreshBtn = document.getElementById("spellingVoiceRefreshBtn");
     if (!select || !SpellDen.speech || !SpellDen.speech.isSupported()) {
       if (select) select.disabled = true;
       if (testBtn) testBtn.disabled = true;
+      if (refreshBtn) refreshBtn.disabled = true;
       return;
     }
 
@@ -366,6 +382,11 @@
 
     testBtn.addEventListener("click", function () {
       SpellDen.speech.speak("because");
+    });
+
+    refreshBtn.addEventListener("click", function () {
+      SpellDen.speech.refresh();
+      populate();
     });
   }
 

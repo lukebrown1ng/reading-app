@@ -136,7 +136,9 @@ Layout:
 - [x] `js/game.js` + `index.html`: hear-the-word button (word is never
       shown as text up front), jumbled letter tiles tapped onto blank
       spaces in order, tapping a filled blank returns that letter to the
-      tray; auto-checks once all blanks are filled
+      tray; a "✓ Check" button (disabled until every blank is filled)
+      checks the attempt on tap, rather than auto-checking on the last
+      letter — gives a chance to review before committing
   - [x] Correct: green glow, brief celebration, auto-advances
   - [x] Wrong: the child's attempt stays on screen (tinted red) and the
         correct spelling is shown alongside it, with "Try again"
@@ -159,15 +161,28 @@ Layout:
       deletable from the UI
 - [x] Parent page top nav: sticky row of hotlinks (Word Game / Read a
       Book / Spellings) that jump to each section
+- [x] Voice-list robustness: all three speech modules
+      (`word-den/js/speech.js`, `read-den/js/narration.js`,
+      `spelling-den/js/speech.js`) now poll `getVoices()` a few times
+      after load (Safari/iOS is known to populate it late and doesn't
+      always fire `onvoiceschanged`), and expose a `.refresh()` a parent
+      page "↻" button next to each voice picker calls manually. The
+      "Get more voices" instructions were corrected to stop claiming
+      Siri voices will appear — that's a Safari/iOS platform limitation
+      (Siri voices aren't exposed to the Web Speech API at all), not
+      something fixable from here; a note now says so explicitly
 - [x] Manual QA: served locally, clicked through home → Spellings →
-      heard a word, unjumbled it correctly (celebration + advance) and
-      incorrectly (attempt + correct spelling shown, tried again and
-      also used "next word"), switched weeks via the week picker,
-      finished a full round to the complete screen and checked the
-      correct/practice word lists matched what happened, added and then
-      deleted a custom week from the parent page and confirmed it
-      appeared/disappeared from the in-game week picker, used the parent
-      page's top nav hotlinks — no console errors
+      heard a word, unjumbled it correctly and tapped Check (celebration
+      + advance) and unjumbled incorrectly then tapped Check (attempt +
+      correct spelling shown, tried again and also used "next word"),
+      confirmed the Check button stays disabled until every blank is
+      filled and re-disables after a wrong check until "Try again",
+      switched weeks via the week picker, finished a full round to the
+      complete screen and checked the correct/practice word lists
+      matched what happened, added and then deleted a custom week from
+      the parent page and confirmed it appeared/disappeared from the
+      in-game week picker, used the parent page's top nav hotlinks and
+      the voice-refresh buttons — no console errors
 
 ## Stretch (explicitly not MVP — logged, not built now)
 - [ ] Feed words stumbled on while reading into the Word Game's practice

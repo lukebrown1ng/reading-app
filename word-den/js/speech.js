@@ -73,6 +73,13 @@ var WordDen = window.WordDen || {};
     if (typeof window.speechSynthesis.onvoiceschanged !== "undefined") {
       window.speechSynthesis.onvoiceschanged = refreshVoices;
     }
+    // Safari (especially iOS/iPadOS) is known to populate the voice list
+    // late and doesn't always fire onvoiceschanged — poll a few times to
+    // catch it. Some voices (notably Siri's) are a Safari platform
+    // limitation and may never be exposed here at all, no matter what.
+    [500, 1000, 2000, 4000].forEach(function (delay) {
+      setTimeout(refreshVoices, delay);
+    });
   }
 
   WordDen.speech = {
@@ -86,6 +93,10 @@ var WordDen = window.WordDen || {};
         return { name: v.name, lang: v.lang };
       });
     },
+
+    // Manual re-check, for a parent-page "refresh" button — covers the
+    // case where a voice was downloaded/enabled after the page loaded.
+    refresh: refreshVoices,
 
     speak: function (word) {
       if (!supported) return;

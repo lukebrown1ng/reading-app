@@ -108,6 +108,12 @@ var SpellDen = window.SpellDen || {};
       });
       els.blanksRow.appendChild(box);
     });
+    updateCheckBtn();
+  }
+
+  function updateCheckBtn() {
+    var full = blanks.length > 0 && blanks.every(function (b) { return !!b; });
+    els.checkBtn.disabled = !full || wrongLocked || animating;
   }
 
   function renderProgress() {
@@ -146,12 +152,6 @@ var SpellDen = window.SpellDen || {};
     tile.used = true;
     renderTray();
     renderBlanks();
-
-    var stillEmpty = blanks.some(function (b) { return !b; });
-    if (!stillEmpty) {
-      animating = true;
-      setTimeout(checkWord, 250);
-    }
   }
 
   function removeLetter(index) {
@@ -309,6 +309,7 @@ var SpellDen = window.SpellDen || {};
     els.hearBtn = document.getElementById("hearBtn");
     els.blanksRow = document.getElementById("blanksRow");
     els.letterTray = document.getElementById("letterTray");
+    els.checkBtn = document.getElementById("checkBtn");
 
     els.wrongFeedback = document.getElementById("wrongFeedback");
     els.correctSpellingWord = document.getElementById("correctSpellingWord");
@@ -331,6 +332,14 @@ var SpellDen = window.SpellDen || {};
 
     els.hearBtn.addEventListener("click", function () {
       if (currentWord) SpellDen.speech.speak(currentWord);
+    });
+
+    els.checkBtn.addEventListener("click", function () {
+      if (els.checkBtn.disabled) return;
+      animating = true;
+      renderTray();
+      renderBlanks();
+      checkWord();
     });
 
     els.tryAgainBtn.addEventListener("click", tryAgain);

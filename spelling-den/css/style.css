@@ -232,6 +232,32 @@ html, body {
   pointer-events: none;
 }
 
+.check-btn {
+  border: none;
+  background: var(--tile-bg-2);
+  color: white;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: clamp(1rem, 4vw, 1.2rem);
+  padding: 14px 32px;
+  border-radius: 22px;
+  cursor: pointer;
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.12);
+  transition: opacity 0.2s ease;
+}
+
+.check-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.12);
+}
+
+.check-btn:disabled {
+  background: var(--accent-soft);
+  color: #9db8ab;
+  cursor: default;
+  box-shadow: none;
+}
+
 .wrong-feedback {
   background: var(--card);
   border-radius: 22px;

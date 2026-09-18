@@ -228,6 +228,14 @@ body.parent-body {
   opacity: 0.85;
 }
 
+.voice-refresh-btn {
+  background: var(--accent-soft) !important;
+  color: var(--ink) !important;
+  flex: 0 0 auto;
+  padding: 8px 12px !important;
+  font-size: 1rem !important;
+}
+
 .voice-help {
   margin-top: 12px;
   font-size: 0.85rem;
@@ -247,6 +255,14 @@ body.parent-body {
 
 .voice-help li {
   margin-bottom: 6px;
+}
+
+.voice-help-note {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  background: var(--accent-soft);
+  border-radius: 10px;
+  line-height: 1.5;
 }
 
 .cluster-list,
