@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Word Den</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="top-bar">
+      <div class="brand">🦕 <span>Word Den</span></div>
+      <label class="audio-switch">
+        <span class="audio-switch-icon" aria-hidden="true">🔊</span>
+        <input type="checkbox" id="audioToggle">
+        <span class="audio-switch-track"><span class="audio-switch-thumb"></span></span>
+      </label>
+    </header>
+
+    <main class="game-area">
+      <div id="promptCard" class="prompt-card">
+        <div id="promptWord" class="prompt-word"></div>
+        <button id="promptListenBtn" class="listen-btn" type="button" aria-label="Play the word again">
+          🔊
+        </button>
+      </div>
+
+      <div id="optionsGrid" class="options-grid"></div>
+    </main>
+
+    <footer class="progress-footer">
+      <div id="progressTrack" class="progress-track">
+        <div class="progress-path">
+          <span class="path-decoration">🌿</span>
+          <span class="path-decoration">🥚</span>
+          <span class="path-decoration">🌴</span>
+          <span class="path-decoration">🌋</span>
+        </div>
+        <div id="dino" class="dino">🦕</div>
+      </div>
+      <a class="parent-link" href="parent.html">parent</a>
+    </footer>
+  </div>
+
+  <script src="js/wordbank.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/speech.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
