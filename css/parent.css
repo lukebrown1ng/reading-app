@@ -225,6 +225,17 @@ body.parent-body {
   margin-bottom: 26px;
 }
 
+.week-block {
+  margin-bottom: 4px;
+}
+
+.week-block-label {
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+  opacity: 0.8;
+}
+
 .cluster-row {
   background: var(--card);
   border-radius: 14px;

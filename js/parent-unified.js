@@ -269,6 +269,106 @@
     });
   }
 
+  // --- Spellings ---------------------------------------------------
+
+  function renderSpellingSessions() {
+    var sessions = SpellDen.state.getSessions();
+    var el = document.getElementById("spellingSessionSummary");
+    if (sessions.length === 0) {
+      el.textContent = "No spelling sessions yet.";
+      return;
+    }
+    var totalMs = 0;
+    var lastStart = 0;
+    sessions.forEach(function (s) {
+      var end = s.end || Date.now();
+      totalMs += Math.max(0, end - s.start);
+      if (s.start > lastStart) lastStart = s.start;
+    });
+    el.innerHTML =
+      "Played " + sessions.length + " time" + (sessions.length === 1 ? "" : "s") +
+      ", roughly " + formatDuration(totalMs) + " altogether. " +
+      "Last played: " + formatDate(lastStart) + ".";
+  }
+
+  function spellingWordStatus(record) {
+    if (record.seen === 0) return "new";
+    if (record.misses === 0) return "solid";
+    if (record.correctFirstTry > 0) return "learning";
+    return "shaky";
+  }
+
+  function renderSpellingWeeks() {
+    var list = document.getElementById("spellingWeekList");
+    list.innerHTML = "";
+    SpellDen.WEEKS.forEach(function (week) {
+      var block = document.createElement("div");
+      block.className = "week-block";
+
+      var label = document.createElement("div");
+      label.className = "week-block-label";
+      label.textContent = week.label;
+      block.appendChild(label);
+
+      var row = document.createElement("div");
+      row.className = "cluster-row";
+      week.words.forEach(function (word) {
+        var record = SpellDen.state.getWordRecord(word);
+        var chip = document.createElement("span");
+        chip.className = "word-chip status-" + spellingWordStatus(record);
+        chip.textContent = word;
+        row.appendChild(chip);
+      });
+      block.appendChild(row);
+
+      list.appendChild(block);
+    });
+  }
+
+  function renderSpellingVoicePicker() {
+    var select = document.getElementById("spellingVoiceSelect");
+    var testBtn = document.getElementById("spellingVoiceTestBtn");
+    if (!select || !SpellDen.speech || !SpellDen.speech.isSupported()) {
+      if (select) select.disabled = true;
+      if (testBtn) testBtn.disabled = true;
+      return;
+    }
+
+    function populate() {
+      var options = SpellDen.speech.getVoiceOptions();
+      if (options.length === 0) return;
+      var current = SpellDen.state.getVoiceName();
+      select.innerHTML = "";
+
+      var autoOpt = document.createElement("option");
+      autoOpt.value = "";
+      autoOpt.textContent = "Auto (recommended)";
+      select.appendChild(autoOpt);
+
+      options.forEach(function (opt) {
+        var el = document.createElement("option");
+        el.value = opt.name;
+        el.textContent = opt.name + " (" + opt.lang + ")";
+        select.appendChild(el);
+      });
+
+      select.value = current || "";
+    }
+
+    populate();
+    if (typeof window.speechSynthesis !== "undefined") {
+      window.speechSynthesis.addEventListener("voiceschanged", populate);
+    }
+
+    select.addEventListener("change", function () {
+      SpellDen.state.setVoiceName(select.value || null);
+    });
+
+    testBtn.addEventListener("click", function () {
+      SpellDen.speech.speak("because");
+    });
+  }
+
   // --- PIN gate --------------------------------------------------------
   // Fixed 4-digit speed bump, not a real security boundary — just enough
   // that a curious kid tapping "parent" doesn't land straight on the
@@ -286,6 +386,9 @@
     renderReadVoicePicker();
     renderBookProgress();
     renderStumbles();
+    renderSpellingSessions();
+    renderSpellingVoicePicker();
+    renderSpellingWeeks();
   }
 
   function initLock() {

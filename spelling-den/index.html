@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Spelling Den</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="top-bar">
+      <a class="brand" href="../index.html">🦕 <span>Spelling Den</span></a>
+      <button id="weekPill" class="week-pill" type="button" aria-label="Choose which week's words to play">
+        <span aria-hidden="true">📅</span>
+        <span id="weekPillLabel" class="week-pill-label">Week 1</span>
+      </button>
+    </header>
+
+    <main id="playArea" class="game-area">
+      <div class="progress-row">
+        <div id="wordProgressLabel" class="word-progress-label">Word 1 of 10</div>
+        <div id="progressDots" class="progress-dots"></div>
+      </div>
+
+      <button id="hearBtn" class="hear-btn" type="button" aria-label="Hear the word">
+        🔊 <span>Hear the word</span>
+      </button>
+
+      <div id="blanksRow" class="blanks-row"></div>
+
+      <div id="letterTray" class="letter-tray"></div>
+
+      <div id="wrongFeedback" class="wrong-feedback" hidden>
+        <p class="wrong-feedback-label">That's tricky — here's how it's spelled:</p>
+        <div id="correctSpellingWord" class="correct-spelling-word"></div>
+        <div class="wrong-feedback-actions">
+          <button id="tryAgainBtn" class="try-again-btn" type="button">Try again</button>
+          <button id="skipWordBtn" class="skip-word-btn" type="button">Next word →</button>
+        </div>
+      </div>
+    </main>
+
+    <div id="roundComplete" class="round-complete" hidden>
+      <div class="round-complete-card">
+        <div class="round-complete-emoji">🎉🦕🎉</div>
+        <div id="roundCompleteScore" class="round-complete-score"></div>
+        <button id="playAgainBtn" class="play-again-btn" type="button">Play this week again</button>
+        <a class="back-home-link" href="../index.html">&larr; back home</a>
+      </div>
+    </div>
+
+    <footer class="progress-footer">
+      <a class="parent-link" href="../parent.html">parent</a>
+    </footer>
+  </div>
+
+  <div id="weekPickerModal" class="week-picker-modal" hidden>
+    <div class="week-picker-card">
+      <button id="weekPickerCloseBtn" class="modal-close-btn" type="button" aria-label="Close">✕</button>
+      <h3 class="week-picker-heading">Pick a week</h3>
+      <div id="weekPickerList" class="week-picker-list"></div>
+    </div>
+  </div>
+
+  <script src="js/weeks.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/speech.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>

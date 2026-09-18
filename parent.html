@@ -105,6 +105,39 @@
 
     <h3 class="section-heading">Words he's stumbled on while reading</h3>
     <div id="stumbleList" class="stumble-list"></div>
+
+    <h2 class="section-heading">Spellings</h2>
+    <div id="spellingSessionSummary" class="session-summary"></div>
+
+    <div class="voice-picker">
+      <label for="spellingVoiceSelect">Spellings reading voice</label>
+      <p class="parent-note voice-note">
+        Used to say each word out loud before he spells it.
+      </p>
+      <div class="voice-picker-row">
+        <select id="spellingVoiceSelect"></select>
+        <button id="spellingVoiceTestBtn" type="button">▶ Try it</button>
+      </div>
+      <details class="voice-help">
+        <summary>Get more voices on this device</summary>
+        <ol>
+          <li>Open <strong>Settings → Accessibility → Spoken Content → Voices</strong>.</li>
+          <li>Pick a language, e.g. <strong>English → United Kingdom</strong>.</li>
+          <li>Tap a voice name (Serena, Stephanie, Kate...) and download the
+            <strong>Enhanced</strong> or <strong>Premium</strong> quality
+            version — the default "Standard" ones are the robotic-sounding
+            ones.</li>
+          <li>Siri voices are further down the same list, as
+            <strong>"Siri Voice 1/2/3/4"</strong> — tap one to download it
+            the same way.</li>
+          <li>Fully quit and reopen the browser (or restart the phone)
+            after downloading — newly downloaded voices often don't show up
+            in the list below until then.</li>
+        </ol>
+      </details>
+    </div>
+
+    <div id="spellingWeekList" class="cluster-list"></div>
   </div>
 
   <script src="word-den/js/wordbank.js"></script>
@@ -115,6 +148,9 @@
   <script src="read-den/js/books.js"></script>
   <script src="read-den/js/state.js"></script>
   <script src="read-den/js/narration.js"></script>
+  <script src="spelling-den/js/weeks.js"></script>
+  <script src="spelling-den/js/state.js"></script>
+  <script src="spelling-den/js/speech.js"></script>
   <script src="js/parent-unified.js"></script>
 </body>
 </html>

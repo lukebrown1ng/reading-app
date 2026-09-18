@@ -124,11 +124,40 @@ Layout:
       Verified programmatically: no duplicate cluster ids, no cluster
       under 2 words, no misspelt words
 
+## Phase H — Spelling Den (`spelling-den/`)
+- [x] `js/weeks.js`: `SpellDen.WEEKS`, weekly spelling lists (10 words
+      each), seeded with 3 example weeks of real UK KS2 statutory
+      spelling words — add a new entry each week for real homework
+      lists; the game defaults to the most recent one, but every past
+      week stays pickable from the in-game week picker for review
+- [x] `js/state.js` / `js/speech.js`: own localStorage key, own voice
+      preference, per-word seen/correctFirstTry/misses records, session
+      tracking — same shape as Word Den's but fully independent
+- [x] `js/game.js` + `index.html`: hear-the-word button (word is never
+      shown as text up front), jumbled letter tiles tapped onto blank
+      spaces in order, tapping a filled blank returns that letter to the
+      tray; auto-checks once all blanks are filled
+  - [x] Correct: green glow, brief celebration, auto-advances
+  - [x] Wrong: the child's attempt stays on screen (tinted red) and the
+        correct spelling is shown alongside it, with "Try again"
+        (reshuffles, same word) and "Next word" options
+  - [x] Round-complete screen after all 10 words: score summary, replay
+        this week, or back home
+- [x] Home screen: third tile ("Spellings")
+- [x] Unified parent view: session time, voice picker, and a per-week
+      word-status grid (same shaky/learning/solid/new chip styling as
+      the Word Game section)
+- [x] Manual QA: served locally, clicked through home → Spellings →
+      heard a word, unjumbled it correctly (celebration + advance) and
+      incorrectly (attempt + correct spelling shown, tried again and
+      also used "next word"), switched weeks via the week picker,
+      finished a full round to the complete screen, checked parent view
+      reflects it — no console errors
+
 ## Stretch (explicitly not MVP — logged, not built now)
 - [ ] Feed words stumbled on while reading into the Word Game's practice
       clusters automatically (data model below already tracks stumbled
       words/counts in a shape that could support this later)
-- [ ] Additional game modes beyond pick-the-word
 - [ ] Import/export of word-mistake data
 - [ ] More visual themes beyond dinosaurs/animals
 - [ ] More book content
