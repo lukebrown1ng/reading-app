@@ -146,6 +146,22 @@ html, body {
 
 .word-current {
   background: var(--highlight);
+  cursor: pointer;
+  box-shadow: 0 0 0 2px var(--highlight);
+  animation: word-current-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes word-current-pulse {
+  0%, 100% { box-shadow: 0 0 0 2px var(--highlight); }
+  50% { box-shadow: 0 0 0 5px var(--highlight); }
+}
+
+.tap-hint {
+  margin: -8px 0 0;
+  font-size: 0.95rem;
+  color: var(--ink);
+  opacity: 0.7;
+  text-align: center;
 }
 
 .hear-word-btn {

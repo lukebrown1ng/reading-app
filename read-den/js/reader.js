@@ -179,6 +179,7 @@ var ReadDen = window.ReadDen || {};
       els.listenBtn.textContent = "🎤 Start reading";
     } else {
       els.narrateBtn.hidden = false;
+      els.tapHint.hidden = false;
     }
   }
 
@@ -201,6 +202,7 @@ var ReadDen = window.ReadDen || {};
     els.bookTitle = document.getElementById("bookTitle");
     els.pageText = document.getElementById("pageText");
     els.hearWordBtn = document.getElementById("hearWordBtn");
+    els.tapHint = document.getElementById("tapHint");
     els.listenBtn = document.getElementById("listenBtn");
     els.narrateBtn = document.getElementById("narrateBtn");
     els.prevBtn = document.getElementById("prevBtn");
