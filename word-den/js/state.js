@@ -29,10 +29,11 @@ var WordDen = window.WordDen || {};
         parsed = null;
       }
     }
-    cached = parsed || { words: {}, sessions: [], audioMode: true };
+    cached = parsed || { words: {}, sessions: [], audioMode: true, voiceName: null };
     if (!cached.words) cached.words = {};
     if (!cached.sessions) cached.sessions = [];
     if (typeof cached.audioMode !== "boolean") cached.audioMode = true;
+    if (typeof cached.voiceName !== "string") cached.voiceName = null;
     return cached;
   }
 
@@ -62,6 +63,16 @@ var WordDen = window.WordDen || {};
     },
     setAudioMode: function (on) {
       load().audioMode = !!on;
+      save();
+    },
+
+    // The system voice the parent picked (by name) as sounding least
+    // robotic on this device — null means "let the app auto-pick".
+    getVoiceName: function () {
+      return load().voiceName;
+    },
+    setVoiceName: function (name) {
+      load().voiceName = name || null;
       save();
     },
 

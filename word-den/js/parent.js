@@ -79,9 +79,54 @@ var WordDen = window.WordDen || {};
     renderSummary(counts, WordDen.ACTIVE_WORDS.length);
   }
 
+  function renderVoicePicker() {
+    var select = document.getElementById("voiceSelect");
+    var testBtn = document.getElementById("voiceTestBtn");
+    if (!select || !WordDen.speech || !WordDen.speech.isSupported()) {
+      if (select) select.disabled = true;
+      if (testBtn) testBtn.disabled = true;
+      return;
+    }
+
+    function populate() {
+      var options = WordDen.speech.getVoiceOptions();
+      if (options.length === 0) return;
+      var current = WordDen.state.getVoiceName();
+      select.innerHTML = "";
+
+      var autoOpt = document.createElement("option");
+      autoOpt.value = "";
+      autoOpt.textContent = "Auto (recommended)";
+      select.appendChild(autoOpt);
+
+      options.forEach(function (opt) {
+        var el = document.createElement("option");
+        el.value = opt.name;
+        el.textContent = opt.name + " (" + opt.lang + ")";
+        select.appendChild(el);
+      });
+
+      select.value = current || "";
+    }
+
+    populate();
+    if (typeof window.speechSynthesis !== "undefined") {
+      window.speechSynthesis.addEventListener("voiceschanged", populate);
+    }
+
+    select.addEventListener("change", function () {
+      WordDen.state.setVoiceName(select.value || null);
+    });
+
+    testBtn.addEventListener("click", function () {
+      WordDen.speech.speak("they");
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     renderClusters();
     renderSessions();
+    renderVoicePicker();
   });
 
   window.WordDen = WordDen;

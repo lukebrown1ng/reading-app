@@ -20,10 +20,24 @@
   <div id="summaryRow" class="summary-row"></div>
   <div id="sessionSummary" class="session-summary"></div>
 
+  <div class="voice-picker">
+    <label for="voiceSelect">Reading voice (audio mode)</label>
+    <p class="parent-note voice-note">
+      Browsers ship several voices and the default one is often the most
+      robotic-sounding. Try a few and pick whichever sounds most natural
+      on this device.
+    </p>
+    <div class="voice-picker-row">
+      <select id="voiceSelect"></select>
+      <button id="voiceTestBtn" type="button">▶ Try it</button>
+    </div>
+  </div>
+
   <div id="clusterList" class="cluster-list"></div>
 
   <script src="js/wordbank.js"></script>
   <script src="js/state.js"></script>
+  <script src="js/speech.js"></script>
   <script src="js/parent.js"></script>
 </body>
 </html>
