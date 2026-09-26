@@ -43,6 +43,30 @@ var SpellDen = window.SpellDen || {};
         "difficult", "history", "knowledge", "natural", "notice",
         "opposite", "ordinary", "popular", "position", "promise"
       ]
+    },
+    {
+      id: "week4",
+      label: "Week 4",
+      words: [
+        "eight", "eighth", "eighty", "weight", "neighbour",
+        "vein", "veil", "beige", "sleigh", "freight"
+      ]
+    },
+    {
+      id: "week5",
+      label: "Week 5",
+      words: [
+        "hey", "they", "obey", "grey", "prey",
+        "whey", "survey", "convey", "disobey", "purvey"
+      ]
+    },
+    {
+      id: "week6",
+      label: "Week 6",
+      words: [
+        "straight", "campaign", "contain", "brain", "faint",
+        "waist", "claim", "praise", "complaint", "afraid"
+      ]
     }
   ];
 
