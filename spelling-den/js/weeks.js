@@ -16,53 +16,28 @@ var SpellDen = window.SpellDen || {};
 (function () {
   "use strict";
 
-  // Seed content: real UK KS2 statutory spelling words (English Appendix
-  // 1), grouped ten at a time. Placeholder until real weekly homework
-  // lists are transcribed in — replace/extend freely.
+  // Official weekly spelling homework lists, transcribed as they come
+  // home from school.
   SpellDen.WEEKS = [
     {
       id: "week1",
       label: "Week 1",
-      words: [
-        "different", "important", "special", "actually", "believe",
-        "because", "question", "favourite", "library", "surprise"
-      ]
-    },
-    {
-      id: "week2",
-      label: "Week 2",
-      words: [
-        "although", "therefore", "separate", "increase", "possible",
-        "probably", "remember", "sentence", "strength", "particular"
-      ]
-    },
-    {
-      id: "week3",
-      label: "Week 3",
-      words: [
-        "difficult", "history", "knowledge", "natural", "notice",
-        "opposite", "ordinary", "popular", "position", "promise"
-      ]
-    },
-    {
-      id: "week4",
-      label: "Week 4",
       words: [
         "eight", "eighth", "eighty", "weight", "neighbour",
         "vein", "veil", "beige", "sleigh", "freight"
       ]
     },
     {
-      id: "week5",
-      label: "Week 5",
+      id: "week2",
+      label: "Week 2",
       words: [
         "hey", "they", "obey", "grey", "prey",
         "whey", "survey", "convey", "disobey", "purvey"
       ]
     },
     {
-      id: "week6",
-      label: "Week 6",
+      id: "week3",
+      label: "Week 3",
       words: [
         "straight", "campaign", "contain", "brain", "faint",
         "waist", "claim", "praise", "complaint", "afraid"
