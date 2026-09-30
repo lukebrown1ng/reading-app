@@ -42,6 +42,14 @@ var SpellDen = window.SpellDen || {};
         "straight", "campaign", "contain", "brain", "faint",
         "waist", "claim", "praise", "complaint", "afraid"
       ]
+    },
+    {
+      id: "week4",
+      label: "Week 4",
+      words: [
+        "earth", "early", "learn", "heard", "earn",
+        "pearl", "search", "unearth", "earl", "rehearse"
+      ]
     }
   ];
 
