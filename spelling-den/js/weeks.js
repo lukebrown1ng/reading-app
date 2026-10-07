@@ -50,6 +50,14 @@ var SpellDen = window.SpellDen || {};
         "earth", "early", "learn", "heard", "earn",
         "pearl", "search", "unearth", "earl", "rehearse"
       ]
+    },
+    {
+      id: "week5",
+      label: "Week 5",
+      words: [
+        "here", "hear", "heel", "heal", "main",
+        "mane", "mail", "male", "knot", "not"
+      ]
     }
   ];
 
