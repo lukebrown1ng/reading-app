@@ -70,29 +70,60 @@ var SpellDen = window.SpellDen || {};
     });
   }
 
-  var currentAudio = null;
+  // iOS only lets audio start without a tap if the same element has been
+  // played from a tap before — so one shared element is reused for every
+  // clip, and unlocked by the first touch anywhere on the page. That's what
+  // lets the next word auto-play after the "correct!" delay.
+  var player = new Audio();
+  player.preload = "auto";
+  var unlocked = false;
+  var fallbackText = null;
+
+  function unlock() {
+    if (unlocked) return;
+    unlocked = true;
+    // Silent 1-sample WAV: satisfies the gesture requirement without sound.
+    player.src = "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=";
+    var p = player.play();
+    if (p && p.catch) p.catch(function () { unlocked = false; });
+    ["pointerdown", "touchstart", "click"].forEach(function (ev) {
+      document.removeEventListener(ev, unlock, true);
+    });
+  }
+  ["pointerdown", "touchstart", "click"].forEach(function (ev) {
+    document.addEventListener(ev, unlock, true);
+  });
+
+  player.addEventListener("error", function () {
+    if (fallbackText) {
+      var t = fallbackText;
+      fallbackText = null;
+      SpellDen.speech.speakWithDeviceVoice(t);
+    }
+  });
+  player.addEventListener("ended", function () { fallbackText = null; });
 
   function stopAll() {
-    if (currentAudio) {
-      currentAudio.pause();
-      currentAudio = null;
-    }
+    player.pause();
     if (supported) window.speechSynthesis.cancel();
   }
 
-  function playClip(clipName, fallbackText) {
+  function playClip(clipName, text) {
     stopAll();
-    var audio = new Audio("audio/" + encodeURIComponent(clipName) + ".mp3");
-    currentAudio = audio;
-    var fellBack = false;
-    function fallBack() {
-      if (fellBack || currentAudio !== audio) return;
-      fellBack = true;
-      SpellDen.speech.speakWithDeviceVoice(fallbackText);
+    fallbackText = text;
+    player.src = "audio/" + encodeURIComponent(clipName) + ".mp3";
+    var p = player.play();
+    if (p && p.catch) {
+      p.catch(function (e) {
+        // A missing clip fires "error" and is handled there; only blocked
+        // playback (NotAllowedError) lands here.
+        if (e && e.name === "NotAllowedError" && fallbackText) {
+          var t = fallbackText;
+          fallbackText = null;
+          SpellDen.speech.speakWithDeviceVoice(t);
+        }
+      });
     }
-    audio.addEventListener("error", fallBack);
-    var p = audio.play();
-    if (p && p.catch) p.catch(fallBack);
   }
 
   SpellDen.speech = {
