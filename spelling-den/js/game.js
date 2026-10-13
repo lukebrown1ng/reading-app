@@ -232,6 +232,8 @@ var SpellDen = window.SpellDen || {};
 
   function renderWeekPill() {
     els.weekPillLabel.textContent = currentWeek.label;
+    els.focusCallout.hidden = !currentWeek.focus;
+    els.focusCalloutText.textContent = currentWeek.focus || "";
   }
 
   // --- Letter placement -----------------------------------------------
@@ -412,6 +414,8 @@ var SpellDen = window.SpellDen || {};
     els.progressDots = document.getElementById("progressDots");
     els.hearBtn = document.getElementById("hearBtn");
     els.hearSentenceBtn = document.getElementById("hearSentenceBtn");
+    els.focusCallout = document.getElementById("focusCallout");
+    els.focusCalloutText = document.getElementById("focusCalloutText");
     els.modeTilesBtn = document.getElementById("modeTilesBtn");
     els.modeTypeBtn = document.getElementById("modeTypeBtn");
     els.blanksRow = document.getElementById("blanksRow");
