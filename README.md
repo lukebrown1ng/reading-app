@@ -71,8 +71,7 @@ node spelling-den/scripts/generate-audio.js --force           # redo everything
 
 If a word still sounds wrong, change its sentence in `sentences.js` (the
 sentence is the pronunciation context) and re-run with `--force <word>`.
-The script lists nothing but names the files it writes, so watch for
-`✓ <file>` lines.
+The script prints a `✓ <file>` line for each clip it writes.
 
 ### How the app plays them
 
