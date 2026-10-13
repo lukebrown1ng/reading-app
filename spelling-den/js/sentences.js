@@ -64,7 +64,19 @@ SpellDen.SENTENCES = {
   mail: "The postman brought the mail this morning.",
   male: "The male peacock has colourful feathers.",
   knot: "I tied a knot in the rope.",
-  not: "I am not hungry right now."
+  not: "I am not hungry right now.",
+
+  // Week 6 (homophones)
+  berry: "I picked a juicy red berry from the bush.",
+  bury: "The dog likes to bury his bone in the garden.",
+  brake: "Squeeze the brake to stop your bike.",
+  break: "Be careful not to break the glass.",
+  meet: "I will meet you at the school gate.",
+  meat: "We had meat and vegetables for dinner.",
+  ball: "He kicked the ball over the fence.",
+  bawl: "The baby began to bawl when she dropped her toy.",
+  fair: "It is not fair to push in line.",
+  fare: "The bus fare was two pounds."
 };
 
 window.SpellDen = SpellDen;

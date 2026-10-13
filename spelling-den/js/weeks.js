@@ -58,6 +58,14 @@ var SpellDen = window.SpellDen || {};
         "here", "hear", "heel", "heal", "main",
         "mane", "mail", "male", "knot", "not"
       ]
+    },
+    {
+      id: "week6",
+      label: "Week 6",
+      words: [
+        "berry", "bury", "brake", "break", "meet",
+        "meat", "ball", "bawl", "fair", "fare"
+      ]
     }
   ];
 
