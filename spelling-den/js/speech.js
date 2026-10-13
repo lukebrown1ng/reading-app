@@ -99,6 +99,7 @@ var SpellDen = window.SpellDen || {};
   // `token` changes whenever playback is stopped or restarted, which makes
   // any callbacks from the previous queue do nothing.
   var token = 0;
+  var GAP_MS = 1500; // pause between the word, the sentence and the word again
 
   function stopAll() {
     token += 1;
@@ -110,6 +111,10 @@ var SpellDen = window.SpellDen || {};
     stopAll();
     var mine = token;
     var i = 0;
+
+    function advance() {
+      setTimeout(next, GAP_MS);
+    }
 
     function next() {
       if (mine !== token || i >= steps.length) return;
@@ -124,12 +129,12 @@ var SpellDen = window.SpellDen || {};
       function onEnded() {
         if (done) return;
         cleanup();
-        next();
+        advance();
       }
       function fallBack() {
         if (done || mine !== token) return;
         cleanup();
-        SpellDen.speech.speakWithDeviceVoice(step.text, next);
+        SpellDen.speech.speakWithDeviceVoice(step.text, advance);
       }
 
       player.addEventListener("ended", onEnded);
