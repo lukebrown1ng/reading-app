@@ -146,6 +146,29 @@ html, body {
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.12);
 }
 
+.hear-sentence-btn {
+  border: 2px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: clamp(0.95rem, 3.4vw, 1.1rem);
+  padding: 10px 22px;
+  border-radius: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hear-sentence-btn[hidden] {
+  display: none;
+}
+
+.hear-sentence-btn:active {
+  transform: translateY(2px);
+}
+
 .blanks-row {
   display: flex;
   flex-wrap: wrap;

@@ -61,6 +61,7 @@ var SpellDen = window.SpellDen || {};
     els.blanksRow.classList.remove("blanks-correct", "blanks-wrong");
     renderProgress();
 
+    els.hearSentenceBtn.hidden = !SpellDen.speech.hasSentence(currentWord);
     SpellDen.speech.speak(currentWord);
   }
 
@@ -307,6 +308,7 @@ var SpellDen = window.SpellDen || {};
     els.wordProgressLabel = document.getElementById("wordProgressLabel");
     els.progressDots = document.getElementById("progressDots");
     els.hearBtn = document.getElementById("hearBtn");
+    els.hearSentenceBtn = document.getElementById("hearSentenceBtn");
     els.blanksRow = document.getElementById("blanksRow");
     els.letterTray = document.getElementById("letterTray");
     els.checkBtn = document.getElementById("checkBtn");
@@ -332,6 +334,10 @@ var SpellDen = window.SpellDen || {};
 
     els.hearBtn.addEventListener("click", function () {
       if (currentWord) SpellDen.speech.speak(currentWord);
+    });
+
+    els.hearSentenceBtn.addEventListener("click", function () {
+      if (currentWord) SpellDen.speech.speakSentence(currentWord);
     });
 
     els.checkBtn.addEventListener("click", function () {

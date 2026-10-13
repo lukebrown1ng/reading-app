@@ -70,6 +70,31 @@ var SpellDen = window.SpellDen || {};
     });
   }
 
+  var currentAudio = null;
+
+  function stopAll() {
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio = null;
+    }
+    if (supported) window.speechSynthesis.cancel();
+  }
+
+  function playClip(clipName, fallbackText) {
+    stopAll();
+    var audio = new Audio("audio/" + encodeURIComponent(clipName) + ".mp3");
+    currentAudio = audio;
+    var fellBack = false;
+    function fallBack() {
+      if (fellBack || currentAudio !== audio) return;
+      fellBack = true;
+      SpellDen.speech.speakWithDeviceVoice(fallbackText);
+    }
+    audio.addEventListener("error", fallBack);
+    var p = audio.play();
+    if (p && p.catch) p.catch(fallBack);
+  }
+
   SpellDen.speech = {
     isSupported: function () {
       return supported;
@@ -85,9 +110,26 @@ var SpellDen = window.SpellDen || {};
     // case where a voice was downloaded/enabled after the page loaded.
     refresh: refreshVoices,
 
+    // Plays the pre-made clip (audio/<word>.mp3, see
+    // scripts/generate-audio.js), falling back to the device voice when
+    // there isn't one — e.g. a week added from the parent page.
+    speak: function (word) {
+      playClip(word, word);
+    },
+
+    // The example sentence for a word, same clip-then-device-voice order.
+    speakSentence: function (word) {
+      var sentence = SpellDen.SENTENCES && SpellDen.SENTENCES[word];
+      if (sentence) playClip(word + "-sentence", sentence);
+    },
+
+    hasSentence: function (word) {
+      return !!(SpellDen.SENTENCES && SpellDen.SENTENCES[word]);
+    },
+
     // Slightly slower than Word Den's prompt voice — spelling needs every
     // sound to land clearly, not just be recognisable.
-    speak: function (word) {
+    speakWithDeviceVoice: function (word) {
       if (!supported) return;
       try {
         window.speechSynthesis.cancel();
