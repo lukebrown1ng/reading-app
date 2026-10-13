@@ -18,6 +18,9 @@ var SpellDen = window.SpellDen || {};
   // "skipped" (moved on without ever getting it right this round).
   var results = [];
 
+  var inputMode = "tiles"; // "tiles" (tap jumbled letters) or "type" (on-screen keyboard)
+  var KEY_ROWS = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
+
   var currentWord = "";
   var tray = []; // [{ ch, id, used }]
   var blanks = []; // [{ ch, tileId } | null] per letter position
@@ -66,6 +69,11 @@ var SpellDen = window.SpellDen || {};
   }
 
   function buildTray() {
+    if (inputMode === "type") {
+      tray = [];
+      renderTray();
+      return;
+    }
     var letters = currentWord.split("").map(function (ch, i) {
       return { ch: ch, id: i, used: false };
     });
@@ -82,6 +90,11 @@ var SpellDen = window.SpellDen || {};
 
   function renderTray() {
     els.letterTray.innerHTML = "";
+    els.letterTray.classList.toggle("keyboard", inputMode === "type");
+    if (inputMode === "type") {
+      renderKeyboard();
+      return;
+    }
     tray.forEach(function (tile) {
       var btn = document.createElement("button");
       btn.type = "button";
@@ -93,6 +106,90 @@ var SpellDen = window.SpellDen || {};
       });
       els.letterTray.appendChild(btn);
     });
+  }
+
+  // Typing mode: a custom on-screen keyboard rather than the system one,
+  // so iOS autocorrect / suggestions can't give the spelling away and the
+  // layout doesn't jump when a keyboard slides up.
+  function renderKeyboard() {
+    var locked = wrongLocked || animating;
+    KEY_ROWS.forEach(function (letters, rowIndex) {
+      var row = document.createElement("div");
+      row.className = "key-row";
+      letters.split("").forEach(function (ch) {
+        var key = document.createElement("button");
+        key.type = "button";
+        key.className = "key";
+        key.textContent = ch;
+        key.disabled = locked;
+        key.addEventListener("click", function () {
+          typeLetter(ch);
+        });
+        row.appendChild(key);
+      });
+      if (rowIndex === KEY_ROWS.length - 1) {
+        var back = document.createElement("button");
+        back.type = "button";
+        back.className = "key key-back";
+        back.textContent = "⌫";
+        back.setAttribute("aria-label", "Delete last letter");
+        back.disabled = locked;
+        back.addEventListener("click", backspace);
+        row.appendChild(back);
+      }
+      els.letterTray.appendChild(row);
+    });
+  }
+
+  function typeLetter(ch) {
+    if (wrongLocked || animating || inputMode !== "type") return;
+    var nextEmpty = blanks.indexOf(null);
+    if (nextEmpty === -1) return;
+    blanks[nextEmpty] = { ch: ch, tileId: null };
+    renderBlanks();
+  }
+
+  function backspace() {
+    if (wrongLocked || animating || inputMode !== "type") return;
+    for (var i = blanks.length - 1; i >= 0; i--) {
+      if (blanks[i]) {
+        blanks[i] = null;
+        renderBlanks();
+        return;
+      }
+    }
+  }
+
+  function setInputMode(mode) {
+    if (mode === inputMode) return;
+    inputMode = mode;
+    SpellDen.state.setInputMode(mode);
+    renderModeToggle();
+    // Start this word's entry afresh in the new mode; it isn't a miss.
+    if (currentWord && !wrongLocked && !animating) {
+      buildTray();
+      buildBlanks();
+    }
+  }
+
+  function renderModeToggle() {
+    els.modeTilesBtn.setAttribute("aria-pressed", String(inputMode === "tiles"));
+    els.modeTypeBtn.setAttribute("aria-pressed", String(inputMode === "type"));
+  }
+
+  function onPhysicalKey(e) {
+    if (els.playArea.hidden || !els.weekPickerModal.hidden) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (e.key === "Enter") {
+      if (!els.checkBtn.disabled) els.checkBtn.click();
+    } else if (inputMode === "type") {
+      if (e.key === "Backspace") {
+        e.preventDefault();
+        backspace();
+      } else if (/^[a-zA-Z]$/.test(e.key)) {
+        typeLetter(e.key.toLowerCase());
+      }
+    }
   }
 
   function renderBlanks() {
@@ -315,6 +412,8 @@ var SpellDen = window.SpellDen || {};
     els.progressDots = document.getElementById("progressDots");
     els.hearBtn = document.getElementById("hearBtn");
     els.hearSentenceBtn = document.getElementById("hearSentenceBtn");
+    els.modeTilesBtn = document.getElementById("modeTilesBtn");
+    els.modeTypeBtn = document.getElementById("modeTypeBtn");
     els.blanksRow = document.getElementById("blanksRow");
     els.letterTray = document.getElementById("letterTray");
     els.checkBtn = document.getElementById("checkBtn");
@@ -343,6 +442,12 @@ var SpellDen = window.SpellDen || {};
     els.hearBtn.addEventListener("click", function () {
       if (currentWord) SpellDen.speech.speak(currentWord);
     });
+
+    inputMode = SpellDen.state.getInputMode();
+    renderModeToggle();
+    els.modeTilesBtn.addEventListener("click", function () { setInputMode("tiles"); });
+    els.modeTypeBtn.addEventListener("click", function () { setInputMode("type"); });
+    document.addEventListener("keydown", onPhysicalKey);
 
     els.hearSentenceBtn.addEventListener("click", function () {
       if (currentWord) SpellDen.speech.speakSentence(currentWord);

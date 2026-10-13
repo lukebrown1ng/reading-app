@@ -255,6 +255,84 @@ html, body {
   pointer-events: none;
 }
 
+.letter-tray.keyboard {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.key-row {
+  display: flex;
+  justify-content: center;
+  gap: clamp(4px, 1.2vw, 8px);
+  width: 100%;
+}
+
+.key {
+  flex: 1 1 0;
+  max-width: 54px;
+  height: clamp(46px, 12vw, 58px);
+  border: none;
+  border-radius: 10px;
+  background: var(--tile-bg);
+  color: white;
+  font-family: inherit;
+  font-size: clamp(1.15rem, 4.8vw, 1.5rem);
+  font-weight: 700;
+  text-transform: lowercase;
+  cursor: pointer;
+  touch-action: manipulation;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.12);
+  padding: 0;
+}
+
+.key:nth-child(even) {
+  background: var(--tile-bg-2);
+}
+
+.key:active {
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
+}
+
+.key:disabled {
+  opacity: 0.45;
+}
+
+.key-back {
+  max-width: 76px;
+  flex-grow: 1.5;
+  background: #b9b3a9;
+}
+
+.mode-toggle {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 20px;
+  background: var(--accent-soft);
+}
+
+.mode-btn {
+  border: none;
+  background: transparent;
+  color: var(--ink);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 8px 16px;
+  border-radius: 16px;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.mode-btn[aria-pressed="true"] {
+  background: white;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
+}
+
 .check-btn {
   border: none;
   background: var(--tile-bg-2);

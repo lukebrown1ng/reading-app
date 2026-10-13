@@ -7,10 +7,9 @@
 // picked from the in-game week picker so past lists can still be
 // revisited for review.
 //
-// Weeks can also be added at runtime from the parent page (stored via
-// SpellDen.state.addCustomWeek), without touching this file at all —
-// SpellDen.getAllWeeks() below merges both sources, built-in weeks
-// first, so parent-added weeks are always the most recent.
+// Every word needs pre-generated audio, so new weeks are added here (plus
+// sentences.js) and rendered with scripts/generate-audio.js — see the
+// README. They can't be added from inside the app.
 var SpellDen = window.SpellDen || {};
 
 (function () {
@@ -69,13 +68,8 @@ var SpellDen = window.SpellDen || {};
     }
   ];
 
-  // Built-in weeks plus any parent-added ones, built-in first so
-  // newly-added weeks are always the most recent (see getLatestWeek).
   SpellDen.getAllWeeks = function () {
-    var custom = (SpellDen.state && SpellDen.state.getCustomWeeks)
-      ? SpellDen.state.getCustomWeeks()
-      : [];
-    return SpellDen.WEEKS.concat(custom);
+    return SpellDen.WEEKS;
   };
 
   SpellDen.getWeek = function (id) {

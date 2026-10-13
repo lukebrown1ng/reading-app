@@ -48,6 +48,9 @@ Needs Node 18+ (uses the built-in `fetch`). No `npm install`.
 
 ### Adding a new week
 
+Weeks can't be added from inside the app — every word needs generated audio,
+so new weeks go through the repo.
+
 1. Add the week to `WEEKS` in `spelling-den/js/weeks.js`.
 2. Add one simple sentence per word to `spelling-den/js/sentences.js`. Words
    without a sentence still get a word clip, and the script warns about them.
