@@ -39,13 +39,29 @@ function loadSpellDen() {
   return sandbox.SpellDen;
 }
 
-async function render(text, outFile) {
+// A word spoken on its own gets guessed at (e.g. "fare"), so word clips are
+// rendered with the words either side of it in its example sentence passed
+// as context. ElevenLabs only speaks `text`; previous_text/next_text just
+// steer the pronunciation.
+function contextFor(word, sentence) {
+  if (!sentence) return {};
+  var m = sentence.match(new RegExp("^(.*?)\\b" + word + "\\b(.*)$", "i"));
+  if (!m) return {};
+  var ctx = {};
+  if (m[1].trim()) ctx.previous_text = m[1].trim();
+  if (m[2].trim()) ctx.next_text = m[2].trim();
+  return ctx;
+}
+
+async function render(text, outFile, context) {
   var res = await fetch(
     "https://api.elevenlabs.io/v1/text-to-speech/" + VOICE_ID + "?output_format=mp3_44100_64",
     {
       method: "POST",
       headers: { "xi-api-key": process.env.ELEVENLABS_API_KEY, "Content-Type": "application/json" },
-      body: JSON.stringify({ text: text, model_id: MODEL, voice_settings: SETTINGS })
+      body: JSON.stringify(Object.assign(
+        { text: text, model_id: MODEL, voice_settings: SETTINGS }, context || {}
+      ))
     }
   );
   if (!res.ok) throw new Error(res.status + " " + (await res.text()));
@@ -75,11 +91,11 @@ async function main() {
     if (only.length && only.indexOf(word) === -1) continue;
     var sentence = SD.SENTENCES[word];
     if (!sentence) console.warn("No sentence for '" + word + "' — add one to js/sentences.js");
-    var jobs = [[word, path.join(ROOT, "audio", word + ".mp3")]];
+    var jobs = [[word, path.join(ROOT, "audio", word + ".mp3"), contextFor(word, sentence)]];
     if (sentence) jobs.push([sentence, path.join(ROOT, "audio", word + "-sentence.mp3")]);
     for (var j = 0; j < jobs.length; j++) {
       if (!force && fs.existsSync(jobs[j][1])) continue;
-      await render(jobs[j][0], jobs[j][1]);
+      await render(jobs[j][0], jobs[j][1], jobs[j][2]);
       made++;
       console.log("✓ " + path.basename(jobs[j][1]));
     }
