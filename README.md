@@ -78,7 +78,7 @@ The script prints a `✓ <file>` line for each clip it writes.
 
 ### How the app plays them
 
-`spelling-den/js/speech.js` reuses one `Audio` element for every clip. iOS
+As each new word starts, the game plays the word, then its sentence, then the word again (`speakIntro` in `spelling-den/js/speech.js`); the 🔊 button replays just the word. `speech.js` reuses one `Audio` element for every clip. iOS
 only allows audio to start without a tap if that element was played from a
 tap before, so the first touch anywhere on the page unlocks it with a silent
 sound; this is what lets the next word auto-play. If a clip is missing (for

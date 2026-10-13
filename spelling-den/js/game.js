@@ -65,7 +65,7 @@ var SpellDen = window.SpellDen || {};
     renderProgress();
 
     els.hearSentenceBtn.hidden = !SpellDen.speech.hasSentence(currentWord);
-    SpellDen.speech.speak(currentWord);
+    SpellDen.speech.speakIntro(currentWord);
   }
 
   function buildTray() {

@@ -77,7 +77,6 @@ var SpellDen = window.SpellDen || {};
   var player = new Audio();
   player.preload = "auto";
   var unlocked = false;
-  var fallbackText = null;
 
   function unlock() {
     if (unlocked) return;
@@ -94,36 +93,64 @@ var SpellDen = window.SpellDen || {};
     document.addEventListener(ev, unlock, true);
   });
 
-  player.addEventListener("error", function () {
-    if (fallbackText) {
-      var t = fallbackText;
-      fallbackText = null;
-      SpellDen.speech.speakWithDeviceVoice(t);
-    }
-  });
-  player.addEventListener("ended", function () { fallbackText = null; });
+  // Clips are played as a queue of { clip, text } steps, so a word can be
+  // followed by its sentence and then the word again. Each step plays the
+  // pre-made clip, or the device voice if the clip is missing / blocked.
+  // `token` changes whenever playback is stopped or restarted, which makes
+  // any callbacks from the previous queue do nothing.
+  var token = 0;
 
   function stopAll() {
+    token += 1;
     player.pause();
     if (supported) window.speechSynthesis.cancel();
   }
 
-  function playClip(clipName, text) {
+  function playSequence(steps) {
     stopAll();
-    fallbackText = text;
-    player.src = "audio/" + encodeURIComponent(clipName) + ".mp3";
-    var p = player.play();
-    if (p && p.catch) {
-      p.catch(function (e) {
-        // A missing clip fires "error" and is handled there; only blocked
-        // playback (NotAllowedError) lands here.
-        if (e && e.name === "NotAllowedError" && fallbackText) {
-          var t = fallbackText;
-          fallbackText = null;
-          SpellDen.speech.speakWithDeviceVoice(t);
-        }
-      });
+    var mine = token;
+    var i = 0;
+
+    function next() {
+      if (mine !== token || i >= steps.length) return;
+      var step = steps[i++];
+      var done = false;
+
+      function cleanup() {
+        done = true;
+        player.removeEventListener("ended", onEnded);
+        player.removeEventListener("error", fallBack);
+      }
+      function onEnded() {
+        if (done) return;
+        cleanup();
+        next();
+      }
+      function fallBack() {
+        if (done || mine !== token) return;
+        cleanup();
+        SpellDen.speech.speakWithDeviceVoice(step.text, next);
+      }
+
+      player.addEventListener("ended", onEnded);
+      player.addEventListener("error", fallBack);
+
+      player.src = "audio/" + encodeURIComponent(step.clip) + ".mp3";
+      var p = player.play();
+      if (p && p.catch) {
+        p.catch(function (e) {
+          // A missing clip fires "error" and is handled there; only blocked
+          // playback (NotAllowedError) lands here.
+          if (e && e.name === "NotAllowedError") fallBack();
+        });
+      }
     }
+
+    next();
+  }
+
+  function playClip(clipName, text) {
+    playSequence([{ clip: clipName, text: text }]);
   }
 
   SpellDen.speech = {
@@ -154,13 +181,26 @@ var SpellDen = window.SpellDen || {};
       if (sentence) playClip(word + "-sentence", sentence);
     },
 
+    // Word, then its sentence, then the word again — played automatically
+    // as each new word starts. Falls back to just the word if there's no
+    // sentence for it.
+    speakIntro: function (word) {
+      var sentence = SpellDen.SENTENCES && SpellDen.SENTENCES[word];
+      var steps = [{ clip: word, text: word }];
+      if (sentence) {
+        steps.push({ clip: word + "-sentence", text: sentence });
+        steps.push({ clip: word, text: word });
+      }
+      playSequence(steps);
+    },
+
     hasSentence: function (word) {
       return !!(SpellDen.SENTENCES && SpellDen.SENTENCES[word]);
     },
 
     // Slightly slower than Word Den's prompt voice — spelling needs every
     // sound to land clearly, not just be recognisable.
-    speakWithDeviceVoice: function (word) {
+    speakWithDeviceVoice: function (word, onDone) {
       if (!supported) return;
       try {
         window.speechSynthesis.cancel();
@@ -174,6 +214,10 @@ var SpellDen = window.SpellDen || {};
         }
         utterance.rate = 0.75;
         utterance.pitch = 1.05;
+        if (onDone) {
+          utterance.onend = onDone;
+          utterance.onerror = onDone;
+        }
         window.speechSynthesis.speak(utterance);
       } catch (e) {
         // Speech unavailable — the game still works, just harder without
