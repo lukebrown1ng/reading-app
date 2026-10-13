@@ -244,7 +244,10 @@ var SpellDen = window.SpellDen || {};
       firstTryCount + " out of " + results.length + " spelled right first time!";
 
     var correctWords = results.filter(function (r) {
-      return r.status === "first" || r.status === "retry";
+      return r.status === "first";
+    }).map(function (r) { return r.word; });
+    var retryWords = results.filter(function (r) {
+      return r.status === "retry";
     }).map(function (r) { return r.word; });
     var practiceWords = results.filter(function (r) {
       return r.status === "skipped";
@@ -252,6 +255,9 @@ var SpellDen = window.SpellDen || {};
 
     renderResultList(els.correctWordList, correctWords);
     els.correctWordsBlock.hidden = correctWords.length === 0;
+
+    renderResultList(els.retryWordList, retryWords);
+    els.retryWordsBlock.hidden = retryWords.length === 0;
 
     renderResultList(els.practiceWordList, practiceWords);
     els.practiceWordsBlock.hidden = practiceWords.length === 0;
@@ -323,6 +329,8 @@ var SpellDen = window.SpellDen || {};
     els.playAgainBtn = document.getElementById("playAgainBtn");
     els.correctWordsBlock = document.getElementById("correctWordsBlock");
     els.correctWordList = document.getElementById("correctWordList");
+    els.retryWordsBlock = document.getElementById("retryWordsBlock");
+    els.retryWordList = document.getElementById("retryWordList");
     els.practiceWordsBlock = document.getElementById("practiceWordsBlock");
     els.practiceWordList = document.getElementById("practiceWordList");
 
