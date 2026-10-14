@@ -11,6 +11,10 @@ var WordDen = window.WordDen || {};
   var correctInSession = 0;
   var currentStreak = 0; // resets to 0 on any miss
   var STEPS_PER_LAP = 8;
+  var MAX_MISSES = 4; // wrong answers allowed before the game ends
+  var missesThisGame = 0;
+  var correctThisGame = 0;
+  var bestStreakThisGame = 0;
   var animating = false;
   var toastQueue = [];
   var toastShowing = false;
@@ -145,6 +149,8 @@ var WordDen = window.WordDen || {};
       advanceProgress();
 
       currentStreak += 1;
+      correctThisGame += 1;
+      if (currentStreak > bestStreakThisGame) bestStreakThisGame = currentStreak;
       WordDen.state.recordStreak(currentStreak);
       renderStreakIndicator();
 
@@ -163,6 +169,8 @@ var WordDen = window.WordDen || {};
       WordDen.state.recordMiss(currentTarget);
       currentStreak = 0;
       renderStreakIndicator();
+      missesThisGame += 1;
+      renderLives();
       var already = retryQueue.some(function (e) {
         return e.word.toLowerCase() === currentTarget.toLowerCase();
       });
@@ -176,8 +184,49 @@ var WordDen = window.WordDen || {};
 
     setTimeout(function () {
       animating = false;
-      renderRound();
+      if (missesThisGame >= MAX_MISSES) {
+        showGameOver();
+      } else {
+        renderRound();
+      }
     }, isCorrect ? 650 : 450);
+  }
+
+  // --- Lives / game over ----------------------------------------------
+
+  function renderLives() {
+    els.lives.innerHTML = "";
+    for (var i = 0; i < MAX_MISSES; i++) {
+      var heart = document.createElement("span");
+      heart.className = "life" + (i < MAX_MISSES - missesThisGame ? "" : " life-lost");
+      heart.textContent = i < MAX_MISSES - missesThisGame ? "❤️" : "🤍";
+      els.lives.appendChild(heart);
+    }
+    els.lives.setAttribute("aria-label",
+      (MAX_MISSES - missesThisGame) + " of " + MAX_MISSES + " lives left");
+  }
+
+  function showGameOver() {
+    els.gameOverScore.textContent = correctThisGame === 1
+      ? "You got 1 word right"
+      : "You got " + correctThisGame + " words right";
+    els.gameOverStreak.textContent = "🔥 Best streak this game: " + bestStreakThisGame + " in a row";
+    els.gameOverModal.hidden = false;
+  }
+
+  function startNewGame() {
+    els.gameOverModal.hidden = true;
+    missesThisGame = 0;
+    correctThisGame = 0;
+    bestStreakThisGame = 0;
+    currentStreak = 0;
+    correctInSession = 0;
+    retryQueue = [];
+    lastTarget = null;
+    els.dino.style.left = "0%";
+    renderLives();
+    renderStreakIndicator();
+    renderRound();
   }
 
   function advanceProgress() {
@@ -331,6 +380,12 @@ var WordDen = window.WordDen || {};
     els.modalSolidCount = document.getElementById("modalSolidCount");
     els.modalBadgeGrid = document.getElementById("modalBadgeGrid");
     els.modalCloseBtn = document.getElementById("modalCloseBtn");
+    els.lives = document.getElementById("lives");
+    els.gameOverModal = document.getElementById("gameOverModal");
+    els.gameOverScore = document.getElementById("gameOverScore");
+    els.gameOverStreak = document.getElementById("gameOverStreak");
+    els.restartBtn = document.getElementById("restartBtn");
+    els.restartBtn.addEventListener("click", startNewGame);
 
     els.audioToggle.checked = WordDen.state.getAudioMode();
     els.audioToggle.addEventListener("change", function () {
@@ -363,6 +418,7 @@ var WordDen = window.WordDen || {};
 
     renderLevelUI();
     WordDen.state.evaluateBadges(0).forEach(queueBadgeToast);
+    renderLives();
     renderRound();
   }
 

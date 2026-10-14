@@ -26,6 +26,8 @@
     <div class="xp-bar-track"><div id="xpBarFill" class="xp-bar-fill"></div></div>
 
     <main class="game-area">
+      <div id="lives" class="lives" aria-label="Lives left"></div>
+
       <div id="streakFlame" class="streak-flame" hidden>🔥 <span id="streakCount">0</span> in a row!</div>
 
       <div id="promptCard" class="prompt-card">
@@ -64,6 +66,16 @@
   <div id="badgeToast" class="badge-toast" hidden>
     <span id="badgeToastIcon" class="badge-toast-icon">🏆</span>
     <span class="badge-toast-text">New badge: <strong id="badgeToastName"></strong></span>
+  </div>
+
+  <div id="gameOverModal" class="progress-modal" hidden>
+    <div class="progress-modal-card">
+      <div class="modal-emoji">🦕💤</div>
+      <div class="modal-title">Game over!</div>
+      <div id="gameOverScore" class="game-over-score"></div>
+      <div id="gameOverStreak" class="modal-stat"></div>
+      <button id="restartBtn" class="restart-btn" type="button">Play again</button>
+    </div>
   </div>
 
   <div id="progressModal" class="progress-modal" hidden>

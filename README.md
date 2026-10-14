@@ -6,6 +6,15 @@ step — serve the folder with any static server
 (e.g. `python3 -m http.server`) and open `index.html`. See `PLAN.md` for the
 build log.
 
+## Word Den game over
+
+Word Den gives four lives (❤️ shown above the word). Each wrong answer costs
+one; on the fourth the game ends with a "Game over!" screen showing how many
+words were right and the best streak that game, and "Play again" starts a fresh
+game (lives, the dino's progress along the path and the retry queue all reset).
+Levels, XP, badges and the daily streak carry on across games. The limit is
+`MAX_MISSES` at the top of `word-den/js/game.js`.
+
 ## Spelling history
 
 Each finished Spelling Den round is logged (date and time, week, score as
