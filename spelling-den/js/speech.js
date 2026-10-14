@@ -99,7 +99,7 @@ var SpellDen = window.SpellDen || {};
   // `token` changes whenever playback is stopped or restarted, which makes
   // any callbacks from the previous queue do nothing.
   var token = 0;
-  var GAP_MS = 800; // pause between the word, the sentence and the word again
+  var GAP_MS = 600; // pause between the word, the sentence and the word again
 
   function stopAll() {
     token += 1;

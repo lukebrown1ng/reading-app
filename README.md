@@ -108,7 +108,7 @@ As each new word starts, the game plays the word, then its sentence, then the wo
 only allows audio to start without a tap if that element was played from a
 tap before, so the first touch anywhere on the page unlocks it with a silent
 sound; this is what lets the next word auto-play. The pause between the word,
-the sentence and the word again is `GAP_MS` (800 ms) near the top of the
+the sentence and the word again is `GAP_MS` (600 ms) near the top of the
 sequence code in `speech.js`. If a clip is missing (for
 example a week added from the parent page, which has no generated audio) or
 playback is blocked, it falls back to the device voice, and the "Hear it in a
