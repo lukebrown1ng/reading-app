@@ -24,7 +24,8 @@ var ROOT = path.join(__dirname, "..");
 // gives the words either side of it (spoken by nobody, used only to steer
 // the pronunciation). Add a word here if its clip sounds wrong, then re-run
 // with --force <word>. Keys are lowercase.
-var SAY = { mr: "Mister", mrs: "Missus" };
+// "am." (with the full stop) is spoken at a natural length rather than clipped.
+var SAY = { mr: "Mister", mrs: "Missus", am: "am." };
 
 var CONTEXT = {
   a: ["I saw", "dog in the park."],
@@ -36,7 +37,7 @@ var CONTEXT = {
   of: ["A cup", "tea."],
   an: ["I ate", "apple."],
   as: ["He ran", "fast as he could."],
-  am: ["I", "very happy."],
+  am: ["Yes, I", ""],
   us: ["Come with", "to the park."],
   or: ["Tea", "coffee?"],
   oh: ["", "no!"],
