@@ -338,6 +338,13 @@ var SpellDen = window.SpellDen || {};
     els.playArea.hidden = true;
     els.roundComplete.hidden = false;
 
+    SpellDen.state.addRound({
+      weekId: currentWeek.id,
+      weekLabel: currentWeek.label,
+      mode: inputMode,
+      results: results
+    });
+
     var firstTryCount = results.filter(function (r) { return r.status === "first"; }).length;
     els.roundCompleteScore.textContent =
       firstTryCount + " out of " + results.length + " spelled right first time!";

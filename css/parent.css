@@ -372,3 +372,54 @@ body.parent-body {
   opacity: 0.75;
   line-height: 1.2;
 }
+
+.round-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 26px;
+}
+
+.round-row {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+}
+
+.round-row summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.round-row summary::-webkit-details-marker {
+  display: none;
+}
+
+.round-score {
+  font-size: 1.3rem;
+  font-weight: 800;
+  min-width: 3.4em;
+}
+
+.round-meta strong {
+  display: block;
+}
+
+.round-meta span {
+  font-size: 0.78rem;
+  opacity: 0.7;
+}
+
+.round-words {
+  margin-top: 10px;
+}
+
+.round-key {
+  margin-top: 8px;
+  font-size: 0.72rem;
+  opacity: 0.6;
+}

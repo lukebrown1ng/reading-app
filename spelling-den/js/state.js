@@ -30,12 +30,13 @@ var SpellDen = window.SpellDen || {};
     }
     cached = parsed || {
       words: {}, sessions: [], activeWeekId: null, voiceName: null,
-      inputMode: "tiles"
+      inputMode: "tiles", rounds: []
     };
     if (!cached.words) cached.words = {};
     if (!cached.sessions) cached.sessions = [];
     if (typeof cached.activeWeekId !== "string") cached.activeWeekId = null;
     if (typeof cached.voiceName !== "string") cached.voiceName = null;
+    if (!Array.isArray(cached.rounds)) cached.rounds = [];
     if (cached.inputMode !== "type") cached.inputMode = "tiles";
     return cached;
   }
@@ -139,6 +140,31 @@ var SpellDen = window.SpellDen || {};
 
     getSessions: function () {
       return load().sessions.slice();
+    },
+
+    // History of completed rounds, oldest first — never trimmed, so the
+    // parent can look back at every attempt. `round` is
+    // { weekId, weekLabel, mode, results: [{ word, status }] } where status
+    // is "first" | "retry" | "skipped"; the score is the number of "first".
+    addRound: function (round) {
+      var state = load();
+      var results = round.results.map(function (r) {
+        return { word: r.word, status: r.status };
+      });
+      state.rounds.push({
+        at: Date.now(),
+        weekId: round.weekId,
+        weekLabel: round.weekLabel,
+        mode: round.mode,
+        total: results.length,
+        firstTry: results.filter(function (r) { return r.status === "first"; }).length,
+        results: results
+      });
+      save();
+    },
+
+    getRounds: function () {
+      return load().rounds.slice();
     },
 
     // How the child enters letters: "tiles" (tap jumbled letters) or

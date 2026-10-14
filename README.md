@@ -6,6 +6,14 @@ step — serve the folder with any static server
 (e.g. `python3 -m http.server`) and open `index.html`. See `PLAN.md` for the
 build log.
 
+## Spelling history
+
+Each finished Spelling Den round is logged (date and time, week, score as
+words right first time out of the total, per-word result, tiles or typed) and
+shown newest first under "Spelling history" on the parent page. It is stored
+in the browser's localStorage on that device — not synced between devices, and
+lost if the browser's site data is cleared.
+
 ## Spelling Den audio (ElevenLabs)
 
 Spelling Den plays pre-recorded clips instead of the device's text-to-speech

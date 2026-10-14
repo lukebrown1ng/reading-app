@@ -312,6 +312,50 @@
     return "shaky";
   }
 
+  function renderSpellingRounds() {
+    var list = document.getElementById("spellingRoundList");
+    list.innerHTML = "";
+    var rounds = SpellDen.state.getRounds().reverse();
+    if (rounds.length === 0) {
+      list.textContent = "No finished rounds yet.";
+      return;
+    }
+    var labels = { first: "first time", retry: "after a retry", skipped: "got wrong" };
+    rounds.forEach(function (round) {
+      var d = new Date(round.at);
+      var details = document.createElement("details");
+      details.className = "round-row";
+
+      var summary = document.createElement("summary");
+      var when = d.toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" }) +
+        ", " + d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+      summary.innerHTML =
+        '<span class="round-score">' + round.firstTry + " / " + round.total + "</span>" +
+        '<span class="round-meta"><strong>' + round.weekLabel + "</strong>" +
+        "<span>" + when + (round.mode === "type" ? " · typed" : "") + "</span></span>";
+      details.appendChild(summary);
+
+      var row = document.createElement("div");
+      row.className = "cluster-row round-words";
+      round.results.forEach(function (r) {
+        var chip = document.createElement("span");
+        chip.className = "word-chip " + (r.status === "first" ? "status-solid" :
+          r.status === "retry" ? "status-learning" : "status-shaky");
+        chip.textContent = r.word;
+        chip.title = labels[r.status];
+        row.appendChild(chip);
+      });
+      details.appendChild(row);
+
+      var key = document.createElement("div");
+      key.className = "round-key";
+      key.textContent = "Green: right first time · Yellow: after a retry · Red: got wrong";
+      details.appendChild(key);
+
+      list.appendChild(details);
+    });
+  }
+
   function renderSpellingWeeks() {
     var list = document.getElementById("spellingWeekList");
     list.innerHTML = "";
@@ -409,6 +453,7 @@
     renderStumbles();
     renderSpellingSessions();
     renderSpellingVoicePicker();
+    renderSpellingRounds();
     renderSpellingWeeks();
   }
 
