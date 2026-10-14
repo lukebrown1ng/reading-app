@@ -186,7 +186,7 @@ var SpellDen = window.SpellDen || {};
   }
 
   function onPhysicalKey(e) {
-    if (els.playArea.hidden || !els.weekPickerModal.hidden || !els.historyModal.hidden) return;
+    if (!els.roundComplete.hidden || !els.weekPickerModal.hidden || !els.historyModal.hidden) return;
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     if (e.key === "Enter") {
       if (!els.checkBtn.disabled) els.checkBtn.click();
@@ -343,7 +343,6 @@ var SpellDen = window.SpellDen || {};
   // --- Round complete ---------------------------------------------------
 
   function showRoundComplete() {
-    els.playArea.hidden = true;
     els.roundComplete.hidden = false;
 
     SpellDen.state.addRound({
