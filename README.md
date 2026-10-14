@@ -15,6 +15,19 @@ kids via the 🏆 "My scores" button at the top of Spelling Den. It is stored
 in the browser's localStorage on that device — not synced between devices, and
 lost if the browser's site data is cleared.
 
+## Spelling Den levels, streak and badges
+
+Spelling Den has the same progress system as Word Den, kept separately in its
+own saved data: a level pill and XP bar at the top (tap it for the stats
+popup), a 🔥 "N in a row" flame once you've spelled 3 words right first time in
+a row, a daily play streak, a best streak, a count of words that are "rock
+solid" (seen and never missed), level-up celebrations and badges. Right first
+time earns 10 XP plus a growing streak bonus (up to +20); right after a retry
+earns 5 XP and breaks the streak; a skipped word earns nothing and breaks it.
+Levels and badges are defined in `spelling-den/js/levels.js`, the saving is in
+`spelling-den/js/state.js` and the celebrations are in `spelling-den/js/game.js`.
+Like the history, it only lives in that browser on that device.
+
 ## Spelling Den audio (ElevenLabs)
 
 Spelling Den plays pre-recorded clips instead of the device's text-to-speech
@@ -90,7 +103,9 @@ The script prints a `✓ <file>` line for each clip it writes.
 As each new word starts, the game plays the word, then its sentence, then the word again (`speakIntro` in `spelling-den/js/speech.js`); the 🔊 button replays just the word. `speech.js` reuses one `Audio` element for every clip. iOS
 only allows audio to start without a tap if that element was played from a
 tap before, so the first touch anywhere on the page unlocks it with a silent
-sound; this is what lets the next word auto-play. If a clip is missing (for
+sound; this is what lets the next word auto-play. The pause between the word,
+the sentence and the word again is `GAP_MS` (800 ms) near the top of the
+sequence code in `speech.js`. If a clip is missing (for
 example a week added from the parent page, which has no generated audio) or
 playback is blocked, it falls back to the device voice, and the "Hear it in a
 sentence" button is hidden for words with no sentence.
@@ -115,6 +130,28 @@ change what's spoken or give the words either side of it as pronunciation
 context; add an entry there and `--force` the word if a clip sounds off. Words
 with no clip fall back to the device voice. The ElevenLabs call itself lives in
 `scripts/elevenlabs.js`, shared by both generators.
+
+### A clip sounds wrong — how to fix it
+
+Both generators work the same way, so the fix is too. You can't hear the clips
+from the code, so listen to any new ones (`open <mode>/audio/<name>.mp3`).
+
+1. **Spelling Den (word or sentence):** the sentence in
+   `spelling-den/js/sentences.js` is also the pronunciation context for the
+   word clip. Reword it so the meaning is obvious (for example "The bus fare was
+   two pounds" fixed "fare"), then run
+   `node spelling-den/scripts/generate-audio.js --force <word>`. This redoes
+   both the word and sentence clips for that word.
+2. **Word Den (short or ambiguous words, e.g. "a", "to", "Mr"):** add or edit an
+   entry for the word in `SAY` (change the text spoken, like "Mister" for "Mr")
+   or `CONTEXT` (the words either side, used only to steer the pronunciation)
+   at the top of `word-den/scripts/generate-audio.js`, then run
+   `node word-den/scripts/generate-audio.js --force <word>`.
+3. Listen again, then commit the new `.mp3` and the edited file.
+
+Each redo of a clip uses ElevenLabs characters (a single word is only a few),
+and the free tier is about 10,000 a month, so redo clips one word at a time
+rather than running `--force` with no word.
 
 ### Gotchas
 

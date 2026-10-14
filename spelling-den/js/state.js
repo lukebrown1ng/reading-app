@@ -30,13 +30,21 @@ var SpellDen = window.SpellDen || {};
     }
     cached = parsed || {
       words: {}, sessions: [], activeWeekId: null, voiceName: null,
-      inputMode: "tiles", rounds: []
+      inputMode: "tiles", rounds: [],
+      xp: 0, totalCorrect: 0, bestStreak: 0,
+      dailyStreak: { current: 0, best: 0, lastPlayDate: null },
+      badges: {}
     };
     if (!cached.words) cached.words = {};
     if (!cached.sessions) cached.sessions = [];
     if (typeof cached.activeWeekId !== "string") cached.activeWeekId = null;
     if (typeof cached.voiceName !== "string") cached.voiceName = null;
     if (!Array.isArray(cached.rounds)) cached.rounds = [];
+    if (typeof cached.xp !== "number") cached.xp = 0;
+    if (typeof cached.totalCorrect !== "number") cached.totalCorrect = 0;
+    if (typeof cached.bestStreak !== "number") cached.bestStreak = 0;
+    if (!cached.dailyStreak) cached.dailyStreak = { current: 0, best: 0, lastPlayDate: null };
+    if (!cached.badges) cached.badges = {};
     if (cached.inputMode !== "type") cached.inputMode = "tiles";
     return cached;
   }
@@ -48,6 +56,10 @@ var SpellDen = window.SpellDen || {};
       // Storage unavailable (private mode, quota, etc.) — fail silently,
       // the game still works within the session.
     }
+  }
+
+  function dateStr(d) {
+    return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
   }
 
   function wordKey(word) {
@@ -93,6 +105,7 @@ var SpellDen = window.SpellDen || {};
     recordCorrect: function (word, firstTry) {
       var record = getWordRecordRaw(word);
       record.seen += 1;
+      load().totalCorrect += 1;
       if (firstTry) record.correctFirstTry += 1;
       record.lastSeen = Date.now();
       save();
@@ -165,6 +178,109 @@ var SpellDen = window.SpellDen || {};
 
     getRounds: function () {
       return load().rounds.slice();
+    },
+
+    // --- Levels & gamification -------------------------------------
+    // Same shape as Word Den's: XP and levels, best in-a-row streak, a
+    // daily play streak, and badges.
+
+    getLevelInfo: function () {
+      return SpellDen.levels.levelInfoForXp(load().xp);
+    },
+
+    // Adds XP and reports whether that pushed the level up, so the caller
+    // can show a level-up celebration.
+    addXP: function (amount) {
+      var state = load();
+      var before = SpellDen.levels.levelInfoForXp(state.xp);
+      state.xp += amount;
+      var after = SpellDen.levels.levelInfoForXp(state.xp);
+      save();
+      return { gained: amount, xp: state.xp, before: before, after: after, leveledUp: after.level > before.level };
+    },
+
+    getBestStreak: function () {
+      return load().bestStreak;
+    },
+
+    // The current right-first-time-in-a-row streak is tracked by the
+    // caller; this remembers the personal best across all rounds.
+    recordStreak: function (current) {
+      var state = load();
+      if (current > state.bestStreak) {
+        state.bestStreak = current;
+        save();
+      }
+    },
+
+    // Call once per app-open. Bumps the day streak if today is a new day
+    // (consecutive to yesterday keeps it going, any bigger gap resets it).
+    touchDailyStreak: function () {
+      var state = load();
+      var ds = state.dailyStreak;
+      var today = dateStr(new Date());
+      if (ds.lastPlayDate !== today) {
+        var yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        ds.current = ds.lastPlayDate === dateStr(yesterday) ? ds.current + 1 : 1;
+        ds.lastPlayDate = today;
+        if (ds.current > ds.best) ds.best = ds.current;
+        save();
+      }
+      return { current: ds.current, best: ds.best };
+    },
+
+    getDailyStreak: function () {
+      var ds = load().dailyStreak;
+      return { current: ds.current, best: ds.best };
+    },
+
+    getBadges: function () {
+      var copy = {};
+      var badges = load().badges;
+      for (var id in badges) {
+        if (badges.hasOwnProperty(id)) copy[id] = badges[id];
+      }
+      return copy;
+    },
+
+    // A word is "solid" once it's been seen and never missed.
+    isWordSolid: function (word) {
+      var r = getWordRecordRaw(word);
+      return r.seen > 0 && r.misses === 0;
+    },
+
+    // Checks every badge condition and unlocks any newly earned ones,
+    // returning their ids (empty if none) for the caller to celebrate.
+    // `allWords` is every word across all weeks; `perfectRound` is true
+    // when a round has just finished with every word right first time.
+    evaluateBadges: function (sessionStreak, allWords, perfectRound) {
+      var state = load();
+      var newly = [];
+
+      function tryUnlock(id, earned) {
+        if (earned && !state.badges[id]) {
+          state.badges[id] = Date.now();
+          newly.push(id);
+        }
+      }
+
+      var solidCount = allWords.filter(function (w) {
+        return SpellDen.state.isWordSolid(w);
+      }).length;
+
+      tryUnlock("first-correct", state.totalCorrect >= 1);
+      tryUnlock("streak-5", sessionStreak >= 5);
+      tryUnlock("streak-10", sessionStreak >= 10);
+      tryUnlock("perfect-round", !!perfectRound);
+      tryUnlock("solid-10", solidCount >= 10);
+      tryUnlock("solid-25", solidCount >= 25);
+      tryUnlock("solid-all", allWords.length > 0 && solidCount >= allWords.length);
+      tryUnlock("daily-3", state.dailyStreak.current >= 3);
+      tryUnlock("daily-7", state.dailyStreak.current >= 7);
+
+      if (newly.length) save();
+      return newly;
     },
 
     // How the child enters letters: "tiles" (tap jumbled letters) or

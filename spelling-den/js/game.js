@@ -21,6 +21,10 @@ var SpellDen = window.SpellDen || {};
   var inputMode = "tiles"; // "tiles" (tap jumbled letters) or "type" (on-screen keyboard)
   var KEY_ROWS = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
 
+  var currentStreak = 0; // words right first time in a row; any miss resets it
+  var toastQueue = [];
+  var toastShowing = false;
+
   var currentWord = "";
   var tray = []; // [{ ch, id, used }]
   var blanks = []; // [{ ch, tileId } | null] per letter position
@@ -46,6 +50,8 @@ var SpellDen = window.SpellDen || {};
     order = shuffle(currentWeek.words.map(function (_, i) { return i; }));
     wordIndex = 0;
     results = [];
+    currentStreak = 0;
+    renderStreakIndicator();
     renderWeekPill();
     els.roundComplete.hidden = true;
     els.playArea.hidden = false;
@@ -178,7 +184,7 @@ var SpellDen = window.SpellDen || {};
   }
 
   function onPhysicalKey(e) {
-    if (els.playArea.hidden || !els.weekPickerModal.hidden || !els.historyModal.hidden) return;
+    if (els.playArea.hidden || !els.weekPickerModal.hidden || !els.historyModal.hidden || !els.progressModal.hidden) return;
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     if (e.key === "Enter") {
       if (!els.checkBtn.disabled) els.checkBtn.click();
@@ -282,6 +288,7 @@ var SpellDen = window.SpellDen || {};
     SpellDen.state.recordCorrect(currentWord, !missedThisWord);
     results.push({ word: currentWord, status: missedThisWord ? "retry" : "first" });
     renderProgress();
+    awardProgress(!missedThisWord);
 
     els.blanksRow.classList.add("blanks-correct");
 
@@ -296,6 +303,8 @@ var SpellDen = window.SpellDen || {};
     animating = false;
     missedThisWord = true;
     SpellDen.state.recordMiss(currentWord);
+    currentStreak = 0;
+    renderStreakIndicator();
 
     els.blanksRow.classList.add("blanks-wrong");
     els.correctSpellingWord.textContent = currentWord;
@@ -332,11 +341,151 @@ var SpellDen = window.SpellDen || {};
     }
   }
 
+  // --- Levels, streak and badges ------------------------------------------
+
+  function allWords() {
+    var seen = {};
+    var words = [];
+    SpellDen.getAllWeeks().forEach(function (week) {
+      week.words.forEach(function (w) {
+        if (!seen[w]) {
+          seen[w] = true;
+          words.push(w);
+        }
+      });
+    });
+    return words;
+  }
+
+  // Called when a word is finally spelled right. Right first time extends
+  // the streak (with a growing XP bonus); right after a retry still earns
+  // some XP but doesn't count towards the streak.
+  function awardProgress(firstTry, perfectRound) {
+    var xpGain = 5;
+    if (firstTry) {
+      currentStreak += 1;
+      SpellDen.state.recordStreak(currentStreak);
+      xpGain = 10 + Math.min(currentStreak - 1, 10) * 2;
+    }
+    renderStreakIndicator();
+    var xpResult = SpellDen.state.addXP(xpGain);
+    renderLevelUI();
+    if (xpResult.leveledUp) showLevelUp(xpResult.after);
+    SpellDen.state.evaluateBadges(currentStreak, allWords(), false).forEach(queueBadgeToast);
+  }
+
+  function renderLevelUI() {
+    var info = SpellDen.state.getLevelInfo();
+    els.levelEmoji.textContent = info.emoji;
+    els.levelNum.textContent = "Lv " + info.level;
+    els.xpBarFill.style.width = info.progressPct + "%";
+  }
+
+  function renderStreakIndicator() {
+    if (currentStreak >= 3) {
+      els.streakFlame.hidden = false;
+      els.streakCount.textContent = currentStreak;
+    } else {
+      els.streakFlame.hidden = true;
+    }
+  }
+
+  function showLevelUp(info) {
+    els.levelUpEmoji.textContent = info.emoji;
+    els.levelUpTitle.textContent = info.title;
+    els.levelUpNum.textContent = "Level " + info.level + "!";
+    els.levelUpOverlay.hidden = false;
+    els.levelUpOverlay.classList.add("show");
+    setTimeout(function () {
+      els.levelUpOverlay.classList.remove("show");
+      setTimeout(function () {
+        els.levelUpOverlay.hidden = true;
+      }, 300);
+    }, 2200);
+  }
+
+  function queueBadgeToast(badgeId) {
+    var badge = SpellDen.BADGES.filter(function (b) {
+      return b.id === badgeId;
+    })[0];
+    if (!badge) return;
+    toastQueue.push(badge);
+    if (!toastShowing) showNextToast();
+  }
+
+  function showNextToast() {
+    var badge = toastQueue.shift();
+    if (!badge) {
+      toastShowing = false;
+      return;
+    }
+    toastShowing = true;
+    els.badgeToastIcon.textContent = badge.icon;
+    els.badgeToastName.textContent = badge.name;
+    els.badgeToast.hidden = false;
+    els.badgeToast.classList.add("show");
+    setTimeout(function () {
+      els.badgeToast.classList.remove("show");
+      setTimeout(function () {
+        els.badgeToast.hidden = true;
+        showNextToast();
+      }, 300);
+    }, 2400);
+  }
+
+  function renderProgressModal() {
+    var info = SpellDen.state.getLevelInfo();
+    els.modalEmoji.textContent = info.emoji;
+    els.modalTitle.textContent = info.title;
+    els.modalLevelNum.textContent = "Level " + info.level;
+    els.modalXpFill.style.width = info.progressPct + "%";
+    els.modalXpLabel.textContent = info.xpIntoLevel + " / " + info.xpForNextLevel + " XP to next level";
+
+    var daily = SpellDen.state.getDailyStreak();
+    els.modalDailyStreak.textContent = daily.current === 1
+      ? "📅 1 day so far — come back tomorrow!"
+      : "📅 " + daily.current + " days in a row (best: " + daily.best + ")";
+
+    els.modalBestStreak.textContent =
+      "🔥 Best streak: " + SpellDen.state.getBestStreak() + " in a row";
+
+    var words = allWords();
+    var solidCount = words.filter(function (w) {
+      return SpellDen.state.isWordSolid(w);
+    }).length;
+    els.modalSolidCount.textContent = "📚 " + solidCount + " / " + words.length + " words rock solid";
+
+    var earned = SpellDen.state.getBadges();
+    els.modalBadgeGrid.innerHTML = "";
+    SpellDen.BADGES.forEach(function (badge) {
+      var unlocked = !!earned[badge.id];
+      var card = document.createElement("div");
+      card.className = "badge-card" + (unlocked ? " badge-unlocked" : " badge-locked");
+      card.innerHTML =
+        '<div class="badge-icon">' + (unlocked ? badge.icon : "🔒") + "</div>" +
+        '<div class="badge-name">' + badge.name + "</div>" +
+        '<div class="badge-desc">' + badge.desc + "</div>";
+      els.modalBadgeGrid.appendChild(card);
+    });
+  }
+
+  function openProgressModal() {
+    renderProgressModal();
+    els.progressModal.hidden = false;
+  }
+
+  function closeProgressModal() {
+    els.progressModal.hidden = true;
+  }
+
   // --- Round complete ---------------------------------------------------
 
   function showRoundComplete() {
     els.playArea.hidden = true;
     els.roundComplete.hidden = false;
+
+    var perfect = results.length > 0 && results.every(function (r) { return r.status === "first"; });
+    SpellDen.state.evaluateBadges(currentStreak, allWords(), perfect).forEach(queueBadgeToast);
 
     SpellDen.state.addRound({
       weekId: currentWeek.id,
@@ -462,6 +611,30 @@ var SpellDen = window.SpellDen || {};
   // --- Init ---------------------------------------------------------------
 
   function init() {
+    els.levelPill = document.getElementById("levelPill");
+    els.levelEmoji = document.getElementById("levelEmoji");
+    els.levelNum = document.getElementById("levelNum");
+    els.xpBarFill = document.getElementById("xpBarFill");
+    els.streakFlame = document.getElementById("streakFlame");
+    els.streakCount = document.getElementById("streakCount");
+    els.levelUpOverlay = document.getElementById("levelUpOverlay");
+    els.levelUpEmoji = document.getElementById("levelUpEmoji");
+    els.levelUpTitle = document.getElementById("levelUpTitle");
+    els.levelUpNum = document.getElementById("levelUpNum");
+    els.badgeToast = document.getElementById("badgeToast");
+    els.badgeToastIcon = document.getElementById("badgeToastIcon");
+    els.badgeToastName = document.getElementById("badgeToastName");
+    els.progressModal = document.getElementById("progressModal");
+    els.modalCloseBtn = document.getElementById("modalCloseBtn");
+    els.modalEmoji = document.getElementById("modalEmoji");
+    els.modalTitle = document.getElementById("modalTitle");
+    els.modalLevelNum = document.getElementById("modalLevelNum");
+    els.modalXpFill = document.getElementById("modalXpFill");
+    els.modalXpLabel = document.getElementById("modalXpLabel");
+    els.modalDailyStreak = document.getElementById("modalDailyStreak");
+    els.modalBestStreak = document.getElementById("modalBestStreak");
+    els.modalSolidCount = document.getElementById("modalSolidCount");
+    els.modalBadgeGrid = document.getElementById("modalBadgeGrid");
     els.historyBtn = document.getElementById("historyBtn");
     els.historyModal = document.getElementById("historyModal");
     els.historyList = document.getElementById("historyList");
@@ -500,6 +673,11 @@ var SpellDen = window.SpellDen || {};
     els.practiceWordsBlock = document.getElementById("practiceWordsBlock");
     els.practiceWordList = document.getElementById("practiceWordList");
 
+    els.levelPill.addEventListener("click", openProgressModal);
+    els.modalCloseBtn.addEventListener("click", closeProgressModal);
+    els.progressModal.addEventListener("click", function (e) {
+      if (e.target === els.progressModal) closeProgressModal();
+    });
     els.historyBtn.addEventListener("click", openHistory);
     els.historyCloseBtn.addEventListener("click", closeHistory);
     els.historyModal.addEventListener("click", function (e) {
@@ -538,6 +716,9 @@ var SpellDen = window.SpellDen || {};
     els.playAgainBtn.addEventListener("click", function () {
       loadWeek(currentWeek.id);
     });
+
+    SpellDen.state.touchDailyStreak();
+    renderLevelUI();
 
     sessionIndex = SpellDen.state.startSession();
     window.addEventListener("beforeunload", function () {
