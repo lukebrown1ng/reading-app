@@ -95,6 +95,27 @@ example a week added from the parent page, which has no generated audio) or
 playback is blocked, it falls back to the device voice, and the "Hear it in a
 sentence" button is hidden for words with no sentence.
 
+### Word Den audio
+
+Word Den (the word game) uses the same voice and the same approach. Clips are
+`word-den/audio/<slug>.mp3` (slug = lowercased word, anything but a-z/0-9
+turned into `-`, so `they're` is `they-re.mp3`), one per word the game can ask
+for (every word in a cluster in `word-den/js/wordbank.js`, 266 at the moment,
+about 2 MB).
+
+```
+node word-den/scripts/generate-audio.js                  # only missing clips
+node word-den/scripts/generate-audio.js --force there    # redo one word
+```
+
+Add a cluster to `wordbank.js`, run the script, listen to the new clips and
+commit them. Short function words said on their own are easy to get wrong
+("a", "to", "Mr"), so `SAY` and `CONTEXT` at the top of the script let you
+change what's spoken or give the words either side of it as pronunciation
+context; add an entry there and `--force` the word if a clip sounds off. Words
+with no clip fall back to the device voice. The ElevenLabs call itself lives in
+`scripts/elevenlabs.js`, shared by both generators.
+
 ### Gotchas
 
 - Setting `ELEVENLABS_API_KEY` in the environment overrides `.env`.

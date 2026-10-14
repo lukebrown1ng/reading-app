@@ -16,18 +16,7 @@ var path = require("path");
 var vm = require("vm");
 
 var ROOT = path.join(__dirname, "..");
-var VOICE_ID = "onwK4e9ZLuTAKqWW03F9"; // Daniel — British male
-var MODEL = "eleven_multilingual_v2";
-var SETTINGS = { stability: 0.6, similarity_boost: 0.75, speed: 0.9 };
-
-function loadEnv() {
-  var file = path.join(ROOT, "..", ".env");
-  if (!fs.existsSync(file)) return;
-  fs.readFileSync(file, "utf8").split("\n").forEach(function (line) {
-    var m = line.match(/^\s*([A-Z_]+)\s*=\s*(.*?)\s*$/);
-    if (m && !process.env[m[1]]) process.env[m[1]] = m[2].replace(/^['"]|['"]$/g, "");
-  });
-}
+var eleven = require("../../scripts/elevenlabs");
 
 function loadSpellDen() {
   var sandbox = { window: {}, SpellDen: undefined };
@@ -53,27 +42,8 @@ function contextFor(word, sentence) {
   return ctx;
 }
 
-async function render(text, outFile, context) {
-  var res = await fetch(
-    "https://api.elevenlabs.io/v1/text-to-speech/" + VOICE_ID + "?output_format=mp3_44100_64",
-    {
-      method: "POST",
-      headers: { "xi-api-key": process.env.ELEVENLABS_API_KEY, "Content-Type": "application/json" },
-      body: JSON.stringify(Object.assign(
-        { text: text, model_id: MODEL, voice_settings: SETTINGS }, context || {}
-      ))
-    }
-  );
-  if (!res.ok) throw new Error(res.status + " " + (await res.text()));
-  fs.writeFileSync(outFile, Buffer.from(await res.arrayBuffer()));
-}
-
 async function main() {
-  loadEnv();
-  if (!process.env.ELEVENLABS_API_KEY) {
-    console.error("ELEVENLABS_API_KEY missing (set it in the repo-root .env)");
-    process.exit(1);
-  }
+  eleven.loadEnv();
   var args = process.argv.slice(2);
   var force = args.indexOf("--force") !== -1;
   var only = args.filter(function (a) { return a.indexOf("--") !== 0; });
@@ -95,7 +65,7 @@ async function main() {
     if (sentence) jobs.push([sentence, path.join(ROOT, "audio", word + "-sentence.mp3")]);
     for (var j = 0; j < jobs.length; j++) {
       if (!force && fs.existsSync(jobs[j][1])) continue;
-      await render(jobs[j][0], jobs[j][1], jobs[j][2]);
+      await eleven.render(jobs[j][0], jobs[j][1], jobs[j][2]);
       made++;
       console.log("✓ " + path.basename(jobs[j][1]));
     }
