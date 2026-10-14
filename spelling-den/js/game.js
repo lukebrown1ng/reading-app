@@ -78,6 +78,14 @@ var SpellDen = window.SpellDen || {};
       return { ch: ch, id: i, used: false };
     });
     tray = shuffle(letters);
+    // Never deal the tiles already in spelling order — that would give the
+    // answer away. Compared by letter, not tile, so repeated letters
+    // (e.g. "meet") can't slip through. Gives up only when every
+    // arrangement spells the word (a word of one repeated letter).
+    var distinct = letters.some(function (t) { return t.ch !== letters[0].ch; });
+    while (distinct && tray.map(function (t) { return t.ch; }).join("") === currentWord) {
+      tray = shuffle(letters);
+    }
     renderTray();
   }
 
