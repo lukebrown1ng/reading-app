@@ -15,18 +15,22 @@ kids via the 🏆 "My scores" button at the top of Spelling Den. It is stored
 in the browser's localStorage on that device — not synced between devices, and
 lost if the browser's site data is cleared.
 
-## Spelling Den levels, streak and badges
+## Spelling Den streaks
 
-Spelling Den has the same progress system as Word Den, kept separately in its
-own saved data: a level pill and XP bar at the top (tap it for the stats
-popup), a 🔥 "N in a row" flame once you've spelled 3 words right first time in
-a row, a daily play streak, a best streak, a count of words that are "rock
-solid" (seen and never missed), level-up celebrations and badges. Right first
-time earns 10 XP plus a growing streak bonus (up to +20); right after a retry
-earns 5 XP and breaks the streak; a skipped word earns nothing and breaks it.
-Levels and badges are defined in `spelling-den/js/levels.js`, the saving is in
-`spelling-den/js/state.js` and the celebrations are in `spelling-den/js/game.js`.
-Like the history, it only lives in that browser on that device.
+Kept deliberately simple — no levels, XP or badges, and no pop-ups. A pill at
+the top of Spelling Den shows the daily streak (✅ once today's round is done,
+otherwise 🔥 with the current streak and "not yet today"). Tapping it, or the
+🏆 "My scores" button, opens a summary at the top of the history: whether
+today's round is done and its best score, the days-in-a-row streak (and the
+best ever), and the best score so far, then every round below (e.g. 10 / 10,
+3 / 10).
+
+A day counts if at least one round was *finished* on it. The streak is the run
+of consecutive days up to today, or up to yesterday if today's round isn't done
+yet, so it only breaks after a whole missed day. It's worked out from the saved
+round history (`getStreakStats` in `spelling-den/js/state.js`), so it has no
+data of its own, and like the history it only lives in that browser on that
+device.
 
 ## Spelling Den audio (ElevenLabs)
 
