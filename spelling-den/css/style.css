@@ -28,7 +28,12 @@ html, body {
 }
 
 .app {
-  min-height: 100vh;
+  /* Exactly the visible screen height, so the page itself never scrolls —
+     otherwise iPad Safari collapses its bar and the header ends up under
+     the translucent status area. The game area scrolls instead if needed. */
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   background: linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
@@ -119,9 +124,20 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 22px;
   padding: 12px 20px 20px;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Centre the content when there's room, without clipping the top when
+   there isn't (justify-content: center would). */
+.game-area::before,
+.game-area::after {
+  content: "";
+  flex: 1 0 0;
 }
 
 .progress-row {
