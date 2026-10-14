@@ -178,7 +178,7 @@ var SpellDen = window.SpellDen || {};
   }
 
   function onPhysicalKey(e) {
-    if (els.playArea.hidden || !els.weekPickerModal.hidden) return;
+    if (els.playArea.hidden || !els.weekPickerModal.hidden || !els.historyModal.hidden) return;
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     if (e.key === "Enter") {
       if (!els.checkBtn.disabled) els.checkBtn.click();
@@ -398,6 +398,58 @@ var SpellDen = window.SpellDen || {};
     });
   }
 
+  // --- History ----------------------------------------------------------
+
+  function renderHistory() {
+    els.historyList.innerHTML = "";
+    var rounds = SpellDen.state.getRounds().reverse();
+    if (rounds.length === 0) {
+      els.historyList.textContent = "No scores yet — finish a round and it will show up here!";
+      return;
+    }
+    rounds.forEach(function (round) {
+      var d = new Date(round.at);
+      var card = document.createElement("div");
+      card.className = "history-round";
+
+      var head = document.createElement("div");
+      head.className = "history-round-head";
+      var score = document.createElement("span");
+      score.className = "history-score";
+      score.textContent = round.firstTry + " / " + round.total;
+      var meta = document.createElement("span");
+      meta.className = "history-meta";
+      meta.innerHTML = "<strong></strong><span></span>";
+      meta.firstChild.textContent = round.weekLabel;
+      meta.lastChild.textContent =
+        d.toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" }) +
+        ", " + d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
+      head.appendChild(score);
+      head.appendChild(meta);
+      card.appendChild(head);
+
+      var words = document.createElement("div");
+      words.className = "result-word-list";
+      round.results.forEach(function (r) {
+        var chip = document.createElement("span");
+        chip.className = "result-word-chip history-chip-" + r.status;
+        chip.textContent = r.word;
+        words.appendChild(chip);
+      });
+      card.appendChild(words);
+      els.historyList.appendChild(card);
+    });
+  }
+
+  function openHistory() {
+    renderHistory();
+    els.historyModal.hidden = false;
+  }
+
+  function closeHistory() {
+    els.historyModal.hidden = true;
+  }
+
   function openWeekPicker() {
     renderWeekPicker();
     els.weekPickerModal.hidden = false;
@@ -410,6 +462,10 @@ var SpellDen = window.SpellDen || {};
   // --- Init ---------------------------------------------------------------
 
   function init() {
+    els.historyBtn = document.getElementById("historyBtn");
+    els.historyModal = document.getElementById("historyModal");
+    els.historyList = document.getElementById("historyList");
+    els.historyCloseBtn = document.getElementById("historyCloseBtn");
     els.weekPill = document.getElementById("weekPill");
     els.weekPillLabel = document.getElementById("weekPillLabel");
     els.weekPickerModal = document.getElementById("weekPickerModal");
@@ -444,6 +500,11 @@ var SpellDen = window.SpellDen || {};
     els.practiceWordsBlock = document.getElementById("practiceWordsBlock");
     els.practiceWordList = document.getElementById("practiceWordList");
 
+    els.historyBtn.addEventListener("click", openHistory);
+    els.historyCloseBtn.addEventListener("click", closeHistory);
+    els.historyModal.addEventListener("click", function (e) {
+      if (e.target === els.historyModal) closeHistory();
+    });
     els.weekPill.addEventListener("click", openWeekPicker);
     els.weekPickerCloseBtn.addEventListener("click", closeWeekPicker);
     els.weekPickerModal.addEventListener("click", function (e) {

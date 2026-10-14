@@ -10,7 +10,8 @@ build log.
 
 Each finished Spelling Den round is logged (date and time, week, score as
 words right first time out of the total, per-word result, tiles or typed) and
-shown newest first under "Spelling history" on the parent page. It is stored
+shown newest first under "Spelling history" on the parent page, and to the
+kids via the 🏆 "My scores" button at the top of Spelling Den. It is stored
 in the browser's localStorage on that device — not synced between devices, and
 lost if the browser's site data is cleared.
 
