@@ -532,6 +532,7 @@ var SpellDen = window.SpellDen || {};
     els.historyModal = document.getElementById("historyModal");
     els.historyList = document.getElementById("historyList");
     els.historyCloseBtn = document.getElementById("historyCloseBtn");
+    els.yearSelect = document.getElementById("yearSelect");
     els.yearPill = document.getElementById("yearPill");
     els.yearPillLabel = document.getElementById("yearPillLabel");
     els.modeToggle = document.getElementById("modeToggle");
@@ -625,8 +626,18 @@ var SpellDen = window.SpellDen || {};
       }
     });
 
-    var savedWeekId = SpellDen.state.getActiveWeekId();
-    loadWeek(savedWeekId);
+    // Pick a year first; the game only starts once one is chosen.
+    function chooseYear(year) {
+      els.yearSelect.hidden = true;
+      if (year !== activeYear) {
+        activeYear = year;
+        SpellDen.state.setActiveYear(year);
+        applyYear();
+      }
+      loadWeek(SpellDen.state.getActiveWeekId());
+    }
+    document.getElementById("year3Btn").addEventListener("click", function () { chooseYear(3); });
+    document.getElementById("year5Btn").addEventListener("click", function () { chooseYear(5); });
   }
 
   document.addEventListener("DOMContentLoaded", init);
