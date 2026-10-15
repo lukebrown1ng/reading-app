@@ -55,6 +55,11 @@ var SpellDen = window.SpellDen || {};
     return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
   }
 
+  // Year 5 weeks have ids like "y5week1"; everything older is Year 3.
+  function roundYear(round) {
+    return /^y5/.test(round.weekId) ? 5 : 3;
+  }
+
   function wordKey(word) {
     return word.toLowerCase();
   }
@@ -176,8 +181,11 @@ var SpellDen = window.SpellDen || {};
       save();
     },
 
-    getRounds: function () {
-      return load().rounds.slice();
+    // Optionally only the rounds for one year (3 or 5).
+    getRounds: function (year) {
+      return load().rounds.filter(function (r) {
+        return !year || roundYear(r) === year;
+      });
     },
 
     // --- Streak stats -------------------------------------------------
@@ -186,8 +194,9 @@ var SpellDen = window.SpellDen || {};
     // the run of consecutive days up to today — or up to yesterday if
     // today's round hasn't been done yet, so it isn't lost until a whole
     // day is missed.
-    getStreakStats: function () {
-      var rounds = load().rounds;
+    // Pass a year (3 or 5) to count only that year's rounds.
+    getStreakStats: function (year) {
+      var rounds = SpellDen.state.getRounds(year);
       var today = dateStr(new Date());
       var days = {};
       var best = null;

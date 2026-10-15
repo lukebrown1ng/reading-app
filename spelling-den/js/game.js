@@ -173,18 +173,9 @@ var SpellDen = window.SpellDen || {};
     }
   }
 
-  function setYear(year) {
-    if (year === activeYear) return;
-    activeYear = year;
-    SpellDen.state.setActiveYear(year);
-    applyYear();
-    loadWeek(null);
-  }
-
   // Year 5 is keyboard-only; Year 3 goes back to the saved tiles/type choice.
   function applyYear() {
     inputMode = activeYear === 5 ? "type" : savedInputMode;
-    els.yearPillLabel.textContent = "Year " + activeYear;
     els.modeToggle.hidden = activeYear === 5;
     renderModeToggle();
   }
@@ -431,7 +422,7 @@ var SpellDen = window.SpellDen || {};
   // --- History ----------------------------------------------------------
 
   function renderStreakPill() {
-    var stats = SpellDen.state.getStreakStats();
+    var stats = SpellDen.state.getStreakStats(activeYear);
     if (stats.doneToday) {
       els.streakPillLabel.textContent = "✅ " + stats.streak + (stats.streak === 1 ? " day" : " days");
     } else {
@@ -443,7 +434,7 @@ var SpellDen = window.SpellDen || {};
 
   function renderHistory() {
     els.historyList.innerHTML = "";
-    var stats = SpellDen.state.getStreakStats();
+    var stats = SpellDen.state.getStreakStats(activeYear);
     var summary = document.createElement("div");
     summary.className = "history-summary";
     var lines = [
@@ -462,7 +453,7 @@ var SpellDen = window.SpellDen || {};
       summary.appendChild(line);
     });
     els.historyList.appendChild(summary);
-    var rounds = SpellDen.state.getRounds().reverse();
+    var rounds = SpellDen.state.getRounds(activeYear).reverse();
     if (rounds.length === 0) {
       var empty = document.createElement("div");
       empty.textContent = "No scores yet — finish a round and it will show up here!";
@@ -506,6 +497,7 @@ var SpellDen = window.SpellDen || {};
   }
 
   function openHistory() {
+    els.historyHeading.textContent = "My scores · Year " + activeYear;
     renderHistory();
     els.historyModal.hidden = false;
   }
@@ -530,11 +522,10 @@ var SpellDen = window.SpellDen || {};
     els.streakPillLabel = document.getElementById("streakPillLabel");
     els.historyBtn = document.getElementById("historyBtn");
     els.historyModal = document.getElementById("historyModal");
+    els.historyHeading = document.getElementById("historyHeading");
     els.historyList = document.getElementById("historyList");
     els.historyCloseBtn = document.getElementById("historyCloseBtn");
     els.yearSelect = document.getElementById("yearSelect");
-    els.yearPill = document.getElementById("yearPill");
-    els.yearPillLabel = document.getElementById("yearPillLabel");
     els.modeToggle = document.getElementById("modeToggle");
     els.weekPill = document.getElementById("weekPill");
     els.weekPillLabel = document.getElementById("weekPillLabel");
@@ -576,9 +567,6 @@ var SpellDen = window.SpellDen || {};
     els.historyModal.addEventListener("click", function (e) {
       if (e.target === els.historyModal) closeHistory();
     });
-    els.yearPill.addEventListener("click", function () {
-      setYear(activeYear === 5 ? 3 : 5);
-    });
     els.weekPill.addEventListener("click", openWeekPicker);
     els.weekPickerCloseBtn.addEventListener("click", closeWeekPicker);
     els.weekPickerModal.addEventListener("click", function (e) {
@@ -614,8 +602,6 @@ var SpellDen = window.SpellDen || {};
       loadWeek(currentWeek.id);
     });
 
-    renderStreakPill();
-
     sessionIndex = SpellDen.state.startSession();
     window.addEventListener("beforeunload", function () {
       SpellDen.state.endSession(sessionIndex);
@@ -634,6 +620,7 @@ var SpellDen = window.SpellDen || {};
         SpellDen.state.setActiveYear(year);
         applyYear();
       }
+      renderStreakPill();
       loadWeek(SpellDen.state.getActiveWeekId());
     }
     document.getElementById("year3Btn").addEventListener("click", function () { chooseYear(3); });
