@@ -45,7 +45,7 @@ html, body {
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 8px;
-  padding: 14px 20px;
+  padding: calc(14px + env(safe-area-inset-top, 0px)) 20px 14px;
 }
 
 .top-bar-actions {
