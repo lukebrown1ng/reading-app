@@ -482,7 +482,9 @@ var SpellDen = window.SpellDen || {};
       var meta = document.createElement("span");
       meta.className = "history-meta";
       meta.innerHTML = "<strong></strong><span></span>";
-      meta.firstChild.textContent = round.weekLabel;
+      var isYear5 = /^y5/.test(round.weekId);
+      meta.firstChild.textContent = round.weekLabel +
+        (isYear5 ? "" : round.mode === "type" ? " · ⌨️ Keyboard" : " · 🔀 Tiles");
       meta.lastChild.textContent =
         d.toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" }) +
         ", " + d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
