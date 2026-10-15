@@ -623,6 +623,9 @@ var SpellDen = window.SpellDen || {};
       renderStreakPill();
       loadWeek(SpellDen.state.getActiveWeekId());
     }
+    // Direct links skip the start page: spelling-den/?year=3 or ?year=5.
+    var linkedYear = (window.location.search.match(/[?&]year=([35])\b/) || [])[1];
+    if (linkedYear) chooseYear(+linkedYear);
     document.getElementById("year3Btn").addEventListener("click", function () { chooseYear(3); });
     document.getElementById("year5Btn").addEventListener("click", function () { chooseYear(5); });
   }
