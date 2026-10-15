@@ -27,6 +27,10 @@
           <span aria-hidden="true">🏆</span>
           <span class="week-pill-label">My scores</span>
         </button>
+        <button id="yearPill" class="week-pill" type="button" aria-label="Switch between Year 3 and Year 5 spellings">
+          <span aria-hidden="true">🎓</span>
+          <span id="yearPillLabel" class="week-pill-label">Year 3</span>
+        </button>
         <button id="weekPill" class="week-pill" type="button" aria-label="Choose which week's words to play">
           <span aria-hidden="true">📅</span>
           <span id="weekPillLabel" class="week-pill-label">Week 1</span>
@@ -58,7 +62,7 @@
 
       <button id="checkBtn" class="check-btn" type="button" disabled>✓ Check</button>
 
-      <div class="mode-toggle" role="group" aria-label="How to enter letters">
+      <div id="modeToggle" class="mode-toggle" role="group" aria-label="How to enter letters">
         <button id="modeTilesBtn" class="mode-btn" type="button" aria-pressed="true">🔀 Tiles</button>
         <button id="modeTypeBtn" class="mode-btn" type="button" aria-pressed="false">⌨️ Type</button>
       </div>

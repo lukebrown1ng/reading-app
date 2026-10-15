@@ -50,7 +50,7 @@ async function main() {
 
   var SD = loadSpellDen();
   var words = [];
-  SD.WEEKS.forEach(function (w) {
+  SD.getAllWeeks().forEach(function (w) {
     w.words.forEach(function (x) { if (words.indexOf(x) === -1) words.push(x); });
   });
 

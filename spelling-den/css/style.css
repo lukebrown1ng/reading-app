@@ -764,3 +764,7 @@ html, body {
   flex-direction: column;
   gap: 6px;
 }
+
+.mode-toggle[hidden] {
+  display: none;
+}

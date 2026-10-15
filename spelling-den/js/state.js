@@ -38,6 +38,7 @@ var SpellDen = window.SpellDen || {};
     if (typeof cached.voiceName !== "string") cached.voiceName = null;
     if (!Array.isArray(cached.rounds)) cached.rounds = [];
     if (cached.inputMode !== "type") cached.inputMode = "tiles";
+    if (cached.activeYear !== 5) cached.activeYear = 3;
     return cached;
   }
 
@@ -71,6 +72,14 @@ var SpellDen = window.SpellDen || {};
     },
     setActiveWeekId: function (id) {
       load().activeWeekId = id || null;
+      save();
+    },
+
+    getActiveYear: function () {
+      return load().activeYear;
+    },
+    setActiveYear: function (year) {
+      load().activeYear = year === 5 ? 5 : 3;
       save();
     },
 

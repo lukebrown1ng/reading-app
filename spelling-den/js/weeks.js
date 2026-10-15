@@ -75,8 +75,75 @@ var SpellDen = window.SpellDen || {};
     }
   ];
 
+  // Year 5 lists. Keyboard-only in the game (no tiles), and kept apart from
+  // the Year 3 lists by the `year` field.
+  SpellDen.WEEKS_Y5 = [
+    {
+      id: "y5week1",
+      label: "Year 5 · Week 1",
+      focus: "Words ending in -ious",
+      words: [
+        "vicious", "gracious", "spacious", "malicious", "precious",
+        "conscious", "delicious", "suspicious", "atrocious", "ferocious"
+      ]
+    },
+    {
+      id: "y5week2",
+      label: "Year 5 · Week 2",
+      focus: "Words with the endings that sound like /shuhs/",
+      words: [
+        "ambitious", "cautious", "fictitious", "infectious", "nutritious",
+        "contentious", "superstitious", "pretentious", "anxious", "obnoxious"
+      ]
+    },
+    {
+      id: "y5week3",
+      label: "Year 5 · Week 3",
+      focus: "Words with the short vowel sound /i/ spelt with y",
+      words: [
+        "symbol", "mystery", "lyrics", "oxygen", "symptom",
+        "physical", "system", "typical", "crystal", "rhythm"
+      ]
+    },
+    {
+      id: "y5week4",
+      label: "Year 5 · Week 4",
+      focus: "Words with the long vowel sound /i/ spelt with y",
+      words: [
+        "apply", "supply", "identify", "occupy", "multiply",
+        "rhyme", "cycle", "python", "hygiene", "hyphen"
+      ]
+    },
+    {
+      id: "y5week5",
+      label: "Year 5 · Week 5",
+      focus: "Homophones and near homophones",
+      words: [
+        "past", "passed", "proceed", "precede", "aisle",
+        "isle", "aloud", "allowed", "affect", "effect"
+      ]
+    },
+    {
+      id: "y5week6",
+      label: "Year 5 · Week 6",
+      focus: "Homophones and near homophones",
+      words: [
+        "farther", "father", "guessed", "guest", "heard",
+        "herd", "led", "lead", "mourning", "morning"
+      ]
+    }
+  ];
+
+  SpellDen.WEEKS.forEach(function (w) { w.year = 3; });
+  SpellDen.WEEKS_Y5.forEach(function (w) { w.year = 5; });
+
+  // Every week across both years (used for lookups and audio generation).
   SpellDen.getAllWeeks = function () {
-    return SpellDen.WEEKS;
+    return SpellDen.WEEKS.concat(SpellDen.WEEKS_Y5);
+  };
+
+  SpellDen.getWeeksForYear = function (year) {
+    return year === 5 ? SpellDen.WEEKS_Y5 : SpellDen.WEEKS;
   };
 
   SpellDen.getWeek = function (id) {
@@ -85,8 +152,8 @@ var SpellDen = window.SpellDen || {};
     })[0] || null;
   };
 
-  SpellDen.getLatestWeek = function () {
-    var all = SpellDen.getAllWeeks();
+  SpellDen.getLatestWeek = function (year) {
+    var all = SpellDen.getWeeksForYear(year || 3);
     return all[all.length - 1];
   };
 

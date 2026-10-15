@@ -18,7 +18,11 @@ var SpellDen = window.SpellDen || {};
   // "skipped" (moved on without ever getting it right this round).
   var results = [];
 
-  var inputMode = "tiles"; // "tiles" (tap jumbled letters) or "type" (on-screen keyboard)
+  var activeYear = 3;
+  var savedInputMode = "tiles"; // the child's Year 3 choice, kept while in Year 5
+  // "tiles" (tap jumbled letters) or "type" (on-screen keyboard). Year 5 is
+  // always "type".
+  var inputMode = "tiles";
   var KEY_ROWS = ["qwertyuiop", "asdfghjkl", "zxcvbnm"];
 
   var currentWord = "";
@@ -41,7 +45,8 @@ var SpellDen = window.SpellDen || {};
   // --- Round / word setup -----------------------------------------------
 
   function loadWeek(weekId) {
-    currentWeek = SpellDen.getWeek(weekId) || SpellDen.getLatestWeek();
+    currentWeek = SpellDen.getWeek(weekId);
+    if (!currentWeek || currentWeek.year !== activeYear) currentWeek = SpellDen.getLatestWeek(activeYear);
     SpellDen.state.setActiveWeekId(currentWeek.id);
     order = shuffle(currentWeek.words.map(function (_, i) { return i; }));
     wordIndex = 0;
@@ -168,9 +173,26 @@ var SpellDen = window.SpellDen || {};
     }
   }
 
+  function setYear(year) {
+    if (year === activeYear) return;
+    activeYear = year;
+    SpellDen.state.setActiveYear(year);
+    applyYear();
+    loadWeek(null);
+  }
+
+  // Year 5 is keyboard-only; Year 3 goes back to the saved tiles/type choice.
+  function applyYear() {
+    inputMode = activeYear === 5 ? "type" : savedInputMode;
+    els.yearPillLabel.textContent = "Year " + activeYear;
+    els.modeToggle.hidden = activeYear === 5;
+    renderModeToggle();
+  }
+
   function setInputMode(mode) {
-    if (mode === inputMode) return;
+    if (mode === inputMode || activeYear === 5) return;
     inputMode = mode;
+    savedInputMode = mode;
     SpellDen.state.setInputMode(mode);
     renderModeToggle();
     // Start this word's entry afresh in the new mode; it isn't a miss.
@@ -391,7 +413,7 @@ var SpellDen = window.SpellDen || {};
 
   function renderWeekPicker() {
     els.weekPickerList.innerHTML = "";
-    SpellDen.getAllWeeks().slice().reverse().forEach(function (week) {
+    SpellDen.getWeeksForYear(activeYear).slice().reverse().forEach(function (week) {
       var btn = document.createElement("button");
       btn.type = "button";
       btn.className = "week-option" + (currentWeek && week.id === currentWeek.id ? " week-option-active" : "");
@@ -508,6 +530,9 @@ var SpellDen = window.SpellDen || {};
     els.historyModal = document.getElementById("historyModal");
     els.historyList = document.getElementById("historyList");
     els.historyCloseBtn = document.getElementById("historyCloseBtn");
+    els.yearPill = document.getElementById("yearPill");
+    els.yearPillLabel = document.getElementById("yearPillLabel");
+    els.modeToggle = document.getElementById("modeToggle");
     els.weekPill = document.getElementById("weekPill");
     els.weekPillLabel = document.getElementById("weekPillLabel");
     els.weekPickerModal = document.getElementById("weekPickerModal");
@@ -548,6 +573,9 @@ var SpellDen = window.SpellDen || {};
     els.historyModal.addEventListener("click", function (e) {
       if (e.target === els.historyModal) closeHistory();
     });
+    els.yearPill.addEventListener("click", function () {
+      setYear(activeYear === 5 ? 3 : 5);
+    });
     els.weekPill.addEventListener("click", openWeekPicker);
     els.weekPickerCloseBtn.addEventListener("click", closeWeekPicker);
     els.weekPickerModal.addEventListener("click", function (e) {
@@ -558,8 +586,9 @@ var SpellDen = window.SpellDen || {};
       if (currentWord) SpellDen.speech.speak(currentWord);
     });
 
-    inputMode = SpellDen.state.getInputMode();
-    renderModeToggle();
+    savedInputMode = SpellDen.state.getInputMode();
+    activeYear = SpellDen.state.getActiveYear();
+    applyYear();
     els.modeTilesBtn.addEventListener("click", function () { setInputMode("tiles"); });
     els.modeTypeBtn.addEventListener("click", function () { setInputMode("type"); });
     document.addEventListener("keydown", onPhysicalKey);
