@@ -15,20 +15,7 @@ var WordDen = window.WordDen || {};
 
   function load() {
     if (cached) return cached;
-    var raw;
-    try {
-      raw = localStorage.getItem(STORAGE_KEY);
-    } catch (e) {
-      raw = null;
-    }
-    var parsed = null;
-    if (raw) {
-      try {
-        parsed = JSON.parse(raw);
-      } catch (e) {
-        parsed = null;
-      }
-    }
+    var parsed = Den.storage.read(STORAGE_KEY);
     cached = parsed || {
       words: {}, sessions: [], audioMode: true, voiceName: null,
       xp: 0, totalCorrect: 0, bestStreak: 0,
@@ -48,20 +35,11 @@ var WordDen = window.WordDen || {};
   }
 
   function save() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(cached));
-    } catch (e) {
-      // Storage unavailable (private mode, quota, etc.) — fail silently,
-      // the game still works within the session.
-    }
+    Den.storage.write(STORAGE_KEY, cached);
   }
 
   function wordKey(word) {
     return word.toLowerCase();
-  }
-
-  function dateStr(d) {
-    return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
   }
 
   function getWordRecord(word) {
@@ -144,7 +122,7 @@ var WordDen = window.WordDen || {};
 
     startSession: function () {
       var state = load();
-      var session = { start: Date.now(), end: null };
+      var session = { start: Date.now(), end: Date.now() };
       state.sessions.push(session);
       save();
       return state.sessions.length - 1;
@@ -207,11 +185,11 @@ var WordDen = window.WordDen || {};
     touchDailyStreak: function () {
       var state = load();
       var ds = state.dailyStreak;
-      var today = dateStr(new Date());
+      var today = Den.dateStr(new Date());
       if (ds.lastPlayDate !== today) {
         var yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
-        ds.current = ds.lastPlayDate === dateStr(yesterday) ? ds.current + 1 : 1;
+        ds.current = ds.lastPlayDate === Den.dateStr(yesterday) ? ds.current + 1 : 1;
         ds.lastPlayDate = today;
         if (ds.current > ds.best) ds.best = ds.current;
         save();

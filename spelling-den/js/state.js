@@ -9,25 +9,12 @@ var SpellDen = window.SpellDen || {};
   var cached = null;
 
   function defaultWordRecord() {
-    return { seen: 0, correctFirstTry: 0, misses: 0, lastSeen: 0 };
+    return { seen: 0, correctFirstTry: 0, misses: 0, cleanStreak: 0, lastSeen: 0 };
   }
 
   function load() {
     if (cached) return cached;
-    var raw;
-    try {
-      raw = localStorage.getItem(STORAGE_KEY);
-    } catch (e) {
-      raw = null;
-    }
-    var parsed = null;
-    if (raw) {
-      try {
-        parsed = JSON.parse(raw);
-      } catch (e) {
-        parsed = null;
-      }
-    }
+    var parsed = Den.storage.read(STORAGE_KEY);
     cached = parsed || {
       words: {}, sessions: [], activeWeekId: null, voiceName: null,
       inputMode: "tiles", rounds: []
@@ -43,16 +30,7 @@ var SpellDen = window.SpellDen || {};
   }
 
   function save() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(cached));
-    } catch (e) {
-      // Storage unavailable (private mode, quota, etc.) — fail silently,
-      // the game still works within the session.
-    }
-  }
-
-  function dateStr(d) {
-    return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+    Den.storage.write(STORAGE_KEY, cached);
   }
 
   // Year 5 weeks have ids like "y5week1"; everything older is Year 3.
@@ -68,7 +46,12 @@ var SpellDen = window.SpellDen || {};
     var state = load();
     var key = wordKey(word);
     if (!state.words[key]) state.words[key] = defaultWordRecord();
-    return state.words[key];
+    var r = state.words[key];
+    // Records saved before cleanStreak existed: estimate it.
+    if (typeof r.cleanStreak !== "number") {
+      r.cleanStreak = r.misses === 0 ? r.correctFirstTry : (r.correctFirstTry > 0 ? 1 : 0);
+    }
+    return r;
   }
 
   SpellDen.state = {
@@ -107,23 +90,60 @@ var SpellDen = window.SpellDen || {};
     },
 
     // Call when a word is spelled correctly. `firstTry` is false if it
-    // took one or more wrong attempts first.
+    // took one or more wrong attempts first. A word counts as "seen" once
+    // per round: here only when it was right first time (otherwise the
+    // first wrong attempt already counted it).
     recordCorrect: function (word, firstTry) {
       var record = getWordRecordRaw(word);
-      record.seen += 1;
-      if (firstTry) record.correctFirstTry += 1;
+      if (firstTry) {
+        record.seen += 1;
+        record.correctFirstTry += 1;
+        record.cleanStreak += 1;
+      }
       record.lastSeen = Date.now();
       save();
     },
 
     // A wrong attempt — the child sees the correct spelling right away,
-    // this just logs it for the parent view.
-    recordMiss: function (word) {
+    // this just logs it for the parent view. `firstMiss` is true for the
+    // first wrong attempt at this word in the round.
+    recordMiss: function (word, firstMiss) {
       var record = getWordRecordRaw(word);
-      record.seen += 1;
+      if (firstMiss) record.seen += 1;
       record.misses += 1;
+      record.cleanStreak = 0;
       record.lastSeen = Date.now();
       save();
+    },
+
+    // "new" (never played), "shaky" (missed last time), "learning" (right
+    // first time since a miss) or "solid" (never missed, or right first
+    // time twice running — so a word that once tripped him up can recover).
+    getWordStatus: function (word) {
+      var r = getWordRecordRaw(word);
+      if (r.seen === 0) return "new";
+      if (r.misses === 0 || r.cleanStreak >= 2) return "solid";
+      if (r.cleanStreak === 1) return "learning";
+      return "shaky";
+    },
+
+    // Up to `limit` words from `weeks` that still need work (shaky first,
+    // then learning, then most-missed), for the "tricky words" round.
+    getTrickyWords: function (weeks, limit) {
+      var seen = {};
+      var list = [];
+      weeks.forEach(function (week) {
+        week.words.forEach(function (word) {
+          if (seen[word]) return;
+          seen[word] = true;
+          var status = SpellDen.state.getWordStatus(word);
+          if (status === "shaky" || status === "learning") {
+            list.push({ word: word, rank: status === "shaky" ? 0 : 1, misses: getWordRecordRaw(word).misses });
+          }
+        });
+      });
+      list.sort(function (a, b) { return a.rank - b.rank || b.misses - a.misses; });
+      return list.slice(0, limit).map(function (e) { return e.word; });
     },
 
     // Aggregate stats for one week's word list, for the parent view.
@@ -141,7 +161,7 @@ var SpellDen = window.SpellDen || {};
 
     startSession: function () {
       var state = load();
-      var session = { start: Date.now(), end: null };
+      var session = { start: Date.now(), end: Date.now() };
       state.sessions.push(session);
       save();
       return state.sessions.length - 1;
@@ -197,22 +217,22 @@ var SpellDen = window.SpellDen || {};
     // Pass a year (3 or 5) to count only that year's rounds.
     getStreakStats: function (year) {
       var rounds = SpellDen.state.getRounds(year);
-      var today = dateStr(new Date());
+      var today = Den.dateStr(new Date());
       var days = {};
       var best = null;
       var todayBest = null;
 
       rounds.forEach(function (r) {
-        var key = dateStr(new Date(r.at));
+        var key = Den.dateStr(new Date(r.at));
         days[key] = true;
         if (!best || r.firstTry > best.firstTry) best = r;
         if (key === today && (!todayBest || r.firstTry > todayBest.firstTry)) todayBest = r;
       });
 
       var day = new Date();
-      if (!days[dateStr(day)]) day.setDate(day.getDate() - 1);
+      if (!days[Den.dateStr(day)]) day.setDate(day.getDate() - 1);
       var streak = 0;
-      while (days[dateStr(day)]) {
+      while (days[Den.dateStr(day)]) {
         streak += 1;
         day.setDate(day.getDate() - 1);
       }

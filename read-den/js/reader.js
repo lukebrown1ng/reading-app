@@ -6,7 +6,6 @@ var ReadDen = window.ReadDen || {};
   "use strict";
 
   var PAUSE_MS = 6000; // quiet seconds before gently offering the word
-  var LOOKAHEAD = 6; // how many upcoming words we'll match speech against
 
   var els = {};
   var book = null;
@@ -18,6 +17,7 @@ var ReadDen = window.ReadDen || {};
   var recognitionActiveSince = null;
   var sessionIndex = null;
   var pauseTimer = null;
+  var wordsConsumed = 0; // words heard this recognition run that have been used
 
   function getBookIdFromUrl() {
     var params = new URLSearchParams(window.location.search);
@@ -92,17 +92,9 @@ var ReadDen = window.ReadDen || {};
   }
 
   function onRecognitionResult(words) {
-    var recent = words.slice(-8);
-    var windowEnd = Math.min(tokens.length, currentWordIndex + LOOKAHEAD);
-    var bestMatch = -1;
-    for (var i = currentWordIndex; i < windowEnd; i++) {
-      if (recent.indexOf(tokens[i].norm) !== -1) {
-        bestMatch = i;
-      }
-    }
-    if (bestMatch >= currentWordIndex) {
-      advanceTo(bestMatch + 1);
-    }
+    var result = ReadDen.advanceBySpeech(tokens, currentWordIndex, words, wordsConsumed);
+    wordsConsumed = result.consumed;
+    if (result.cursor > currentWordIndex) advanceTo(result.cursor);
   }
 
   function onRecognitionEnd() {
@@ -111,6 +103,7 @@ var ReadDen = window.ReadDen || {};
     // mode and the page isn't finished, just pick it back up seamlessly
     // rather than surfacing anything to him.
     if (listening && !pageComplete()) {
+      wordsConsumed = 0;
       ReadDen.recognition.start({
         onResult: onRecognitionResult,
         onEnd: onRecognitionEnd,
@@ -133,6 +126,7 @@ var ReadDen = window.ReadDen || {};
   function startListening() {
     if (!recognitionSupported || pageComplete()) return;
     listening = true;
+    wordsConsumed = 0;
     recognitionActiveSince = Date.now();
     els.listenBtn.textContent = "⏸ Listening… tap to pause";
     ReadDen.recognition.start({
@@ -230,16 +224,13 @@ var ReadDen = window.ReadDen || {};
     });
 
     ReadDen.state.recordBookOpen(book.id);
-    sessionIndex = ReadDen.state.startSession(book.id);
-    window.addEventListener("beforeunload", function () {
-      stopListening();
-      ReadDen.state.endSession(sessionIndex);
-    });
-    document.addEventListener("visibilitychange", function () {
-      if (document.visibilityState === "hidden") {
-        stopListening();
-        ReadDen.state.endSession(sessionIndex);
-      }
+    Den.trackSession({
+      start: function () {
+        sessionIndex = ReadDen.state.startSession(book.id);
+        return sessionIndex;
+      },
+      end: ReadDen.state.endSession,
+      onHide: stopListening
     });
 
     var startPage = ReadDen.state.getBookProgress(book.id).lastPage || 0;

@@ -34,7 +34,7 @@
       <a class="back-link" href="index.html">&larr; back to Reading Den</a>
     </div>
     <p class="parent-note">
-      This is just for grown-ups — it's never shown to him during play, and
+      This is just for grown-ups — it's never shown during play, and
       none of this is framed as scores or targets.
     </p>
 
@@ -42,6 +42,7 @@
       <a href="#section-word-game">🦕 Word Game</a>
       <a href="#section-read-a-book">📖 Read a Book</a>
       <a href="#section-spellings">🔤 Spellings</a>
+      <a href="#section-backup">💾 Backup</a>
     </nav>
 
     <h2 id="section-word-game" class="section-heading">Word Game</h2>
@@ -52,132 +53,54 @@
     <div id="levelSummary" class="session-summary"></div>
     <div id="badgeRow" class="badge-grid"></div>
 
-    <div class="voice-picker">
-      <label for="wordVoiceSelect">Word Game reading voice (audio mode)</label>
-      <p class="parent-note voice-note">
-        Browsers ship several voices and the default one is often the most
-        robotic-sounding. Try a few and pick whichever sounds most natural
-        on this device.
-      </p>
-      <div class="voice-picker-row">
-        <select id="wordVoiceSelect"></select>
-        <button id="wordVoiceTestBtn" type="button">▶ Try it</button>
-        <button id="wordVoiceRefreshBtn" type="button" class="voice-refresh-btn" aria-label="Refresh voice list">↻</button>
-      </div>
-      <details class="voice-help">
-        <summary>Get more voices on this device</summary>
-        <ol>
-          <li>Open <strong>Settings → Accessibility → Spoken Content → Voices</strong>.</li>
-          <li>Pick a language, e.g. <strong>English → United Kingdom</strong>.</li>
-          <li>Tap a voice name (Serena, Stephanie, Kate...) and download the
-            <strong>Enhanced</strong> or <strong>Premium</strong> quality
-            version — the default "Standard" ones are the robotic-sounding
-            ones.</li>
-          <li>Fully quit and reopen the browser (or restart the phone)
-            after downloading, then tap the ↻ button above to re-check —
-            newly downloaded voices often don't show up until then.</li>
-        </ol>
-        <p class="voice-help-note">
-          <strong>Siri voices don't show up here</strong> — this is a
-          known Safari/iOS limitation (Siri's voices aren't available to
-          web pages at all, however long you wait), not something this
-          page can fix. The Enhanced/Premium voices above are the
-          best-sounding ones actually available here.
-        </p>
-      </details>
-    </div>
+    <div class="voice-picker" data-voice-picker="word" data-label="Word Game reading voice (audio mode)" data-note="Browsers ship several voices and the default one is often the most robotic-sounding. Try a few and pick whichever sounds most natural on this device."></div>
 
     <div id="clusterList" class="cluster-list"></div>
 
     <h2 id="section-read-a-book" class="section-heading">Read a Book</h2>
     <div id="readSessionSummary" class="session-summary"></div>
 
-    <div class="voice-picker">
-      <label for="readVoiceSelect">Read a Book narration voice</label>
-      <p class="parent-note voice-note">
-        Used for "hear this word" and the read-to-me fallback on devices
-        without speech recognition.
-      </p>
-      <div class="voice-picker-row">
-        <select id="readVoiceSelect"></select>
-        <button id="readVoiceTestBtn" type="button">▶ Try it</button>
-        <button id="readVoiceRefreshBtn" type="button" class="voice-refresh-btn" aria-label="Refresh voice list">↻</button>
-      </div>
-      <details class="voice-help">
-        <summary>Get more voices on this device</summary>
-        <ol>
-          <li>Open <strong>Settings → Accessibility → Spoken Content → Voices</strong>.</li>
-          <li>Pick a language, e.g. <strong>English → United Kingdom</strong>.</li>
-          <li>Tap a voice name (Serena, Stephanie, Kate...) and download the
-            <strong>Enhanced</strong> or <strong>Premium</strong> quality
-            version — the default "Standard" ones are the robotic-sounding
-            ones.</li>
-          <li>Fully quit and reopen the browser (or restart the phone)
-            after downloading, then tap the ↻ button above to re-check —
-            newly downloaded voices often don't show up until then.</li>
-        </ol>
-        <p class="voice-help-note">
-          <strong>Siri voices don't show up here</strong> — this is a
-          known Safari/iOS limitation (Siri's voices aren't available to
-          web pages at all, however long you wait), not something this
-          page can fix. The Enhanced/Premium voices above are the
-          best-sounding ones actually available here.
-        </p>
-      </details>
-    </div>
+    <div class="voice-picker" data-voice-picker="read" data-label="Read a Book narration voice" data-note="Used for "hear this word" and the read-to-me fallback on devices without speech recognition."></div>
 
     <div id="bookProgressList" class="book-progress-list"></div>
 
-    <h3 class="section-heading">Words he's stumbled on while reading</h3>
+    <h3 class="section-heading">Words stumbled on while reading</h3>
     <div id="stumbleList" class="stumble-list"></div>
 
     <h2 id="section-spellings" class="section-heading">Spellings</h2>
     <div id="spellingSessionSummary" class="session-summary"></div>
 
-    <div class="voice-picker">
-      <label for="spellingVoiceSelect">Spellings reading voice</label>
-      <p class="parent-note voice-note">
-        Used to say each word out loud before he spells it.
-      </p>
-      <div class="voice-picker-row">
-        <select id="spellingVoiceSelect"></select>
-        <button id="spellingVoiceTestBtn" type="button">▶ Try it</button>
-        <button id="spellingVoiceRefreshBtn" type="button" class="voice-refresh-btn" aria-label="Refresh voice list">↻</button>
-      </div>
-      <details class="voice-help">
-        <summary>Get more voices on this device</summary>
-        <ol>
-          <li>Open <strong>Settings → Accessibility → Spoken Content → Voices</strong>.</li>
-          <li>Pick a language, e.g. <strong>English → United Kingdom</strong>.</li>
-          <li>Tap a voice name (Serena, Stephanie, Kate...) and download the
-            <strong>Enhanced</strong> or <strong>Premium</strong> quality
-            version — the default "Standard" ones are the robotic-sounding
-            ones.</li>
-          <li>Fully quit and reopen the browser (or restart the phone)
-            after downloading, then tap the ↻ button above to re-check —
-            newly downloaded voices often don't show up until then.</li>
-        </ol>
-        <p class="voice-help-note">
-          <strong>Siri voices don't show up here</strong> — this is a
-          known Safari/iOS limitation (Siri's voices aren't available to
-          web pages at all, however long you wait), not something this
-          page can fix. The Enhanced/Premium voices above are the
-          best-sounding ones actually available here.
-        </p>
-      </details>
-    </div>
+    <div class="voice-picker" data-voice-picker="spelling" data-label="Spellings reading voice" data-note="Used to say each word out loud when a clip is missing. Normally the recorded voice is used."></div>
 
     <h3 class="section-heading">Spelling history</h3>
     <p class="parent-note voice-note">
       Every finished round, newest first. The score is words spelled right
-      first time. Saved on this device only.
+      first time. Saved on this device only (see Backup below).
     </p>
     <div id="spellingRoundList" class="round-list"></div>
 
     <h3 class="section-heading">Word status by week</h3>
     <div id="spellingWeekList" class="cluster-list"></div>
+
+    <h2 id="section-backup" class="section-heading">Backup</h2>
+    <p class="parent-note">
+      Everything — scores, streaks, levels, reading progress — is stored only
+      in this browser on this device. If the browser's site data is cleared
+      (Safari does this to sites left unused for a week, unless the app is
+      added to the Home Screen) it is gone. Save a copy now and then, or use
+      it to move progress to another device.
+    </p>
+    <div class="backup-row">
+      <button id="backupExportBtn" type="button">⬇ Save a backup</button>
+      <label class="backup-import">
+        ⬆ Restore from a backup
+        <input id="backupImportInput" type="file" accept="application/json,.json" hidden>
+      </label>
+    </div>
+    <p id="backupMessage" class="parent-note" role="status"></p>
   </div>
 
+  <script src="js/common.js"></script>
   <script src="word-den/js/wordbank.js"></script>
   <script src="word-den/js/wordbanks.js"></script>
   <script src="word-den/js/levels.js"></script>

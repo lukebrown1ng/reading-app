@@ -7,7 +7,6 @@ var WordDen = window.WordDen || {};
   var els = {};
   var retryQueue = []; // [{ word, roundsUntilDue }]
   var lastTarget = null;
-  var sessionIndex = null;
   var correctInSession = 0;
   var currentStreak = 0; // resets to 0 on any miss
   var STEPS_PER_LAP = 8;
@@ -403,18 +402,11 @@ var WordDen = window.WordDen || {};
       if (e.target === els.progressModal) closeProgressModal();
     });
 
-    sessionIndex = WordDen.state.startSession();
+    Den.trackSession({
+      start: function () { return WordDen.state.startSession(); },
+      end: WordDen.state.endSession
+    });
     WordDen.state.touchDailyStreak();
-    window.addEventListener("beforeunload", function () {
-      WordDen.state.endSession(sessionIndex);
-    });
-    // Also close the session on tab hide (tablets rarely fire beforeunload
-    // reliably), so parent-view playtime stays roughly accurate.
-    document.addEventListener("visibilitychange", function () {
-      if (document.visibilityState === "hidden") {
-        WordDen.state.endSession(sessionIndex);
-      }
-    });
 
     renderLevelUI();
     WordDen.state.evaluateBadges(0).forEach(queueBadgeToast);

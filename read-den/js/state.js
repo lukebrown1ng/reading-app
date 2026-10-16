@@ -14,20 +14,7 @@ var ReadDen = window.ReadDen || {};
 
   function load() {
     if (cached) return cached;
-    var raw;
-    try {
-      raw = localStorage.getItem(STORAGE_KEY);
-    } catch (e) {
-      raw = null;
-    }
-    var parsed = null;
-    if (raw) {
-      try {
-        parsed = JSON.parse(raw);
-      } catch (e) {
-        parsed = null;
-      }
-    }
+    var parsed = Den.storage.read(STORAGE_KEY);
     cached = parsed || { books: {}, stumbles: {}, stumbleLog: [], sessions: [], narrationVoiceName: null };
     if (!cached.books) cached.books = {};
     if (!cached.stumbles) cached.stumbles = {};
@@ -38,11 +25,7 @@ var ReadDen = window.ReadDen || {};
   }
 
   function save() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(cached));
-    } catch (e) {
-      // Storage unavailable (private mode, quota, etc.) — fail silently.
-    }
+    Den.storage.write(STORAGE_KEY, cached);
   }
 
   function getBookProgress(bookId) {
@@ -116,7 +99,7 @@ var ReadDen = window.ReadDen || {};
 
     startSession: function (bookId) {
       var state = load();
-      var session = { start: Date.now(), end: null, activeMs: 0, bookId: bookId };
+      var session = { start: Date.now(), end: Date.now(), activeMs: 0, bookId: bookId };
       state.sessions.push(session);
       save();
       return state.sessions.length - 1;
@@ -134,7 +117,7 @@ var ReadDen = window.ReadDen || {};
     endSession: function (index) {
       var state = load();
       var session = state.sessions[index];
-      if (session && !session.end) {
+      if (session) {
         session.end = Date.now();
         save();
       }

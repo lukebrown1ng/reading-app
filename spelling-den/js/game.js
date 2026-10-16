@@ -7,7 +7,6 @@ var SpellDen = window.SpellDen || {};
   "use strict";
 
   var els = {};
-  var sessionIndex = null;
   var animating = false;
 
   var currentWeek = null;
@@ -44,10 +43,32 @@ var SpellDen = window.SpellDen || {};
 
   // --- Round / word setup -----------------------------------------------
 
+  var PRACTICE_ID = "practice";
+
+  function trickyWords() {
+    return SpellDen.state.getTrickyWords(SpellDen.getWeeksForYear(activeYear), 10);
+  }
+
+  // A made-up "week" of the words he still finds hard. Its id keeps the
+  // year prefix so its rounds are filed under the right year.
+  function practiceWeek() {
+    return {
+      id: (activeYear === 5 ? "y5" : "") + PRACTICE_ID,
+      label: "Tricky words",
+      focus: "Words you found tricky before",
+      year: activeYear,
+      words: trickyWords()
+    };
+  }
+
   function loadWeek(weekId) {
-    currentWeek = SpellDen.getWeek(weekId);
-    if (!currentWeek || currentWeek.year !== activeYear) currentWeek = SpellDen.getLatestWeek(activeYear);
-    SpellDen.state.setActiveWeekId(currentWeek.id);
+    if (weekId === PRACTICE_ID && trickyWords().length > 0) {
+      currentWeek = practiceWeek();
+    } else {
+      currentWeek = SpellDen.getWeek(weekId);
+      if (!currentWeek || currentWeek.year !== activeYear) currentWeek = SpellDen.getLatestWeek(activeYear);
+      SpellDen.state.setActiveWeekId(currentWeek.id);
+    }
     order = shuffle(currentWeek.words.map(function (_, i) { return i; }));
     wordIndex = 0;
     results = [];
@@ -202,6 +223,11 @@ var SpellDen = window.SpellDen || {};
     if (!els.roundComplete.hidden || !els.weekPickerModal.hidden || !els.historyModal.hidden) return;
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     if (e.key === "Enter") {
+      var tag = e.target && e.target.tagName;
+      if (tag === "A" || tag === "SELECT") return;
+      // Enter means "Check" — stop it also pressing whichever tile or key
+      // happens to have focus.
+      e.preventDefault();
       if (!els.checkBtn.disabled) els.checkBtn.click();
     } else if (inputMode === "type") {
       if (e.key === "Backspace") {
@@ -315,8 +341,8 @@ var SpellDen = window.SpellDen || {};
   function handleWrong() {
     wrongLocked = true;
     animating = false;
+    SpellDen.state.recordMiss(currentWord, !missedThisWord);
     missedThisWord = true;
-    SpellDen.state.recordMiss(currentWord);
 
     els.blanksRow.classList.add("blanks-wrong");
     els.correctSpellingWord.textContent = currentWord;
@@ -388,6 +414,12 @@ var SpellDen = window.SpellDen || {};
 
     renderResultList(els.practiceWordList, practiceWords);
     els.practiceWordsBlock.hidden = practiceWords.length === 0;
+
+    var tricky = trickyWords();
+    els.practiceTrickyBtn.hidden = tricky.length === 0;
+    els.practiceTrickyBtn.textContent = "🌱 Practise my tricky words (" + tricky.length + ")";
+    els.playAgainBtn.textContent = currentWeek.label === "Tricky words"
+      ? "Play tricky words again" : "Play this week again";
   }
 
   function renderResultList(container, words) {
@@ -404,6 +436,21 @@ var SpellDen = window.SpellDen || {};
 
   function renderWeekPicker() {
     els.weekPickerList.innerHTML = "";
+    var tricky = trickyWords();
+    if (tricky.length > 0) {
+      var practiceBtn = document.createElement("button");
+      practiceBtn.type = "button";
+      practiceBtn.className = "week-option" + (currentWeek && currentWeek.label === "Tricky words" ? " week-option-active" : "");
+      practiceBtn.innerHTML =
+        '<span class="week-option-label">🌱 Tricky words</span>' +
+        '<span class="week-option-words"></span>';
+      practiceBtn.lastChild.textContent = tricky.join(", ");
+      practiceBtn.addEventListener("click", function () {
+        closeWeekPicker();
+        loadWeek(PRACTICE_ID);
+      });
+      els.weekPickerList.appendChild(practiceBtn);
+    }
     SpellDen.getWeeksForYear(activeYear).slice().reverse().forEach(function (week) {
       var btn = document.createElement("button");
       btn.type = "button";
@@ -554,6 +601,7 @@ var SpellDen = window.SpellDen || {};
     els.roundComplete = document.getElementById("roundComplete");
     els.roundCompleteScore = document.getElementById("roundCompleteScore");
     els.playAgainBtn = document.getElementById("playAgainBtn");
+    els.practiceTrickyBtn = document.getElementById("practiceTrickyBtn");
     els.correctWordsBlock = document.getElementById("correctWordsBlock");
     els.correctWordList = document.getElementById("correctWordList");
     els.retryWordsBlock = document.getElementById("retryWordsBlock");
@@ -599,17 +647,15 @@ var SpellDen = window.SpellDen || {};
     els.tryAgainBtn.addEventListener("click", tryAgain);
     els.skipWordBtn.addEventListener("click", skipWord);
     els.playAgainBtn.addEventListener("click", function () {
-      loadWeek(currentWeek.id);
+      loadWeek(currentWeek.label === "Tricky words" ? PRACTICE_ID : currentWeek.id);
+    });
+    els.practiceTrickyBtn.addEventListener("click", function () {
+      loadWeek(PRACTICE_ID);
     });
 
-    sessionIndex = SpellDen.state.startSession();
-    window.addEventListener("beforeunload", function () {
-      SpellDen.state.endSession(sessionIndex);
-    });
-    document.addEventListener("visibilitychange", function () {
-      if (document.visibilityState === "hidden") {
-        SpellDen.state.endSession(sessionIndex);
-      }
+    Den.trackSession({
+      start: function () { return SpellDen.state.startSession(); },
+      end: SpellDen.state.endSession
     });
 
     // Pick a year first; the game only starts once one is chosen.

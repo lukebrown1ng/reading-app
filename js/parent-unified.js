@@ -50,7 +50,7 @@
     var totalMs = 0;
     var lastStart = 0;
     sessions.forEach(function (s) {
-      var end = s.end || Date.now();
+      var end = s.end || s.start;
       totalMs += Math.max(0, end - s.start);
       if (s.start > lastStart) lastStart = s.start;
     });
@@ -107,57 +107,6 @@
     });
   }
 
-  function renderWordVoicePicker() {
-    var select = document.getElementById("wordVoiceSelect");
-    var testBtn = document.getElementById("wordVoiceTestBtn");
-    var refreshBtn = document.getElementById("wordVoiceRefreshBtn");
-    if (!select || !WordDen.speech || !WordDen.speech.isSupported()) {
-      if (select) select.disabled = true;
-      if (testBtn) testBtn.disabled = true;
-      if (refreshBtn) refreshBtn.disabled = true;
-      return;
-    }
-
-    function populate() {
-      var options = WordDen.speech.getVoiceOptions();
-      if (options.length === 0) return;
-      var current = WordDen.state.getVoiceName();
-      select.innerHTML = "";
-
-      var autoOpt = document.createElement("option");
-      autoOpt.value = "";
-      autoOpt.textContent = "Auto (recommended)";
-      select.appendChild(autoOpt);
-
-      options.forEach(function (opt) {
-        var el = document.createElement("option");
-        el.value = opt.name;
-        el.textContent = opt.name + " (" + opt.lang + ")";
-        select.appendChild(el);
-      });
-
-      select.value = current || "";
-    }
-
-    populate();
-    if (typeof window.speechSynthesis !== "undefined") {
-      window.speechSynthesis.addEventListener("voiceschanged", populate);
-    }
-
-    select.addEventListener("change", function () {
-      WordDen.state.setVoiceName(select.value || null);
-    });
-
-    testBtn.addEventListener("click", function () {
-      WordDen.speech.speak("they");
-    });
-
-    refreshBtn.addEventListener("click", function () {
-      WordDen.speech.refresh();
-      populate();
-    });
-  }
-
   // --- Read a Book ---------------------------------------------------
 
   function renderReadSessions() {
@@ -171,7 +120,7 @@
     var activeMs = 0;
     var lastStart = 0;
     sessions.forEach(function (s) {
-      var end = s.end || Date.now();
+      var end = s.end || s.start;
       appOpenMs += Math.max(0, end - s.start);
       activeMs += s.activeMs || 0;
       if (s.start > lastStart) lastStart = s.start;
@@ -190,57 +139,6 @@
         "active-reading-time figure — just time the app was open.</em>";
     }
     el.innerHTML = html;
-  }
-
-  function renderReadVoicePicker() {
-    var select = document.getElementById("readVoiceSelect");
-    var testBtn = document.getElementById("readVoiceTestBtn");
-    var refreshBtn = document.getElementById("readVoiceRefreshBtn");
-    if (!select || !ReadDen.narration || !ReadDen.narration.isSupported()) {
-      if (select) select.disabled = true;
-      if (testBtn) testBtn.disabled = true;
-      if (refreshBtn) refreshBtn.disabled = true;
-      return;
-    }
-
-    function populate() {
-      var options = ReadDen.narration.getVoiceOptions();
-      if (options.length === 0) return;
-      var current = ReadDen.state.getNarrationVoiceName();
-      select.innerHTML = "";
-
-      var autoOpt = document.createElement("option");
-      autoOpt.value = "";
-      autoOpt.textContent = "Auto (recommended)";
-      select.appendChild(autoOpt);
-
-      options.forEach(function (opt) {
-        var el = document.createElement("option");
-        el.value = opt.name;
-        el.textContent = opt.name + " (" + opt.lang + ")";
-        select.appendChild(el);
-      });
-
-      select.value = current || "";
-    }
-
-    populate();
-    if (typeof window.speechSynthesis !== "undefined") {
-      window.speechSynthesis.addEventListener("voiceschanged", populate);
-    }
-
-    select.addEventListener("change", function () {
-      ReadDen.state.setNarrationVoiceName(select.value || null);
-    });
-
-    testBtn.addEventListener("click", function () {
-      ReadDen.narration.speak("the dinosaur went for a walk");
-    });
-
-    refreshBtn.addEventListener("click", function () {
-      ReadDen.narration.refresh();
-      populate();
-    });
   }
 
   function renderBookProgress() {
@@ -295,7 +193,7 @@
     var totalMs = 0;
     var lastStart = 0;
     sessions.forEach(function (s) {
-      var end = s.end || Date.now();
+      var end = s.end || s.start;
       totalMs += Math.max(0, end - s.start);
       if (s.start > lastStart) lastStart = s.start;
     });
@@ -303,13 +201,6 @@
       "Played " + sessions.length + " time" + (sessions.length === 1 ? "" : "s") +
       ", roughly " + formatDuration(totalMs) + " altogether. " +
       "Last played: " + formatDate(lastStart) + ".";
-  }
-
-  function spellingWordStatus(record) {
-    if (record.seen === 0) return "new";
-    if (record.misses === 0) return "solid";
-    if (record.correctFirstTry > 0) return "learning";
-    return "shaky";
   }
 
   function renderSpellingRounds() {
@@ -371,9 +262,8 @@
       var row = document.createElement("div");
       row.className = "cluster-row";
       week.words.forEach(function (word) {
-        var record = SpellDen.state.getWordRecord(word);
         var chip = document.createElement("span");
-        chip.className = "word-chip status-" + spellingWordStatus(record);
+        chip.className = "word-chip status-" + SpellDen.state.getWordStatus(word);
         chip.textContent = word;
         row.appendChild(chip);
       });
@@ -383,54 +273,137 @@
     });
   }
 
-  function renderSpellingVoicePicker() {
-    var select = document.getElementById("spellingVoiceSelect");
-    var testBtn = document.getElementById("spellingVoiceTestBtn");
-    var refreshBtn = document.getElementById("spellingVoiceRefreshBtn");
-    if (!select || !SpellDen.speech || !SpellDen.speech.isSupported()) {
-      if (select) select.disabled = true;
-      if (testBtn) testBtn.disabled = true;
-      if (refreshBtn) refreshBtn.disabled = true;
+  // --- Voice pickers ---------------------------------------------------
+
+  var VOICE_HELP =
+    "<summary>Get more voices on this device</summary>" +
+    "<ol>" +
+    "<li>Open <strong>Settings → Accessibility → Spoken Content → Voices</strong>.</li>" +
+    "<li>Pick a language, e.g. <strong>English → United Kingdom</strong>.</li>" +
+    "<li>Tap a voice name (Serena, Stephanie, Kate...) and download the " +
+    "<strong>Enhanced</strong> or <strong>Premium</strong> quality version — " +
+    "the default \"Standard\" ones are the robotic-sounding ones.</li>" +
+    "<li>Fully quit and reopen the browser (or restart the phone) after " +
+    "downloading, then tap the ↻ button above to re-check — newly " +
+    "downloaded voices often don't show up until then.</li>" +
+    "</ol>" +
+    "<p class=\"voice-help-note\"><strong>Siri voices don't show up here</strong> — " +
+    "this is a known Safari/iOS limitation (Siri's voices aren't available to " +
+    "web pages at all, however long you wait), not something this page can " +
+    "fix. The Enhanced/Premium voices above are the best-sounding ones " +
+    "actually available here.</p>";
+
+  // One picker per mode. `speech` has isSupported / getVoiceOptions /
+  // refresh / a speak function; `state` stores the chosen voice name.
+  var VOICE_PICKERS = {
+    word: {
+      speech: function () { return WordDen.speech; },
+      speak: function (sp) { sp.speak("they"); },
+      get: function () { return WordDen.state.getVoiceName(); },
+      set: function (v) { WordDen.state.setVoiceName(v); }
+    },
+    read: {
+      speech: function () { return ReadDen.narration; },
+      speak: function (sp) { sp.speak("the dinosaur went for a walk"); },
+      get: function () { return ReadDen.state.getNarrationVoiceName(); },
+      set: function (v) { ReadDen.state.setNarrationVoiceName(v); }
+    },
+    spelling: {
+      speech: function () { return SpellDen.speech; },
+      speak: function (sp) { sp.speak("because"); },
+      get: function () { return SpellDen.state.getVoiceName(); },
+      set: function (v) { SpellDen.state.setVoiceName(v); }
+    }
+  };
+
+  function renderVoicePicker(box) {
+    var cfg = VOICE_PICKERS[box.getAttribute("data-voice-picker")];
+    var speech = cfg.speech();
+    var id = "voiceSelect-" + box.getAttribute("data-voice-picker");
+
+    box.innerHTML =
+      '<label for="' + id + '"></label>' +
+      '<p class="parent-note voice-note"></p>' +
+      '<div class="voice-picker-row">' +
+      '<select id="' + id + '"></select>' +
+      '<button type="button" class="voice-test-btn">▶ Try it</button>' +
+      '<button type="button" class="voice-refresh-btn" aria-label="Refresh voice list">↻</button>' +
+      "</div>" +
+      '<details class="voice-help">' + VOICE_HELP + "</details>";
+    box.querySelector("label").textContent = box.getAttribute("data-label");
+    box.querySelector(".voice-note").textContent = box.getAttribute("data-note");
+
+    var select = box.querySelector("select");
+    var testBtn = box.querySelector(".voice-test-btn");
+    var refreshBtn = box.querySelector(".voice-refresh-btn");
+    if (!speech || !speech.isSupported()) {
+      select.disabled = testBtn.disabled = refreshBtn.disabled = true;
       return;
     }
 
     function populate() {
-      var options = SpellDen.speech.getVoiceOptions();
+      var options = speech.getVoiceOptions();
       if (options.length === 0) return;
-      var current = SpellDen.state.getVoiceName();
       select.innerHTML = "";
-
       var autoOpt = document.createElement("option");
       autoOpt.value = "";
       autoOpt.textContent = "Auto (recommended)";
       select.appendChild(autoOpt);
-
       options.forEach(function (opt) {
         var el = document.createElement("option");
         el.value = opt.name;
         el.textContent = opt.name + " (" + opt.lang + ")";
         select.appendChild(el);
       });
-
-      select.value = current || "";
+      select.value = cfg.get() || "";
     }
 
     populate();
-    if (typeof window.speechSynthesis !== "undefined") {
-      window.speechSynthesis.addEventListener("voiceschanged", populate);
-    }
-
-    select.addEventListener("change", function () {
-      SpellDen.state.setVoiceName(select.value || null);
-    });
-
-    testBtn.addEventListener("click", function () {
-      SpellDen.speech.speak("because");
-    });
-
+    window.speechSynthesis.addEventListener("voiceschanged", populate);
+    select.addEventListener("change", function () { cfg.set(select.value || null); });
+    testBtn.addEventListener("click", function () { cfg.speak(speech); });
     refreshBtn.addEventListener("click", function () {
-      SpellDen.speech.refresh();
+      speech.refresh();
       populate();
+    });
+  }
+
+  // --- Backup ------------------------------------------------------------
+
+  function initBackup() {
+    var message = document.getElementById("backupMessage");
+    document.getElementById("backupExportBtn").addEventListener("click", function () {
+      var blob = new Blob([Den.backup.toJSON()], { type: "application/json" });
+      var link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "reading-den-backup-" + new Date().toISOString().slice(0, 10) + ".json";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(function () { URL.revokeObjectURL(link.href); }, 1000);
+      message.textContent = "Backup saved to your downloads.";
+    });
+
+    var input = document.getElementById("backupImportInput");
+    input.addEventListener("change", function () {
+      var file = input.files && input.files[0];
+      if (!file) return;
+      if (!window.confirm("Replace the progress on this device with the backup? This can't be undone.")) {
+        input.value = "";
+        return;
+      }
+      var reader = new FileReader();
+      reader.onload = function () {
+        try {
+          Den.backup.restore(String(reader.result));
+          message.textContent = "Restored. Reloading…";
+          setTimeout(function () { window.location.reload(); }, 600);
+        } catch (e) {
+          message.textContent = "Couldn't restore: " + e.message;
+        }
+        input.value = "";
+      };
+      reader.readAsText(file);
     });
   }
 
@@ -446,15 +419,14 @@
     renderClusters();
     renderWordGameSessions();
     renderLevelAndBadges();
-    renderWordVoicePicker();
     renderReadSessions();
-    renderReadVoicePicker();
     renderBookProgress();
     renderStumbles();
     renderSpellingSessions();
-    renderSpellingVoicePicker();
     renderSpellingRounds();
     renderSpellingWeeks();
+    Array.prototype.forEach.call(document.querySelectorAll("[data-voice-picker]"), renderVoicePicker);
+    initBackup();
   }
 
   function initLock() {

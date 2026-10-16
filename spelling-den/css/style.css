@@ -813,3 +813,11 @@ html, body {
   background: var(--tile-bg-2);
   color: var(--ink);
 }
+
+.play-again-btn[hidden] {
+  display: none;
+}
+
+.practice-tricky-btn {
+  margin-top: 12px;
+}
