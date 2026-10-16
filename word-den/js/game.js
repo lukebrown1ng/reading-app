@@ -60,10 +60,43 @@ var WordDen = window.WordDen || {};
     return null;
   }
 
+  // Words he stumbled on while reading (Read a Book) that this game can
+  // quiz, as the game's own spelling of each, with how often he stumbled.
+  function stumbledCandidates() {
+    var counts = Den.readStumbles();
+    var out = [];
+    WordDen.ACTIVE_WORDS.forEach(function (w) {
+      var n = counts[w.toLowerCase()];
+      if (n > 0 && w.toLowerCase() !== (lastTarget || "").toLowerCase()) {
+        out.push({ word: w, count: n });
+      }
+    });
+    return out;
+  }
+
+  // About one round in four, revisit a word he stumbled on in a book,
+  // more often the more it tripped him up.
+  var STUMBLE_CHANCE = 0.25;
+
+  function pickStumbledWord() {
+    if (Math.random() >= STUMBLE_CHANCE) return null;
+    var list = stumbledCandidates();
+    if (list.length === 0) return null;
+    var total = list.reduce(function (sum, e) { return sum + e.count; }, 0);
+    var r = Math.random() * total;
+    for (var i = 0; i < list.length; i++) {
+      r -= list[i].count;
+      if (r <= 0) return list[i].word;
+    }
+    return list[list.length - 1].word;
+  }
+
   function pickTargetWord() {
     decayRetryQueue();
     var due = takeDueRetry();
     if (due) return due;
+    var stumbled = pickStumbledWord();
+    if (stumbled) return stumbled;
 
     var candidates = WordDen.ACTIVE_WORDS;
     var word = pickWeighted(candidates);

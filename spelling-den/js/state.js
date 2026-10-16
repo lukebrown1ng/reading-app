@@ -190,7 +190,7 @@ var SpellDen = window.SpellDen || {};
         return { word: r.word, status: r.status };
       });
       state.rounds.push({
-        at: Date.now(),
+        at: round.at || Date.now(),
         weekId: round.weekId,
         weekLabel: round.weekLabel,
         mode: round.mode,

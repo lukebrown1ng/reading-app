@@ -36,6 +36,12 @@ var Den = window.Den || {};
     return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
   };
 
+  // Words stumbled on in Read a Book, { word: count } (lower-case).
+  Den.readStumbles = function () {
+    var state = Den.storage.read("readDenState.v1");
+    return (state && state.stumbles) || {};
+  };
+
   // --- Play-time sessions ---------------------------------------------
   //
   // A session's `end` is a heartbeat: it is bumped every HEARTBEAT_MS while

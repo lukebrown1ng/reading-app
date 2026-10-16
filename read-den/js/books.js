@@ -58,6 +58,97 @@ var ReadDen = window.ReadDen || {};
         "He came out and said, I am here.",
         "They all played together in the sun."
       ]
+    },
+    {
+      id: "fox",
+      title: "The Little Fox",
+      cover: "🦊",
+      pages: [
+        "A little fox lived in a den.",
+        "One night she went out to look for food.",
+        "The moon was big and bright.",
+        "She saw a mouse run by.",
+        "The fox did not chase the mouse. She said hello.",
+        "Then she went back to her den to sleep."
+      ]
+    },
+    {
+      id: "rain",
+      title: "Rain, Rain, Go Away",
+      cover: "🌧️",
+      pages: [
+        "The rain came down on the hill.",
+        "Drip, drop, drip, drop.",
+        "A snail came out to play in it.",
+        "The birds hid in the tree.",
+        "Then the sun came out. Look, a rainbow.",
+        "Now everyone was happy."
+      ]
+    },
+    {
+      id: "ptero",
+      title: "Pterodactyl's Big Day",
+      cover: "🦅",
+      pages: [
+        "Pterodactyl woke up very early.",
+        "Today she was going to fly high.",
+        "She jumped off the tall cliff.",
+        "The wind lifted her up and up.",
+        "She could see the whole land below.",
+        "It was the best day ever."
+      ]
+    },
+    {
+      id: "farm",
+      title: "Night on the Farm",
+      cover: "🐄",
+      pages: [
+        "It was night on the farm.",
+        "The cow was asleep in the barn.",
+        "The pigs were asleep in the mud.",
+        "But the owl was awake in the tree.",
+        "Who, who, said the owl.",
+        "Then the sun came up and the farm woke up."
+      ]
+    },
+    {
+      id: "bear",
+      title: "The Sleepy Bear",
+      cover: "🐻",
+      pages: [
+        "The bear was so sleepy.",
+        "He had eaten a lot of berries.",
+        "He found a warm cave in the hill.",
+        "He made a bed of soft leaves.",
+        "Snow fell outside, but he did not mind.",
+        "The bear slept all winter long."
+      ]
+    },
+    {
+      id: "beach",
+      title: "A Day at the Beach",
+      cover: "🏖️",
+      pages: [
+        "We went to the beach in the car.",
+        "The sand was hot and the sea was blue.",
+        "I made a big sand castle.",
+        "A crab walked right up to it.",
+        "I gave him a shell for his house.",
+        "Then we had ice cream and went home."
+      ]
+    },
+    {
+      id: "egg",
+      title: "The Lost Egg",
+      cover: "🥚",
+      pages: [
+        "A dinosaur egg rolled down the hill.",
+        "Mum looked here and there for it.",
+        "It was not in the ferns. It was not by the lake.",
+        "Then she heard a tap, tap, tap.",
+        "The egg was by a log, and it was starting to crack.",
+        "Out came a tiny baby dino. Mum gave her a big hug."
+      ]
     }
   ];
 

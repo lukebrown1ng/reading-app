@@ -1,0 +1,10 @@
+{
+  "name": "reading-den",
+  "private": true,
+  "description": "A small static web app for a child's reading practice. No dependencies, no build step.",
+  "scripts": {
+    "test": "node --test tests/",
+    "build": "node scripts/build-sw.js",
+    "serve": "python3 -m http.server 8000"
+  }
+}

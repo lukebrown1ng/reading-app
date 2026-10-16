@@ -173,10 +173,18 @@
       list.appendChild(empty);
       return;
     }
+    var note = document.createElement("p");
+    note.className = "empty-note";
+    note.textContent = "🦕 = also comes up in the Word Game, which revisits these words.";
+    list.appendChild(note);
     counts.slice(0, 20).forEach(function (entry) {
       var row = document.createElement("div");
       row.className = "stumble-row";
-      row.innerHTML = "<span>" + entry.word + "</span><span>" + entry.count + "</span>";
+      var inGame = !!WordDen.CLUSTERS_BY_WORD[entry.word];
+      row.innerHTML = "<span></span><span></span>";
+      row.firstChild.textContent = entry.word + (inGame ? " 🦕" : "");
+      if (inGame) row.firstChild.title = "Also practised in the Word Game";
+      row.lastChild.textContent = entry.count;
       list.appendChild(row);
     });
   }

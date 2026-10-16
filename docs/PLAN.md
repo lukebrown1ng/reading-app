@@ -152,13 +152,9 @@ Layout:
 - [x] Unified parent view: session time, voice picker, and a per-week
       word-status grid (same shaky/learning/solid/new chip styling as
       the Word Game section)
-- [x] Parent-added weeks: a form on the parent page (label + words, one
-      per line or comma-separated) calls `SpellDen.state.addCustomWeek`
-      to add a new week without touching code — `SpellDen.getAllWeeks()`
-      merges these with the built-in seed weeks (built-in first, so a
-      newly added week is always the default). Each parent-added week
-      lists its words with a delete button; built-in seed weeks aren't
-      deletable from the UI
+- [x] ~~Parent-added weeks from the parent page~~ — removed: every word needs
+      generated audio, so new weeks are added with `scripts/add-week.js`
+      (see Phase I)
 - [x] Parent page top nav: sticky row of hotlinks (Word Game / Read a
       Book / Spellings) that jump to each section
 - [x] Voice-list robustness: all three speech modules
@@ -184,10 +180,24 @@ Layout:
       in-game week picker, used the parent page's top nav hotlinks and
       the voice-refresh buttons — no console errors
 
+## Phase I — Review follow-ups
+- [x] Read a Book: matcher takes each heard word once and matches its first
+      occurrence (repeated "the" no longer skips ahead); logic in
+      `read-den/js/matcher.js` with unit tests
+- [x] Sessions use a heartbeat end time (no more never-ending sessions or
+      uncounted time after switching apps)
+- [x] Parent page: Backup (export/restore JSON); neutral wording
+- [x] Offline: `sw.js` + `scripts/build-sw.js`
+- [x] Spelling Den: "Tricky words" round; `seen` no longer double-counts;
+      words can recover from "shaky"; Enter no longer double-fires
+- [x] Stumbled words feed the Word Game (about one round in four)
+- [x] 7 more books (11 in total)
+- [x] `scripts/add-week.js`
+- [x] Modal accessibility (dialog role, focus, Escape, Tab trap)
+- [x] Shared `js/common.js` replaces three copies of storage, session and
+      voice code; voice pickers on the parent page are generated
+- [x] `tests/` (`npm test`)
+- [ ] Not done: per-child profiles (everything is one shared record)
+
 ## Stretch (explicitly not MVP — logged, not built now)
-- [ ] Feed words stumbled on while reading into the Word Game's practice
-      clusters automatically (data model below already tracks stumbled
-      words/counts in a shape that could support this later)
-- [ ] Import/export of word-mistake data
 - [ ] More visual themes beyond dinosaurs/animals
-- [ ] More book content

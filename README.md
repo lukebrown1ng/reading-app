@@ -1,10 +1,66 @@
 # Reading Den
 
 A small static web app for a child's reading practice: a home screen with
-Word Game, Read a Book and Spellings modes, plus a parent page. No build
-step — serve the folder with any static server
-(e.g. `python3 -m http.server`) and open `index.html`. See `PLAN.md` for the
-build log.
+Word Game, Read a Book and Spellings modes, plus a PIN-protected parent page.
+Plain HTML/CSS/JS, no dependencies, no build step — serve the folder with any
+static server (`npm run serve`, or `python3 -m http.server`) and open
+`index.html`. `docs/PLAN.md` is the build log.
+
+## Layout
+
+| Path | What |
+| --- | --- |
+| `index.html` | home screen |
+| `word-den/` | Word Game: pick the right word, XP, badges, spaced repetition |
+| `read-den/` | Read a Book: follow-along reading with the microphone |
+| `spelling-den/` | Spellings: hear a word, spell it (tiles or keyboard), Years 3 and 5 |
+| `parent.html` | parent page (PIN `3108`, a speed bump rather than security) |
+| `js/common.js` | shared code: storage, sessions, voices, backup, modal accessibility |
+| `sw.js` | service worker that makes the whole app work offline |
+| `tests/` | `npm test` (Node's built-in test runner, no installs) |
+| `scripts/` | audio generation, `add-week.js`, `build-sw.js` |
+
+## Tests, and the offline cache
+
+```
+npm test            # unit tests + data checks (every word has audio, etc.)
+npm run build       # node scripts/build-sw.js
+```
+
+Run `npm run build` after adding or changing any file: it rewrites the file
+list and version in `sw.js` so devices fetch the new version and keep every
+audio clip for offline use. A test fails if an audio clip isn't in that list.
+Pages refresh in the background each visit, so a device picks up a new
+version the second time it opens the app.
+
+## Backup
+
+All progress lives in the browser's `localStorage` on that device. Safari can
+clear it for sites left unused for about a week unless the app is added to the
+Home Screen, so the parent page has a **Backup** section: save a JSON file,
+and restore it on this or another device. Do it now and then.
+
+## Read a Book
+
+Follows along with the microphone where the browser supports speech
+recognition (not iOS Safari — there it falls back to "read this page to me").
+Each newly heard word moves the highlight to its first match in the next few
+words (`read-den/js/matcher.js`, unit-tested), so repeated words like "the"
+can't skip ahead. Words he needs the app to say are logged quietly; the Word
+Game then brings those words up more often (about one round in four).
+
+## Spelling Den: tricky words
+
+After a round — or from the week picker — "Tricky words" plays up to ten words
+from that year that he still finds hard (missed last time, or right first time
+only once since a miss). A word turns "solid" on the parent page after two
+clean rounds in a row, so one old slip doesn't mark it forever.
+
+## Play time
+
+Each mode logs sessions. A session's end time is a heartbeat updated every
+30 seconds and when the app is hidden, so time is right even if the OS kills
+the page; coming back after two minutes or more starts a new session.
 
 ## Word Den game over
 
@@ -86,7 +142,16 @@ Needs Node 18+ (uses the built-in `fetch`). No `npm install`.
 Weeks can't be added from inside the app — every word needs generated audio,
 so new weeks go through the repo.
 
-1. Add the week to `WEEKS` in `spelling-den/js/weeks.js`.
+The quick way: write a file of ten `word | example sentence` lines and run
+
+```
+node scripts/add-week.js --year 3 --focus "Words with a silent k" week.txt
+```
+
+It adds the week, the sentences, the audio and the offline cache list in one
+go (add `--no-audio` to skip the ElevenLabs step). The manual steps it does:
+
+1. Add the week to `WEEKS` (or `WEEKS_Y5`) in `spelling-den/js/weeks.js`.
 2. Add one simple sentence per word to `spelling-den/js/sentences.js`. Words
    without a sentence still get a word clip, and the script warns about them.
 3. Generate the clips:
@@ -97,7 +162,8 @@ so new weeks go through the repo.
 
    Clips that already exist are skipped, so only the new words are rendered.
 4. Listen to the new clips (`open spelling-den/audio/<word>.mp3`), then commit
-   the new `.mp3` files along with the code changes.
+   the new `.mp3` files along with the code changes (and run `npm run build`
+   first so the offline cache list includes them).
 
 ### Fixing a clip
 
