@@ -144,8 +144,13 @@ var Den = window.Den || {};
         return english.map(function (v) { return { name: v.name, lang: v.lang }; });
       },
       refresh: refresh,
-      // Say `text` with the chosen voice. onDone fires on end or error.
-      speak: function (text, rate, pitch, onDone) {
+      cancel: function () {
+        if (!supported) return;
+        try { window.speechSynthesis.cancel(); } catch (e) { /* ignore */ }
+      },
+      // Say `text` with the chosen voice. onDone fires on end or error;
+      // onWord(charIndex) fires as each word starts, where the browser says so.
+      speak: function (text, rate, pitch, onDone, onWord) {
         if (!supported) {
           if (onDone) onDone();
           return;
@@ -162,6 +167,11 @@ var Den = window.Den || {};
           }
           utterance.rate = rate;
           utterance.pitch = pitch;
+          if (onWord) {
+            utterance.onboundary = function (e) {
+              if (e.name === undefined || e.name === "word") onWord(e.charIndex);
+            };
+          }
           if (onDone) {
             utterance.onend = onDone;
             utterance.onerror = onDone;

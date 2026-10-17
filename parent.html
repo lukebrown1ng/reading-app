@@ -58,14 +58,21 @@
     <div id="clusterList" class="cluster-list"></div>
 
     <h2 id="section-read-a-book" class="section-heading">Read a Book</h2>
-    <div id="readSessionSummary" class="session-summary"></div>
+    <div id="readOverview" class="summary-row"></div>
+    <div id="readInsights" class="session-summary"></div>
 
-    <div class="voice-picker" data-voice-picker="read" data-label="Read a Book narration voice" data-note="Used for "hear this word" and the read-to-me fallback on devices without speech recognition."></div>
+    <h3 class="section-heading">Minutes read, last 14 days</h3>
+    <div id="readChart" class="bar-chart"></div>
 
+    <h3 class="section-heading">Books</h3>
     <div id="bookProgressList" class="book-progress-list"></div>
 
-    <h3 class="section-heading">Words stumbled on while reading</h3>
+    <h3 class="section-heading">Words that needed help</h3>
     <div id="stumbleList" class="stumble-list"></div>
+
+    <div id="readSessionSummary" class="empty-note"></div>
+
+    <div class="voice-picker" data-voice-picker="read" data-label="Read a Book narration voice" data-note="Used for “hear this word” and the “Hear it” page narration."></div>
 
     <h2 id="section-spellings" class="section-heading">Spellings</h2>
     <div id="spellingSessionSummary" class="session-summary"></div>
@@ -108,6 +115,7 @@
   <script src="word-den/js/speech.js"></script>
   <script src="read-den/js/books.js"></script>
   <script src="read-den/js/state.js"></script>
+  <script src="read-den/js/stats.js"></script>
   <script src="read-den/js/narration.js"></script>
   <script src="spelling-den/js/weeks.js"></script>
   <script src="spelling-den/js/state.js"></script>

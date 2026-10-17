@@ -1,5 +1,5 @@
 // Read Den — SpeechSynthesis wrapper, shared by the "hear this word" help
-// and the no-recognition fallback's "read this page to me" narration.
+// and "hear it" page narration.
 // Voice choice lives in js/common.js; Read a Book keeps its own preference.
 var ReadDen = window.ReadDen || {};
 
@@ -14,8 +14,10 @@ var ReadDen = window.ReadDen || {};
     isSupported: voices.isSupported,
     getVoiceOptions: voices.getVoiceOptions,
     refresh: voices.refresh,
-    speak: function (text, onEnd) {
-      voices.speak(text, 0.9, 1.0, onEnd);
+    cancel: voices.cancel,
+    // onWord(charIndex) fires as each word starts, where supported.
+    speak: function (text, onEnd, onWord) {
+      voices.speak(text, 0.9, 1.0, onEnd, onWord);
     }
   };
 

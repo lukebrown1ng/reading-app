@@ -1,8 +1,7 @@
 // Read Den — thin wrapper around the browser SpeechRecognition API for
-// the follow-along reading mode. Not supported on every browser (notably
-// iOS/iPadOS Safari has no SpeechRecognition at all) — reader.js checks
-// isSupported() and falls back to a page-through-only mode when it's not
-// available, rather than pretending to listen.
+// the follow-along reading mode. Not supported on every browser, so
+// reader.js checks isSupported() and falls back to tap-to-hear reading
+// rather than pretending to listen.
 var ReadDen = window.ReadDen || {};
 
 (function () {
@@ -12,21 +11,18 @@ var ReadDen = window.ReadDen || {};
   var supported = !!SpeechRecognitionImpl;
   var active = null;
 
-  function normalize(word) {
-    return word.toLowerCase().replace(/[^a-z']/g, "");
-  }
-
   ReadDen.recognition = {
     isSupported: function () {
       return supported;
     },
 
-    // callbacks: { onResult(words), onEnd(), onError(err) }
-    // onResult receives the full list of normalized words recognized so
-    // far in this session (interim + final), so the caller can match
-    // forward from wherever it currently is in the page.
+    // callbacks: { onResult(results), onEnd(), onError(err) }
+    // onResult gets the run's running list, [{ words, isFinal }], so the
+    // caller can tell settled speech from guesses that may still change.
+    // onEnd fires only when the browser ends a run by itself (they all
+    // auto-stop after some quiet) — not after stop().
     start: function (callbacks) {
-      if (!supported) return null;
+      if (!supported) return false;
       try {
         var rec = new SpeechRecognitionImpl();
         rec.lang = "en-GB";
@@ -35,37 +31,41 @@ var ReadDen = window.ReadDen || {};
         rec.maxAlternatives = 1;
 
         rec.onresult = function (event) {
-          var words = [];
+          if (active !== rec) return;
+          var results = [];
           for (var i = 0; i < event.results.length; i++) {
-            var transcript = event.results[i][0].transcript;
-            transcript.split(/\s+/).forEach(function (w) {
-              var norm = normalize(w);
-              if (norm) words.push(norm);
+            results.push({
+              words: ReadDen.normalizeHeard(event.results[i][0].transcript),
+              isFinal: event.results[i].isFinal
             });
           }
-          if (callbacks.onResult) callbacks.onResult(words);
+          if (callbacks.onResult) callbacks.onResult(results);
         };
         rec.onerror = function (event) {
-          if (callbacks.onError) callbacks.onError(event.error);
+          if (active === rec && callbacks.onError) callbacks.onError(event.error);
         };
         rec.onend = function () {
-          if (active === rec) active = null;
+          if (active !== rec) return;
+          active = null;
           if (callbacks.onEnd) callbacks.onEnd();
         };
 
         active = rec;
         rec.start();
-        return rec;
+        return true;
       } catch (e) {
-        if (callbacks.onError) callbacks.onError(e);
-        return null;
+        active = null;
+        if (callbacks.onError) callbacks.onError(e && e.name === "NotAllowedError" ? "not-allowed" : "error");
+        return false;
       }
     },
 
     stop: function () {
-      if (active) {
+      var rec = active;
+      active = null;
+      if (rec) {
         try {
-          active.stop();
+          rec.abort();
         } catch (e) {
           // Already stopped/unavailable — nothing to do.
         }

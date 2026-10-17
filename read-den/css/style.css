@@ -20,11 +20,14 @@ html, body {
   font-family: "Baloo 2", "Comic Sans MS", "Segoe UI", system-ui, sans-serif;
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior: none;
+  -webkit-user-select: none;
   user-select: none;
+  touch-action: manipulation;
 }
 
 .app {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   background: linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
@@ -47,19 +50,109 @@ html, body {
   color: var(--ink);
 }
 
-.brand-home {
-  font-size: 1.4rem;
+.icon-link {
+  font-size: 1.5rem;
   text-decoration: none;
-  opacity: 0.8;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+}
+
+.icon-link:active {
+  background: var(--accent-soft);
+}
+
+.book-heading {
+  flex: 1;
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  text-align: center;
 }
 
 /* Book picker */
 .picker-area {
   flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  gap: 18px;
   padding: 12px 20px 20px;
+}
+
+.resume-tile {
+  width: 100%;
+  max-width: 620px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 20px;
+  border-radius: 22px;
+  background: var(--accent);
+  color: #fff;
+  text-decoration: none;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.12);
+}
+
+.resume-tile[hidden] {
+  display: none;
+}
+
+.resume-tile:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.12);
+}
+
+.resume-cover {
+  font-size: 2.6rem;
+}
+
+.resume-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.resume-label {
+  font-size: 0.8rem;
+  opacity: 0.85;
+}
+
+.resume-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.resume-go {
+  font-size: 1.6rem;
+}
+
+.tile-pips {
+  display: flex;
+  gap: 4px;
+}
+
+.tile-pip {
+  width: 10px;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.tile-pip.on {
+  background: var(--accent);
+}
+
+.resume-tile .tile-pip {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.resume-tile .tile-pip.on {
+  background: #fff;
 }
 
 .book-grid {
@@ -105,50 +198,113 @@ html, body {
 }
 
 /* Reader view */
+.pips {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 20px 4px;
+}
+
+.pip {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.12);
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.pip-done {
+  background: var(--accent);
+}
+
+.pip-current {
+  background: var(--highlight);
+  box-shadow: 0 0 0 3px rgba(255, 209, 102, 0.45);
+  transform: scale(1.25);
+}
+
 .reader-area {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 20px;
-  padding: 12px 20px 20px;
+  gap: 14px;
+  padding: 8px 20px 12px;
+}
+
+.reader-area[hidden],
+.end-card[hidden],
+.nav-row[hidden] {
+  display: none;
 }
 
 .page-card {
   background: var(--card);
   border-radius: 24px;
-  min-height: 160px;
-  width: min(620px, 100%);
+  min-height: 200px;
+  width: min(680px, 100%);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 18px;
-  padding: 32px 28px;
+  padding: 32px 26px;
   box-shadow: 0 6px 0 rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.4s ease, background 0.4s ease;
+}
+
+.page-card.page-done {
+  background: #f4fff8;
+  box-shadow: 0 6px 0 rgba(0, 0, 0, 0.06), 0 0 0 4px var(--accent-soft);
+}
+
+.page-card.turn-next { animation: turn-next 0.35s ease; }
+.page-card.turn-prev { animation: turn-prev 0.35s ease; }
+
+@keyframes turn-next {
+  from { opacity: 0; transform: translateX(36px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes turn-prev {
+  from { opacity: 0; transform: translateX(-36px); }
+  to { opacity: 1; transform: translateX(0); }
 }
 
 .page-text {
-  font-size: clamp(1.5rem, 6vw, 2.2rem);
+  font-size: clamp(1.7rem, 7vw, 2.6rem);
   font-weight: 700;
-  line-height: 1.6;
+  line-height: 1.55;
   text-align: center;
   margin: 0;
 }
 
 .word {
   display: inline-block;
-  border-radius: 8px;
-  padding: 0 2px;
-  transition: background 0.2s ease;
+  border-radius: 10px;
+  padding: 0 4px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.3s ease;
+}
+
+.word:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Words already read fade back so the eye stays on what's next. */
+.word-done {
+  color: #6b8f7b;
 }
 
 .word-current {
   background: var(--highlight);
-  cursor: pointer;
   box-shadow: 0 0 0 2px var(--highlight);
   animation: word-current-pulse 1.6s ease-in-out infinite;
+}
+
+.word-narrating {
+  background: var(--accent-soft);
+  box-shadow: 0 0 0 2px var(--accent-soft);
 }
 
 @keyframes word-current-pulse {
@@ -156,24 +312,30 @@ html, body {
   50% { box-shadow: 0 0 0 5px var(--highlight); }
 }
 
-.tap-hint {
-  margin: -8px 0 0;
-  font-size: 0.95rem;
-  color: var(--ink);
-  opacity: 0.7;
-  text-align: center;
+/* Fixed height so the help button appearing never moves the page. */
+.help-slot {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .hear-word-btn {
   border: none;
-  background: var(--accent-soft);
+  background: var(--card);
   color: var(--ink);
-  font-size: 1rem;
+  font: inherit;
+  font-size: 1.05rem;
   font-weight: 700;
-  padding: 10px 18px;
-  border-radius: 20px;
+  padding: 10px 20px;
+  border-radius: 22px;
   cursor: pointer;
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.08);
   animation: fade-in 0.3s ease;
+}
+
+.hear-word-btn[hidden] {
+  display: none;
 }
 
 @keyframes fade-in {
@@ -181,27 +343,87 @@ html, body {
   to { opacity: 1; transform: translateY(0); }
 }
 
-.listen-toggle-btn,
-.narrate-btn {
-  border: none;
-  background: var(--accent);
-  color: white;
-  font-size: 1.1rem;
-  font-weight: 700;
-  padding: 16px 28px;
-  border-radius: 26px;
-  cursor: pointer;
-  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.12);
+.status-line {
+  margin: 0;
+  min-height: 1.4em;
+  font-size: 0.98rem;
+  color: var(--ink);
+  opacity: 0.75;
+  text-align: center;
 }
 
-.listen-toggle-btn:active,
-.narrate-btn:active {
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.mic-btn {
+  position: relative;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font: inherit;
+  font-size: 1.15rem;
+  font-weight: 700;
+  min-height: 64px;
+  padding: 14px 30px;
+  border-radius: 34px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.14);
+}
+
+.mic-btn[hidden] {
+  display: none;
+}
+
+.mic-btn:active {
   transform: translateY(4px);
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.14);
+}
+
+.mic-icon {
+  font-size: 1.5rem;
+}
+
+.mic-btn[data-state="on"] {
+  background: #d9534f;
+  animation: mic-listening 1.8s ease-in-out infinite;
+}
+
+@keyframes mic-listening {
+  0%, 100% { box-shadow: 0 5px 0 rgba(0, 0, 0, 0.14), 0 0 0 0 rgba(217, 83, 79, 0.45); }
+  50% { box-shadow: 0 5px 0 rgba(0, 0, 0, 0.14), 0 0 0 12px rgba(217, 83, 79, 0); }
+}
+
+.side-btn {
+  border: none;
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  min-height: 64px;
+  padding: 10px 22px;
+  border-radius: 34px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.08);
+}
+
+.side-btn:active {
+  transform: translateY(4px);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
 }
 
 .reader-footer {
-  padding: 10px 20px 22px;
+  padding: 10px 20px calc(18px + env(safe-area-inset-bottom, 0px));
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -211,7 +433,7 @@ html, body {
 .nav-row {
   display: flex;
   gap: 14px;
-  width: min(620px, 100%);
+  width: min(680px, 100%);
 }
 
 .nav-btn {
@@ -219,9 +441,11 @@ html, body {
   border: none;
   background: var(--card);
   color: var(--ink);
+  font: inherit;
   font-size: 1.05rem;
   font-weight: 700;
-  padding: 14px;
+  min-height: 52px;
+  padding: 12px;
   border-radius: 18px;
   cursor: pointer;
   box-shadow: 0 4px 0 rgba(0, 0, 0, 0.06);
@@ -235,6 +459,79 @@ html, body {
 .nav-btn:disabled {
   opacity: 0.4;
   cursor: default;
+}
+
+/* A finished page: the way on is the obvious next thing. */
+.nav-btn.nudge {
+  background: var(--accent);
+  color: #fff;
+  animation: nudge 1.4s ease-in-out infinite;
+}
+
+@keyframes nudge {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+}
+
+/* End of a book */
+.end-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 20px 24px;
+  text-align: center;
+}
+
+.end-cover {
+  font-size: 5rem;
+  animation: end-bounce 1.2s ease;
+}
+
+@keyframes end-bounce {
+  0% { transform: scale(0.3); opacity: 0; }
+  60% { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+.end-title {
+  margin: 0;
+  font-size: 2.4rem;
+}
+
+.end-sub {
+  margin: 0 0 12px;
+  font-size: 1.1rem;
+  opacity: 0.8;
+}
+
+.end-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: min(420px, 100%);
+}
+
+.end-btn {
+  border: none;
+  background: var(--card);
+  color: var(--ink);
+  font: inherit;
+  font-size: 1.1rem;
+  font-weight: 700;
+  padding: 16px;
+  border-radius: 22px;
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  box-shadow: 0 5px 0 rgba(0, 0, 0, 0.08);
+}
+
+.end-btn.primary {
+  background: var(--accent);
+  color: #fff;
 }
 
 .parent-link {
@@ -252,5 +549,17 @@ html, body {
 @media (min-width: 560px) {
   .book-grid {
     grid-template-columns: repeat(2, minmax(180px, 1fr));
+  }
+}
+
+@media (max-height: 560px) {
+  .page-card { min-height: 120px; padding: 18px; }
+  .page-text { font-size: clamp(1.3rem, 5vw, 1.9rem); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
   }
 }

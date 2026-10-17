@@ -48,13 +48,13 @@ var ReadDen = window.ReadDen || {};
     },
     {
       id: "trex",
-      title: "The Shy T. Rex",
+      title: "The Shy T-Rex",
       cover: "🦖",
       pages: [
-        "The T. Rex was very shy.",
+        "The T-Rex was very shy.",
         "He hid behind the big rocks.",
         "The other dinosaurs looked for him.",
-        "Where did the T. Rex go, they said.",
+        "Where did the T-Rex go, they said.",
         "He came out and said, I am here.",
         "They all played together in the sun."
       ]
@@ -159,17 +159,23 @@ var ReadDen = window.ReadDen || {};
     return null;
   };
 
-  // Splits a page into tokens carrying both what to display (with
-  // punctuation) and a normalized form (lowercase, punctuation stripped)
-  // used for matching against speech recognition results.
+  // Lower-case, apostrophes kept, everything else stripped: the form used to
+  // compare a printed word with a spoken one.
+  ReadDen.normalizeWord = function (word) {
+    return word.toLowerCase().replace(/[\u2018\u2019]/g, "'").replace(/[^a-z']/g, "").replace(/^'+|'+$/g, "");
+  };
+
+  // Splits a page into tokens carrying what to display (with punctuation),
+  // a normalized form for matching against speech recognition results, and
+  // where the word starts in the page text (for narration highlighting).
   ReadDen.tokenizePage = function (text) {
-    var raw = text.split(/\s+/).filter(Boolean);
-    return raw.map(function (word) {
-      return {
-        display: word,
-        norm: word.toLowerCase().replace(/[^a-z']/g, "")
-      };
-    });
+    var tokens = [];
+    var re = /\S+/g;
+    var m;
+    while ((m = re.exec(text))) {
+      tokens.push({ display: m[0], norm: ReadDen.normalizeWord(m[0]), start: m.index });
+    }
+    return tokens;
   };
 
   window.ReadDen = ReadDen;

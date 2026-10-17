@@ -201,3 +201,10 @@ Layout:
 
 ## Stretch (explicitly not MVP — logged, not built now)
 - [ ] More visual themes beyond dinosaurs/animals
+
+## Read a Book overhaul (audit follow-up)
+- [x] Mic stays on across pages; finished pages auto-turn; end-of-book screen with next-book suggestion; resume tile on picker; finished books restart at page one
+- [x] Matcher: interim-result-safe follower, page-boundary baseline, homophones/fuzzy for long words, joined words, digits
+- [x] Tap any word to hear it; "Hear it" narration with word highlighting; mic restart backoff; zoom no longer disabled
+- [x] Reading log (`pageReads`, per-word help/clean counts) + `stats.js`; parent view with trends, chart, books, word mastery
+- [ ] Not done: real-device check of speech recognition on iPad/Android (only the tap/narration/stats flows were driven in a desktop browser); more book content

@@ -64,3 +64,77 @@ test("finishing the page stops at the last word", () => {
   const r = advance(t, 0, ["go", "now", "extra"], 0);
   assert.strictEqual(r.cursor, 2);
 });
+
+// --- Fuzzy matching, joins, homophones ---------------------------------
+
+test("short look-alike words are not confused (then/they/these)", () => {
+  const t = tokens("Then they ran.");
+  const r = advance(t, 0, ["they"], 0);
+  // "they" is within the lookahead, so it skips "then" -- but it must never *match* it.
+  assert.strictEqual(r.hits[0], 1);
+  assert.strictEqual(win.ReadDen.wordsMatch("then", "they"), false);
+  assert.strictEqual(win.ReadDen.wordsMatch("these", "them"), false);
+});
+
+test("homophones, endings and a slipped letter on longer words are accepted", () => {
+  const m = win.ReadDen.wordsMatch;
+  assert.ok(m("two", "to"));
+  assert.ok(m("walk", "walked"));
+  assert.ok(m("dinosaur", "dinosaurs"));
+  assert.ok(m("stegosaurus", "stegosaurs"));
+  assert.ok(!m("cat", "cap"));
+});
+
+test("two heard words can make one printed word (T-Rex)", () => {
+  const t = tokens("The T-Rex was shy.");
+  const r = advance(t, 0, ["the", "t", "rex"], 0);
+  assert.strictEqual(r.cursor, 2);
+});
+
+test("heard text is normalised: digits become words, hyphens vanish", () => {
+  assert.deepStrictEqual(Array.from(win.ReadDen.normalizeHeard("T-Rex 2 Hello!")), ["trex", "two", "hello"]);
+});
+
+// --- The follower: interim results get revised ---------------------------
+
+const R = (words, isFinal) => ({ words, isFinal: !!isFinal });
+
+test("an interim guess that is later revised does not derail the highlight", () => {
+  const t = tokens("The cat sat on the mat.");
+  const f = win.ReadDen.createFollower(t);
+  f.update([R(["the", "bat"])]);
+  assert.strictEqual(f.cursor(), 1);
+  f.update([R(["the", "cat", "sat"])]);
+  assert.strictEqual(f.cursor(), 3);
+  f.update([R(["the", "cat", "sat"], true)]);
+  assert.strictEqual(f.cursor(), 3);
+  f.update([R(["the", "cat", "sat"], true), R(["on", "the"])]);
+  assert.strictEqual(f.cursor(), 5);
+});
+
+test("words heard on the previous page are not counted on the next", () => {
+  const t = tokens("The dog ran.");
+  const earlier = [R(["it", "was", "the", "end"])]; // result still in flight at the page turn
+  const f = win.ReadDen.createFollower(t, win.ReadDen.baselineOf(earlier));
+  f.update([R(["it", "was", "the", "end", "the", "dog"])]);
+  assert.strictEqual(f.cursor(), 2, "only 'the dog' belongs to this page");
+});
+
+test("passed-over words are marked skipped, heard ones heard, helped ones helped", () => {
+  const t = tokens("The big cat sat.");
+  const f = win.ReadDen.createFollower(t);
+  f.update([R(["the", "cat"])]);
+  assert.deepStrictEqual(Array.from(f.statuses()), [1, 2, 1, 0]);
+  f.help();
+  assert.deepStrictEqual(Array.from(f.statuses()), [1, 2, 1, 3]);
+  assert.ok(f.done());
+});
+
+test("a new recognition run starts clean without losing the position", () => {
+  const t = tokens("One two three four.");
+  const f = win.ReadDen.createFollower(t);
+  f.update([R(["one", "two"], true)]);
+  f.newRun();
+  f.update([R(["three"])]);
+  assert.strictEqual(f.cursor(), 3);
+});

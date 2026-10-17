@@ -42,12 +42,27 @@ and restore it on this or another device. Do it now and then.
 
 ## Read a Book
 
-Follows along with the microphone where the browser supports speech
-recognition (not iOS Safari — there it falls back to "read this page to me").
-Each newly heard word moves the highlight to its first match in the next few
-words (`read-den/js/matcher.js`, unit-tested), so repeated words like "the"
-can't skip ahead. Words he needs the app to say are logged quietly; the Word
-Game then brings those words up more often (about one round in four).
+One tap on the microphone and the book follows along page after page: read
+words fade back, the next word is highlighted, a finished page turns by
+itself, and the end of a book has its own screen with a suggested next book.
+Tapping any word says it (and counts as asking for help); "Hear it" reads the
+page with each word lit as it's spoken. Without speech recognition (or with
+the mic refused) it is tap-to-hear reading, and Next counts the page as read.
+
+`read-den/js/matcher.js` (unit-tested) follows the reading: interim guesses
+from the recogniser are re-tried from the last settled position so revisions
+can't derail the highlight; short words must match exactly (then/they/these
+are what's being practised) while longer ones forgive homophones, endings and
+a slipped letter; "t" + "rex" can make "T-Rex"; words heard on the previous
+page aren't counted on the next.
+
+What's logged (`read-den/js/state.js`, summarised by `stats.js`): per page
+read — active time, words, helped / heard / passed-over — plus per word that
+ever needed help. The parent page turns that into minutes, pages, streak, words
+per minute and help rate with week-on-week trends, a 14-day chart, per-book
+progress, and tricky words that move to "getting easier" and "mastered" (3
+clean mic reads) — mastered words stop feeding the Word Game's one-round-in-four
+revisits.
 
 ## Spelling Den: tricky words
 

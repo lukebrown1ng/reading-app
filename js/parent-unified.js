@@ -109,84 +109,152 @@
 
   // --- Read a Book ---------------------------------------------------
 
-  function renderReadSessions() {
-    var sessions = ReadDen.state.getSessions();
-    var el = document.getElementById("readSessionSummary");
-    if (sessions.length === 0) {
-      el.textContent = "No reading sessions yet.";
-      return;
-    }
-    var appOpenMs = 0;
-    var activeMs = 0;
-    var lastStart = 0;
-    sessions.forEach(function (s) {
-      var end = s.end || s.start;
-      appOpenMs += Math.max(0, end - s.start);
-      activeMs += s.activeMs || 0;
-      if (s.start > lastStart) lastStart = s.start;
-    });
-    var recognitionEverUsed = activeMs > 0;
-    var html =
-      "Opened " + sessions.length + " time" + (sessions.length === 1 ? "" : "s") +
-      ", app open roughly " + formatDuration(appOpenMs) + " altogether. " +
-      "Last read: " + formatDate(lastStart) + ".";
-    if (recognitionEverUsed) {
-      html += "<br>Actual listening time (mic following along): roughly " +
-        formatDuration(activeMs) + ".";
-    } else {
-      html += "<br><em>Speech recognition hasn't been used yet on this " +
-        "device (or isn't supported), so there's no separate " +
-        "active-reading-time figure — just time the app was open.</em>";
-    }
-    el.innerHTML = html;
+  var WEEKDAYS = ["S", "M", "T", "W", "T", "F", "S"];
+
+  function el(tag, className, text) {
+    var node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+    return node;
   }
 
-  function renderBookProgress() {
+  function pill(value, label) {
+    var div = el("div", "summary-pill");
+    div.appendChild(el("strong", null, value));
+    div.appendChild(document.createTextNode(label));
+    return div;
+  }
+
+  function trend(now, before) {
+    if (before === 0 || now === before) return "";
+    return now > before ? " ▲" : " ▼";
+  }
+
+  function renderReadOverview(stats) {
+    var row = document.getElementById("readOverview");
+    var insights = document.getElementById("readInsights");
+    row.innerHTML = "";
+    insights.innerHTML = "";
+    if (!stats.hasData) {
+      insights.textContent = "No reading logged yet. Once a book has been read, this fills in with " +
+        "time, pace and tricky words.";
+      return;
+    }
+    var w = stats.week;
+    row.appendChild(pill(w.minutes + trend(w.minutes, stats.prevWeek.minutes), "minutes this week"));
+    row.appendChild(pill(w.pages + trend(w.pages, stats.prevWeek.pages), "pages this week"));
+    row.appendChild(pill(w.words, "words read"));
+    row.appendChild(pill(stats.streak.current, "day streak"));
+    row.appendChild(pill(stats.totals.completions, "books finished"));
+    if (stats.pace.wpm !== null) row.appendChild(pill(stats.pace.wpm, "words / minute"));
+
+    var list = el("ul", "insight-list");
+    stats.insights.forEach(function (line) { list.appendChild(el("li", null, line)); });
+    insights.appendChild(list);
+  }
+
+  function renderReadChart(stats) {
+    var chart = document.getElementById("readChart");
+    chart.innerHTML = "";
+    if (!stats.hasData) return;
+    var max = 0;
+    stats.daily.forEach(function (d) { max = Math.max(max, d.ms); });
+    var total = 0;
+    stats.daily.forEach(function (d) {
+      var minutes = d.ms / 60000;
+      total += d.pages;
+      var col = el("div", "bar-col");
+      col.title = formatDate(d.ts) + ": " + (d.pages ? d.pages + " page" + (d.pages === 1 ? "" : "s") + ", about " +
+        Math.max(Math.round(minutes), 1) + " min" : "no reading");
+      var value = el("span", "bar-value", d.pages ? String(Math.max(Math.round(minutes), 1)) : "");
+      var track = el("div", "bar-track");
+      var bar = el("div", "bar" + (d.pages ? "" : " bar-empty"));
+      bar.style.height = d.pages ? Math.max(6, Math.round(d.ms / (max || 1) * 100)) + "%" : "3px";
+      track.appendChild(bar);
+      col.appendChild(value);
+      col.appendChild(track);
+      col.appendChild(el("span", "bar-label", WEEKDAYS[new Date(d.ts).getDay()]));
+      chart.appendChild(col);
+    });
+    chart.setAttribute("role", "img");
+    chart.setAttribute("aria-label", "Minutes read each day for the last " + stats.daily.length + " days; " +
+      total + " pages in total.");
+  }
+
+  function renderBookProgress(stats) {
     var list = document.getElementById("bookProgressList");
     list.innerHTML = "";
-    ReadDen.BOOKS.forEach(function (book) {
-      var progress = ReadDen.state.getBookProgress(book.id);
-      var row = document.createElement("div");
-      row.className = "book-row";
-      if (progress.opens === 0) {
-        row.innerHTML = "<strong>" + book.cover + " " + book.title + "</strong>Not started yet.";
+    stats.books.forEach(function (book) {
+      var row = el("div", "book-row");
+      row.appendChild(el("strong", null, book.cover + " " + book.title));
+      var bits = [];
+      if (!book.started) {
+        bits.push("Not started yet.");
       } else {
-        row.innerHTML =
-          "<strong>" + book.cover + " " + book.title + "</strong>" +
-          "Up to page " + (progress.lastPage + 1) + " of " + book.pages.length + ". " +
-          "Opened " + progress.opens + " time" + (progress.opens === 1 ? "" : "s") +
-          (progress.rereads > 0 ? ", reread pages " + progress.rereads + " time" + (progress.rereads === 1 ? "" : "s") : "") +
-          ".";
+        if (book.lastPage > 0) bits.push("On page " + (book.lastPage + 1) + " of " + book.pageCount + ".");
+        if (book.completions > 0) bits.push("Finished " + book.completions + " time" + (book.completions === 1 ? "" : "s") + ".");
+        if (book.pagesRead > 0) bits.push(book.pagesRead + " page reads logged.");
+        if (book.lastRead) bits.push("Last read " + formatDate(book.lastRead) + ".");
+      }
+      row.appendChild(document.createTextNode(bits.join(" ")));
+      if (book.started && book.lastPage > 0) {
+        var track = el("div", "progress-track");
+        var fill = el("div", "progress-fill");
+        fill.style.width = Math.round(book.lastPage / book.pageCount * 100) + "%";
+        track.appendChild(fill);
+        row.appendChild(track);
       }
       list.appendChild(row);
     });
   }
 
-  function renderStumbles() {
+  var WORD_STATUS_LABEL = { tricky: "still tricky", improving: "getting easier", mastered: "reads it smoothly now" };
+
+  function renderStumbles(stats) {
     var list = document.getElementById("stumbleList");
     list.innerHTML = "";
-    var counts = ReadDen.state.getStumbleCounts();
-    if (counts.length === 0) {
-      var empty = document.createElement("p");
-      empty.className = "empty-note";
-      empty.textContent = "No stumbles logged yet.";
-      list.appendChild(empty);
+    if (stats.words.length === 0) {
+      list.appendChild(el("p", "empty-note", "No words needed help yet."));
       return;
     }
-    var note = document.createElement("p");
-    note.className = "empty-note";
-    note.textContent = "🦕 = also comes up in the Word Game, which revisits these words.";
-    list.appendChild(note);
-    counts.slice(0, 20).forEach(function (entry) {
-      var row = document.createElement("div");
-      row.className = "stumble-row";
+    list.appendChild(el("p", "empty-note",
+      "A word shows up here when it was tapped to hear it. It moves to “getting easier” once it is " +
+      "read unaided, and counts as mastered after " + ReadDen.state.MASTERED_AFTER + " clean reads " +
+      "(needs the microphone). 🦕 = also in the Word Game."));
+    stats.words.slice(0, 30).forEach(function (entry) {
+      var row = el("div", "word-row");
       var inGame = !!WordDen.CLUSTERS_BY_WORD[entry.word];
-      row.innerHTML = "<span></span><span></span>";
-      row.firstChild.textContent = entry.word + (inGame ? " 🦕" : "");
-      if (inGame) row.firstChild.title = "Also practised in the Word Game";
-      row.lastChild.textContent = entry.count;
+      var main = el("span", "word-main");
+      main.appendChild(el("strong", null, entry.word + (inGame ? " 🦕" : "")));
+      if (entry.where) main.appendChild(el("small", null, entry.where));
+      row.appendChild(main);
+      row.appendChild(el("span", "word-chip status-" + entry.status, WORD_STATUS_LABEL[entry.status]));
+      row.appendChild(el("span", "word-count", "helped " + entry.helped + "×"));
       list.appendChild(row);
     });
+  }
+
+  function renderReadSessions() {
+    var sessions = ReadDen.state.getSessions();
+    var el = document.getElementById("readSessionSummary");
+    if (sessions.length === 0) {
+      el.textContent = "";
+      return;
+    }
+    var openMs = 0;
+    sessions.forEach(function (s) { openMs += Math.max(0, (s.end || s.start) - s.start); });
+    el.textContent = "The book has been opened " + sessions.length + " time" + (sessions.length === 1 ? "" : "s") +
+      ", app open roughly " + formatDuration(openMs) + " altogether. Reading time above counts only time " +
+      "actually spent on pages.";
+  }
+
+  function renderRead() {
+    var stats = ReadDen.computeStats(ReadDen.state, ReadDen.BOOKS);
+    renderReadOverview(stats);
+    renderReadChart(stats);
+    renderBookProgress(stats);
+    renderStumbles(stats);
+    renderReadSessions();
   }
 
   // --- Spellings ---------------------------------------------------
@@ -427,9 +495,7 @@
     renderClusters();
     renderWordGameSessions();
     renderLevelAndBadges();
-    renderReadSessions();
-    renderBookProgress();
-    renderStumbles();
+    renderRead();
     renderSpellingSessions();
     renderSpellingRounds();
     renderSpellingWeeks();
