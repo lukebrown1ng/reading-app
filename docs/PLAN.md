@@ -207,4 +207,5 @@ Layout:
 - [x] Matcher: interim-result-safe follower, page-boundary baseline, homophones/fuzzy for long words, joined words, digits
 - [x] Tap any word to hear it; "Hear it" narration with word highlighting; mic restart backoff; zoom no longer disabled
 - [x] Reading log (`pageReads`, per-word help/clean counts) + `stats.js`; parent view with trends, chart, books, word mastery
-- [ ] Not done: real-device check of speech recognition on iPad/Android (only the tap/narration/stats flows were driven in a desktop browser); more book content
+- [x] 12 new books (23 total), written around then/they/these/this/that/there/when/what; `?debug=1` overlay for device tuning
+- [ ] Not done: real-device check of speech recognition on iPad/Android (open `book.html?book=whale&debug=1`)

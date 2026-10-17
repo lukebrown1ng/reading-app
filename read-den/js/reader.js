@@ -43,6 +43,19 @@ var ReadDen = window.ReadDen || {};
   var tapped = [];
   var pageUsedMic = false;
 
+  // --- Diagnostics ----------------------------------------------------
+  // Open a book with ?debug=1 to see what the microphone is hearing and what
+  // the follower does with it — for tuning on a real device.
+  var debugEl = null;
+  var debugLines = [];
+  function debug(line) {
+    if (!debugEl) return;
+    var t = new Date();
+    debugLines.push(("0" + t.getMinutes()).slice(-2) + ":" + ("0" + t.getSeconds()).slice(-2) + " " + line);
+    if (debugLines.length > 14) debugLines.shift();
+    debugEl.textContent = debugLines.join("\n");
+  }
+
   // --- Small helpers --------------------------------------------------
 
   function listenMode() {
@@ -191,7 +204,11 @@ var ReadDen = window.ReadDen || {};
     quickEnds = 0;
     pageUsedMic = true;
     touch();
-    if (follower.update(results)) progressed();
+    var before = follower.cursor();
+    var moved = follower.update(results);
+    debug((results[results.length - 1].isFinal ? "final " : "interim ") + "\"" +
+      results[results.length - 1].words.join(" ") + "\" cursor " + before + "→" + follower.cursor());
+    if (moved) progressed();
   }
 
   // Browsers end a run by themselves after some quiet; carry straight on.
@@ -199,6 +216,7 @@ var ReadDen = window.ReadDen || {};
   // trying after a few goes rather than looping.
   function onMicEnd() {
     micOn = false;
+    debug("mic ended after " + (Date.now() - runStartedAt) + "ms");
     if (!wantListening || finished || narrating) return;
     quickEnds = Date.now() - runStartedAt < QUICK_END_MS ? quickEnds + 1 : 0;
     if (quickEnds >= MAX_QUICK_ENDS) {
@@ -212,6 +230,7 @@ var ReadDen = window.ReadDen || {};
   }
 
   function onMicError(err) {
+    debug("mic error: " + err);
     if (err === "not-allowed" || err === "service-not-allowed" || err === "audio-capture") {
       micBlocked = true;
       wantListening = false;
@@ -483,6 +502,12 @@ var ReadDen = window.ReadDen || {};
       els.pips.appendChild(pip);
     });
     recognitionSupported = ReadDen.recognition.isSupported();
+    if (/[?&]debug=1/.test(window.location.search)) {
+      debugEl = document.createElement("pre");
+      debugEl.className = "debug-panel";
+      document.body.appendChild(debugEl);
+      debug("recognition " + (recognitionSupported ? "supported" : "NOT supported") + ", " + navigator.userAgent.slice(0, 60));
+    }
 
     els.hearWordBtn.addEventListener("click", function () {
       if (!follower.done()) onWordTap(follower.cursor());

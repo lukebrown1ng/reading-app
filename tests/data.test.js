@@ -42,7 +42,10 @@ test("books have unique ids and pages", () => {
   assert.strictEqual(new Set(ids).size, ids.length);
   R.BOOKS.forEach((b) => {
     assert.ok(b.title && b.cover && b.pages.length > 0, b.id);
-    b.pages.forEach((p) => assert.ok(R.tokenizePage(p).length > 0));
+    b.pages.forEach((p) => {
+      const n = R.tokenizePage(p).length;
+      assert.ok(n > 0 && n <= 12, b.id + ": a page should be 1-12 words, got " + n);
+    });
   });
 });
 
