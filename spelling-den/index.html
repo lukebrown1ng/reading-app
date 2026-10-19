@@ -63,14 +63,6 @@
         <button id="modeTypeBtn" class="mode-btn" type="button" aria-pressed="false">⌨️ Type</button>
       </div>
 
-      <div id="wrongFeedback" class="wrong-feedback" hidden>
-        <p class="wrong-feedback-label">That's tricky — here's how it's spelled:</p>
-        <div id="correctSpellingWord" class="correct-spelling-word"></div>
-        <div class="wrong-feedback-actions">
-          <button id="tryAgainBtn" class="try-again-btn" type="button">Try again</button>
-          <button id="skipWordBtn" class="skip-word-btn" type="button">Next word →</button>
-        </div>
-      </div>
     </main>
 
     <div id="roundComplete" class="round-complete" hidden>
@@ -112,6 +104,17 @@
       <button id="year3Btn" class="play-again-btn year-select-btn" type="button">Year 3</button>
       <button id="year5Btn" class="play-again-btn year-select-btn year-select-btn-alt" type="button">Year 5</button>
       <a class="back-home-link" href="../index.html">&larr; back home</a>
+    </div>
+  </div>
+
+  <div id="wrongFeedback" class="week-picker-modal wrong-modal" hidden>
+    <div class="wrong-feedback">
+      <p class="wrong-feedback-label modal-title">That's tricky — here's how it's spelled:</p>
+      <div id="correctSpellingWord" class="correct-spelling-word"></div>
+      <div class="wrong-feedback-actions">
+        <button id="tryAgainBtn" class="try-again-btn" type="button">Try again</button>
+        <button id="skipWordBtn" class="skip-word-btn" type="button">Next word →</button>
+      </div>
     </div>
   </div>
 
