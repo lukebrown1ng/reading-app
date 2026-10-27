@@ -80,6 +80,9 @@ button { touch-action: manipulation; }
 
 .top-bar-actions {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
   gap: 8px;
 }
 
@@ -220,7 +223,7 @@ button { touch-action: manipulation; }
 }
 
 .dino {
-  font-size: 3rem;
+  font-size: 5.5rem;
   line-height: 1;
   transform-origin: 50% 100%;
   margin-bottom: -8px;
@@ -611,12 +614,6 @@ button { touch-action: manipulation; }
   opacity: 0.8;
 }
 
-.progress-footer {
-  padding: 10px 20px 22px;
-  display: flex;
-  justify-content: center;
-}
-
 .parent-link {
   font-size: 0.9rem;
   color: var(--page-ink);
@@ -647,7 +644,7 @@ button { touch-action: manipulation; }
 }
 
 /* The round is over: take the finished game out from behind the card. */
-.app:has(> .round-complete:not([hidden])) :is(.top-bar, .game-area, .progress-footer) {
+.app:has(> .round-complete:not([hidden])) :is(.top-bar, .game-area) {
   visibility: hidden;
 }
 
@@ -950,6 +947,10 @@ button { touch-action: manipulation; }
   justify-content: center;
 }
 
+.grownups-actions .parent-link {
+  justify-content: center;
+}
+
 @media (min-width: 560px) {
   .blank-box {
     width: 52px;
@@ -1081,4 +1082,13 @@ button { touch-action: manipulation; }
 
 .practice-tricky-btn {
   margin-top: 12px;
+}
+
+/* Phones: the top bar's three controls shrink so they sit on one row. */
+@media (max-width: 520px) {
+  .top-bar { padding-inline: 12px; }
+  .top-bar-actions { gap: 6px; }
+  .top-bar .brand span { display: none; }
+  .top-bar .week-pill { padding: 8px 12px; font-size: 0.85rem; }
+  .top-bar .mode-btn { padding: 8px 12px; font-size: 0.9rem; }
 }

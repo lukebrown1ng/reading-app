@@ -307,7 +307,7 @@ var SpellDen = window.SpellDen || {};
   }
 
   function renderProgress() {
-    els.wordProgressLabel.textContent = "Word " + (wordIndex + 1) + " of " + order.length;
+    els.wordProgressLabel.textContent = currentWeek.label + " · Word " + (wordIndex + 1) + " of " + order.length;
     els.progressDots.innerHTML = "";
     for (var i = 0; i < order.length; i++) {
       var dot = document.createElement("span");

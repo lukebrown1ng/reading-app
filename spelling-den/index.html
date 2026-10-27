@@ -19,7 +19,14 @@
   <div class="app">
     <header class="top-bar">
       <a class="brand" href="../index.html">🦕 <span>Spelling Den</span></a>
-      <button id="grownupsBtn" class="week-pill" type="button">For grown-ups</button>
+      <div class="top-bar-actions">
+        <div id="modeToggle" class="mode-toggle" role="group" aria-label="How to enter letters">
+          <button id="modeTilesBtn" class="mode-btn" type="button" aria-pressed="true">🔀 Tiles</button>
+          <button id="modeTypeBtn" class="mode-btn" type="button" aria-pressed="false">⌨️ Type</button>
+        </div>
+        <button id="historyBtn" class="week-pill" type="button">🏆 My scores</button>
+        <button id="grownupsBtn" class="week-pill" type="button">For grown-ups</button>
+      </div>
     </header>
 
     <main id="playArea" class="game-area">
@@ -48,10 +55,6 @@
 
       <button id="checkBtn" class="check-btn" type="button" disabled>✓ Check</button>
 
-      <div id="modeToggle" class="mode-toggle" role="group" aria-label="How to enter letters">
-        <button id="modeTilesBtn" class="mode-btn" type="button" aria-pressed="true">🔀 Tiles</button>
-        <button id="modeTypeBtn" class="mode-btn" type="button" aria-pressed="false">⌨️ Type</button>
-      </div>
 
     </main>
 
@@ -88,10 +91,6 @@
         <a class="back-home-link" href="../index.html">&larr; back home</a>
       </div>
     </div>
-
-    <footer class="progress-footer">
-      <a class="parent-link" href="../parent.html">parent</a>
-    </footer>
   </div>
 
   <div id="yearSelect" class="year-select">
@@ -122,10 +121,10 @@
       <h3 class="week-picker-heading">For grown-ups</h3>
       <p id="streakPillLabel" class="grownups-streak"></p>
       <div class="grownups-actions">
-        <button id="historyBtn" class="week-pill" type="button">🏆 My scores</button>
         <button id="weekPill" class="week-pill" type="button">
           📅 <span id="weekPillLabel">Week 1</span> &middot; change week
         </button>
+        <a class="parent-link" href="../parent.html">parent</a>
       </div>
     </div>
   </div>
