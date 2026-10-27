@@ -211,7 +211,7 @@ button { touch-action: manipulation; }
 
 .dot-first { background: var(--correct-glow); }
 .dot-retry { background: var(--tile-bg-2); }
-.dot-skipped { background: #c98c8c; }
+.dot-skipped { background: var(--tile-bg); }
 
 @keyframes egg-wobble {
   0%, 100% { transform: rotate(0); }
@@ -322,7 +322,7 @@ button { touch-action: manipulation; }
 }
 
 .blank-box {
-  width: clamp(34px, 9vw, 48px);
+  width: clamp(44px, 9vw, 48px);
   height: clamp(44px, 11vw, 56px);
   border: none;
   border-bottom: 4px solid var(--accent);
@@ -377,8 +377,8 @@ button { touch-action: manipulation; }
 }
 
 .letter-tile {
-  width: clamp(42px, 11vw, 56px);
-  height: clamp(42px, 11vw, 56px);
+  width: clamp(44px, 11vw, 56px);
+  height: clamp(44px, 11vw, 56px);
   border: none;
   border-radius: 14px;
   background: var(--tile-bg);
@@ -586,13 +586,14 @@ button { touch-action: manipulation; }
   cursor: pointer;
 }
 
-/* Skipping logs the word as missed, so it is quieter and set apart from
-   the retry button a small finger is likely to hit. */
+/* Skipping logs the word as missed, so it is a quieter outlined button,
+   clearly apart from the retry button a small finger is likely to hit. */
 .skip-word-btn {
   font-size: 0.95rem;
-  background: transparent !important;
-  color: var(--muted-ink) !important;
-  text-decoration: underline;
+  margin-top: 6px;
+  background: transparent;
+  color: var(--muted-ink);
+  border: 2px solid var(--muted-ink);
 }
 
 .try-again-btn {
@@ -604,11 +605,6 @@ button { touch-action: manipulation; }
 .try-again-btn:active {
   transform: translateY(3px);
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
-}
-
-.skip-word-btn {
-  background: var(--accent-soft);
-  color: var(--ink);
 }
 
 .skip-word-btn:active {
@@ -648,6 +644,11 @@ button { touch-action: manipulation; }
   justify-content: center;
   padding: 16px;
   overflow-y: auto;
+}
+
+/* The round is over: take the finished game out from behind the card. */
+.app:has(> .round-complete:not([hidden])) :is(.top-bar, .game-area, .progress-footer) {
+  visibility: hidden;
 }
 
 .round-complete[hidden] {
@@ -709,6 +710,21 @@ button { touch-action: manipulation; }
   font-size: 3.4rem;
   line-height: 1.1;
   font-weight: 800;
+}
+
+.round-complete-score { display: flex; flex-direction: column; }
+
+/* A rough round leads with encouragement; the number steps back. */
+.round-complete-low .round-complete-caption {
+  order: -1;
+  font-size: 1.5rem;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.round-complete-low .round-complete-number {
+  font-size: 1.4rem;
+  color: var(--muted-ink);
 }
 
 .round-complete-caption {
@@ -777,8 +793,8 @@ button { touch-action: manipulation; }
 }
 
 #practiceWordList .result-word-chip {
-  background: var(--wrong-soft);
-  color: var(--wrong-ink);
+  background: var(--tile-bg);
+  color: var(--tile-ink);
 }
 
 .play-again-btn {

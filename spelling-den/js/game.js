@@ -445,9 +445,11 @@ var SpellDen = window.SpellDen || {};
     renderStreakPill();
 
     var firstTryCount = results.filter(function (r) { return r.status === "first"; }).length;
-    els.roundCompleteScore.textContent = firstTryCount + " / " + results.length;
-    els.roundCompleteCaption.textContent = firstTryCount === results.length ? "all spelled right first time!"
-      : firstTryCount === 0 ? "tricky ones today - let's practise!" : "spelled right first time!";
+    var low = firstTryCount * 2 < results.length;
+    els.roundCompleteCard.classList.toggle("round-complete-low", low);
+    els.roundCompleteScore.textContent = firstTryCount + " / " + results.length + (low ? " right first time" : "");
+    els.roundCompleteCaption.textContent = low ? "Tricky ones today - let's practise!"
+      : firstTryCount === results.length ? "all spelled right first time!" : "spelled right first time!";
 
     els.roundCompleteEggs.innerHTML = "";
     results.forEach(function (r, i) {
@@ -699,6 +701,7 @@ var SpellDen = window.SpellDen || {};
 
     els.roundComplete = document.getElementById("roundComplete");
     els.roundCompleteScore = document.getElementById("roundCompleteScore");
+    els.roundCompleteCard = document.querySelector(".round-complete-card");
     els.roundCompleteCaption = document.getElementById("roundCompleteCaption");
     els.roundCompleteEggs = document.getElementById("roundCompleteEggs");
     els.roundCompleteDino = document.getElementById("roundCompleteDino");
