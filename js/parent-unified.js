@@ -351,13 +351,16 @@
       var row = document.createElement("div");
       row.className = "cluster-row";
       week.words.forEach(function (word) {
+        var cell = document.createElement("div");
+        cell.className = "word-cell";
+        row.appendChild(cell);
         var chip = document.createElement("button");
         chip.type = "button";
         chip.className = "word-chip status-" + SpellDen.state.getWordStatus(word);
         chip.textContent = "🔊 " + word;
         chip.setAttribute("aria-label", "Play " + word);
         chip.onclick = function () { SpellDen.speech.speak(word); };
-        row.appendChild(chip);
+        cell.appendChild(chip);
         if (SpellDen.speech.hasSentence(word)) {
           var sent = document.createElement("button");
           sent.type = "button";
@@ -365,7 +368,7 @@
           sent.textContent = "💬";
           sent.setAttribute("aria-label", "Play sentence for " + word);
           sent.onclick = function () { SpellDen.speech.speakSentence(word); };
-          row.appendChild(sent);
+          cell.appendChild(sent);
         }
       });
       block.appendChild(row);

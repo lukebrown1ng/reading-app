@@ -317,6 +317,22 @@ body.parent-body {
   gap: 8px;
 }
 
+/* Spelling weeks: two words per line, each with its sentence bubble
+   pinned to the right of its own column so the bubbles line up. */
+.week-block .cluster-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 12px;
+}
+
+.word-cell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  min-width: 0;
+}
+
 .cluster-row .word-chip {
   padding: 4px 10px;
   border-radius: 10px;
@@ -325,7 +341,7 @@ body.parent-body {
 }
 
 .cluster-row button.word-chip { border: none; font-family: inherit; cursor: pointer; min-height: 36px; }
-.cluster-row .sentence-chip { background: #e5e5e5; margin-left: -4px; }
+.cluster-row .sentence-chip { background: #e5e5e5; }
 
 .status-new { background: #e5e5e5; color: #555; }
 .status-shaky { background: #ffe1e1; color: #a13c3c; }
