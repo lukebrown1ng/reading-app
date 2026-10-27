@@ -328,7 +328,18 @@
   function renderSpellingWeeks() {
     var list = document.getElementById("spellingWeekList");
     list.innerHTML = "";
+    var grid, year;
     SpellDen.getAllWeeks().forEach(function (week) {
+      if (week.year !== year) {
+        year = week.year;
+        var heading = document.createElement("h4");
+        heading.className = "year-heading year-" + year;
+        heading.textContent = "Year " + year;
+        list.appendChild(heading);
+        grid = document.createElement("div");
+        grid.className = "week-grid";
+        list.appendChild(grid);
+      }
       var block = document.createElement("div");
       block.className = "week-block";
 
@@ -359,7 +370,7 @@
       });
       block.appendChild(row);
 
-      list.appendChild(block);
+      grid.appendChild(block);
     });
   }
 

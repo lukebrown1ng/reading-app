@@ -307,7 +307,7 @@ var SpellDen = window.SpellDen || {};
   }
 
   function renderProgress() {
-    els.wordProgressLabel.textContent = currentWeek.label + " · Word " + (wordIndex + 1) + " of " + order.length;
+    els.wordProgressLabel.textContent = "Word " + (wordIndex + 1) + " of " + order.length;
     els.progressDots.innerHTML = "";
     for (var i = 0; i < order.length; i++) {
       var dot = document.createElement("span");
@@ -324,7 +324,7 @@ var SpellDen = window.SpellDen || {};
 
   function renderWeekPill() {
     els.weekPillLabel.textContent = currentWeek.label;
-    els.focusCallout.hidden = !currentWeek.focus;
+    els.focusCalloutLabel.textContent = currentWeek.focus ? currentWeek.label + " · Key focus" : currentWeek.label;
     els.focusCalloutText.textContent = currentWeek.focus || "";
   }
 
@@ -689,6 +689,7 @@ var SpellDen = window.SpellDen || {};
     els.hearBtn = document.getElementById("hearBtn");
     els.hearSentenceBtn = document.getElementById("hearSentenceBtn");
     els.focusCallout = document.getElementById("focusCallout");
+    els.focusCalloutLabel = document.getElementById("focusCalloutLabel");
     els.focusCalloutText = document.getElementById("focusCalloutText");
     els.modeTilesBtn = document.getElementById("modeTilesBtn");
     els.modeTypeBtn = document.getElementById("modeTypeBtn");

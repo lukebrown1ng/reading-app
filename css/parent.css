@@ -274,6 +274,28 @@ body.parent-body {
   margin-bottom: 26px;
 }
 
+/* Spelling weeks: a heading per year, then two columns of week cards. */
+.year-heading {
+  margin: 8px 0 0;
+  padding: 6px 14px;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  background: var(--accent);
+  color: var(--on-accent, #fff);
+}
+
+.year-heading.year-5 {
+  background: var(--tile-bg-2, #ffb703);
+  color: #3a2a05;
+}
+
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  align-items: start;
+}
+
 .week-block {
   margin-bottom: 4px;
 }
