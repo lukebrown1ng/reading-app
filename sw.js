@@ -5,7 +5,7 @@
 // The VERSION and PRECACHE lines are rewritten by `node scripts/build-sw.js`
 // — run it after adding or changing files so a new device can install the
 // whole app (including all the audio) in one go.
-const VERSION = "97f0d8a928";
+const VERSION = "247e9970f4";
 const PRECACHE = [
   "./",
   "./css/home.css",
@@ -558,8 +558,8 @@ const CACHE = "reading-den-" + VERSION;
 self.addEventListener("install", (event) => {
   event.waitUntil(
     caches.open(CACHE).then((cache) =>
-      // One missing file must not stop the rest being cached.
-      Promise.all(PRECACHE.map((url) => cache.add(url).catch(() => {})))
+      // All or nothing: a partial install must not replace a complete old cache.
+      cache.addAll(PRECACHE)
     ).then(() => self.skipWaiting())
   );
 });

@@ -6,6 +6,7 @@ var SpellDen = window.SpellDen || {};
   "use strict";
 
   var STORAGE_KEY = "spellDenState.v1";
+  var MAX_SESSIONS = 500;
   var cached = null;
 
   function defaultWordRecord() {
@@ -163,6 +164,7 @@ var SpellDen = window.SpellDen || {};
       var state = load();
       var session = { start: Date.now(), end: Date.now() };
       state.sessions.push(session);
+      if (state.sessions.length > MAX_SESSIONS) state.sessions = state.sessions.slice(-MAX_SESSIONS);
       save();
       return state.sessions.length - 1;
     },
@@ -218,42 +220,19 @@ var SpellDen = window.SpellDen || {};
     getStreakStats: function (year) {
       var rounds = SpellDen.state.getRounds(year);
       var today = Den.dateStr(new Date());
-      var days = {};
+      var streaks = Den.streaks(rounds.map(function (r) { return r.at; }));
       var best = null;
       var todayBest = null;
 
       rounds.forEach(function (r) {
-        var key = Den.dateStr(new Date(r.at));
-        days[key] = true;
         if (!best || r.firstTry > best.firstTry) best = r;
-        if (key === today && (!todayBest || r.firstTry > todayBest.firstTry)) todayBest = r;
+        if (Den.dateStr(new Date(r.at)) === today && (!todayBest || r.firstTry > todayBest.firstTry)) todayBest = r;
       });
 
-      var day = new Date();
-      if (!days[Den.dateStr(day)]) day.setDate(day.getDate() - 1);
-      var streak = 0;
-      while (days[Den.dateStr(day)]) {
-        streak += 1;
-        day.setDate(day.getDate() - 1);
-      }
-
-      // Longest run of consecutive days ever.
-      var keys = Object.keys(days).map(function (k) {
-        var p = k.split("-");
-        return new Date(+p[0], +p[1] - 1, +p[2]).getTime();
-      }).sort(function (a, b) { return a - b; });
-      var bestStreak = 0;
-      var run = 0;
-      for (var i = 0; i < keys.length; i++) {
-        var consecutive = i > 0 && Math.round((keys[i] - keys[i - 1]) / 86400000) === 1;
-        run = consecutive ? run + 1 : 1;
-        if (run > bestStreak) bestStreak = run;
-      }
-
       return {
-        doneToday: !!days[today],
-        streak: streak,
-        bestStreak: bestStreak,
+        doneToday: streaks.today,
+        streak: streaks.current,
+        bestStreak: streaks.best,
         todayBest: todayBest ? todayBest.firstTry : null,
         todayTotal: todayBest ? todayBest.total : null,
         bestScore: best ? best.firstTry : null,

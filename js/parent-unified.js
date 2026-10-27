@@ -296,10 +296,12 @@
       var summary = document.createElement("summary");
       var when = d.toLocaleDateString(undefined, { weekday: "short", day: "numeric", month: "short" }) +
         ", " + d.toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" });
-      summary.innerHTML =
-        '<span class="round-score">' + round.firstTry + " / " + round.total + "</span>" +
-        '<span class="round-meta"><strong>' + round.weekLabel + "</strong>" +
-        "<span>" + when + (round.mode === "type" ? " · typed" : "") + "</span></span>";
+      var score = el("span", "round-score", round.firstTry + " / " + round.total);
+      var meta = el("span", "round-meta");
+      meta.appendChild(el("strong", null, round.weekLabel));
+      meta.appendChild(el("span", null, when + (round.mode === "type" ? " · typed" : "")));
+      summary.appendChild(score);
+      summary.appendChild(meta);
       details.appendChild(summary);
 
       var row = document.createElement("div");

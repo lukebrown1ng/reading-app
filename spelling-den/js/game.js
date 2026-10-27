@@ -8,6 +8,7 @@ var SpellDen = window.SpellDen || {};
 
   var els = {};
   var animating = false;
+  var nextWordTimer = null; // pending move on after a correct answer
 
   var currentWeek = null;
   var order = []; // shuffled word indices into currentWeek.words for this round
@@ -100,6 +101,7 @@ var SpellDen = window.SpellDen || {};
   }
 
   function loadWeek(weekId) {
+    clearTimeout(nextWordTimer); // a pick during the cheer must not skip the new round's first word
     if (weekId === PRACTICE_ID && trickyWords().length > 0) {
       currentWeek = practiceWeek();
     } else {
@@ -382,7 +384,7 @@ var SpellDen = window.SpellDen || {};
     chime();
     announce("Correct! " + cheer);
 
-    setTimeout(function () {
+    nextWordTimer = setTimeout(function () {
       animating = false;
       nextWord();
     }, 1700);

@@ -1,9 +1,8 @@
 # Reading Den — Build Plan
 
-Tracking doc for the unified app described in
-`reading-den-unified-claude-code-prompt.md`, which merges the read-aloud
-reading tutor ("Reading Den") and the sight-word game ("Word Den", built
-first — see `word-den-claude-code-prompt.md`) behind one home screen.
+Tracking doc for the unified app, which merges the read-aloud reading tutor
+("Reading Den") and the sight-word game ("Word Den", built first) behind one
+home screen.
 Plain HTML/CSS/JS throughout, no build step, `localStorage` only, no
 backend, works opened directly via `file://` or any static host.
 
@@ -21,7 +20,7 @@ Layout:
       Word Game one
 
 ## Phase B — Word Game mode (built previously, see below for detail)
-- [x] Fully built per the original `word-den-claude-code-prompt.md` (word
+- [x] Fully built per the original Word Den brief (word
       bank, spaced repetition, game engine, audio/text modes, dino
       progress visual, styling) — all of Phases 0–6 from the old plan
 - [x] Re-point its "parent" footer link at the new unified `../parent.html`

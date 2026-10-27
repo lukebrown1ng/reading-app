@@ -14,7 +14,6 @@
 
 var fs = require("fs");
 var path = require("path");
-var vm = require("vm");
 var eleven = require("../../scripts/elevenlabs");
 
 var ROOT = path.join(__dirname, "..");
@@ -68,11 +67,7 @@ function slug(word) {
 }
 
 function loadWords() {
-  var sandbox = {};
-  sandbox.window = sandbox;
-  vm.createContext(sandbox);
-  vm.runInContext(fs.readFileSync(path.join(ROOT, "js", "wordbank.js"), "utf8"), sandbox);
-  return sandbox.WordDen.ACTIVE_WORDS;
+  return eleven.loadScripts(path.join(ROOT, "js"), ["wordbank.js"]).WordDen.ACTIVE_WORDS;
 }
 
 async function main() {

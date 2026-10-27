@@ -55,28 +55,8 @@ var ReadDen = window.ReadDen || {};
     };
   }
 
-  // Consecutive days with some reading, ending today — or yesterday, so
-  // the streak isn't shown as broken before today's reading has happened.
   function streaks(reads, now) {
-    var set = {};
-    reads.forEach(function (r) { set[startOfDay(r.ts)] = true; });
-    var days = Object.keys(set).map(Number).sort(function (a, b) { return a - b; });
-    var best = 0;
-    var run = 0;
-    var prev = null;
-    days.forEach(function (day) {
-      run = prev !== null && daysBefore(day, 1) === prev ? run + 1 : 1;
-      if (run > best) best = run;
-      prev = day;
-    });
-    var today = startOfDay(now);
-    var current = 0;
-    var day = set[today] ? today : daysBefore(today, 1);
-    while (set[day]) {
-      current += 1;
-      day = daysBefore(day, 1);
-    }
-    return { current: current, best: best, today: !!set[today] };
+    return Den.streaks(reads.map(function (r) { return r.ts; }), now);
   }
 
   function plural(n, word) {

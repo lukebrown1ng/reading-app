@@ -13,19 +13,12 @@
 
 var fs = require("fs");
 var path = require("path");
-var vm = require("vm");
 
 var ROOT = path.join(__dirname, "..");
 var eleven = require("../../scripts/elevenlabs");
 
 function loadSpellDen() {
-  var sandbox = { window: {}, SpellDen: undefined };
-  sandbox.window = sandbox;
-  vm.createContext(sandbox);
-  ["weeks.js", "sentences.js"].forEach(function (f) {
-    vm.runInContext(fs.readFileSync(path.join(ROOT, "js", f), "utf8"), sandbox);
-  });
-  return sandbox.SpellDen;
+  return eleven.loadScripts(path.join(ROOT, "js"), ["weeks.js", "sentences.js"]).SpellDen;
 }
 
 // A word spoken on its own gets guessed at (e.g. "fare"), so word clips are

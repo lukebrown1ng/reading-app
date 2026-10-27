@@ -23,6 +23,7 @@ function walk(dir, out) {
 }
 
 const files = walk(root, []);
+if (require.main !== module) { module.exports = { files }; return; }
 const hash = crypto.createHash("sha1");
 files.forEach((f) => { hash.update(f); hash.update(fs.readFileSync(path.join(root, f))); });
 const version = hash.digest("hex").slice(0, 10);

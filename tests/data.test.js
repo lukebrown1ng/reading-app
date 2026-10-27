@@ -57,5 +57,7 @@ test("the service worker precaches every file, including all audio", () => {
       assert.ok(listed.has(dir + "/" + f), "not precached (run node scripts/build-sw.js): " + dir + "/" + f);
     });
   });
-  ["index.html", "parent.html", "js/common.js"].forEach((f) => assert.ok(listed.has(f), f));
+  require("../scripts/build-sw").files.forEach((f) => {
+    assert.ok(listed.has(f), "not precached (run node scripts/build-sw.js): " + f);
+  });
 });

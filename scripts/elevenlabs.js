@@ -42,4 +42,16 @@ async function render(text, outFile, context) {
   fs.writeFileSync(outFile, Buffer.from(await res.arrayBuffer()));
 }
 
-module.exports = { loadEnv: loadEnv, render: render };
+// Runs browser scripts (relative to `dir`) in a sandbox; returns its globals.
+function loadScripts(dir, files) {
+  var vm = require("vm");
+  var sandbox = {};
+  sandbox.window = sandbox;
+  vm.createContext(sandbox);
+  files.forEach(function (f) {
+    vm.runInContext(fs.readFileSync(path.join(dir, f), "utf8"), sandbox);
+  });
+  return sandbox;
+}
+
+module.exports = { loadEnv: loadEnv, render: render, loadScripts: loadScripts };

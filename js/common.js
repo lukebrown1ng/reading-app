@@ -15,7 +15,9 @@ var Den = window.Den || {};
   (function () {
     if (typeof location === "undefined" || !document.head) return; // tests run without a page
     var me = document.currentScript, base = me ? me.src.replace(/js\/common\.js.*$/, "") : "";
+    var NAMES = ["candy", "jungle", "space", "none"];
     var q = /[?&]theme=(\w+)/.exec(location.search), t = q && q[1];
+    if (NAMES.indexOf(t) === -1) t = null;
     try { if (t) localStorage.setItem("denTheme", t); else t = localStorage.getItem("denTheme"); } catch (e) { /* ignore */ }
     var link = document.createElement("link");
     link.rel = "stylesheet"; link.href = base + "css/themes.css";
@@ -24,8 +26,9 @@ var Den = window.Den || {};
     document.documentElement.setAttribute("data-theme", t);
     var themeColor = { candy: "#fff3c4", jungle: "#0f5a3c", space: "#1b1464" }[t], meta = document.querySelector('meta[name="theme-color"]');
     if (themeColor && meta) meta.setAttribute("content", themeColor);
+    if (!document.body.hasAttribute("data-theme-picker")) return; // only the home page offers the picker
     var bar = document.createElement("div"); bar.className = "den-themes";
-    ["candy", "jungle", "space", "none"].forEach(function (n) {
+    NAMES.forEach(function (n) {
       var b = document.createElement("button"); b.textContent = n === "none" ? "old" : n;
       b.setAttribute("aria-pressed", String(t === n));
       b.onclick = function () { try { localStorage.setItem("denTheme", n); } catch (e) { /* ignore */ } location.reload(); };
@@ -58,6 +61,30 @@ var Den = window.Den || {};
   // Local calendar day as a stable string, e.g. "2026-10-3".
   Den.dateStr = function (d) {
     return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+  };
+
+  // Consecutive-day streaks from timestamps of activity. The current streak
+  // ends today, or yesterday so it isn't shown broken before today's play.
+  Den.streaks = function (timestamps, now) {
+    var set = {};
+    var firsts = [];
+    function day(d, n) { return new Date(d.getFullYear(), d.getMonth(), d.getDate() + n); }
+    timestamps.forEach(function (ts) {
+      var d = new Date(ts), key = Den.dateStr(d);
+      if (!set[key]) { set[key] = true; firsts.push(d); }
+    });
+    var best = 0;
+    firsts.forEach(function (d) {
+      if (set[Den.dateStr(day(d, -1))]) return; // not the start of a run
+      var run = 0;
+      for (var x = d; set[Den.dateStr(x)]; x = day(x, 1)) run += 1;
+      if (run > best) best = run;
+    });
+    var today = new Date(now || Date.now());
+    var doneToday = !!set[Den.dateStr(today)];
+    var current = 0;
+    for (var y = doneToday ? today : day(today, -1); set[Den.dateStr(y)]; y = day(y, -1)) current += 1;
+    return { current: current, best: best, today: doneToday };
   };
 
   // Words stumbled on in Read a Book, { word: count } (lower-case).
@@ -231,7 +258,8 @@ var Den = window.Den || {};
         throw new Error("Not a Reading Den backup file.");
       }
       var keys = Den.STORAGE_KEYS.filter(function (key) {
-        return parsed.data[key] && typeof parsed.data[key] === "object";
+        var v = parsed.data[key];
+        return v && typeof v === "object" && !Array.isArray(v);
       });
       if (keys.length === 0) throw new Error("That backup has no saved progress in it.");
       keys.forEach(function (key) {
