@@ -2,7 +2,7 @@
   --bg: #eafaf0;
   --bg-deep: #cdf0da;
   --ink: #234032;
-  --accent: #2f9e6b;
+  --accent: #1f7a50;
   --accent-soft: #d7f5e3;
   --card: #ffffff;
   --tile-bg: #8ecae6;
@@ -10,6 +10,7 @@
   --correct-glow: #52c976;
   --wrong-soft: #ffe1e1;
   --wrong-ink: #a13c3c;
+  --muted-ink: #4a6657;
 }
 
 * {
@@ -25,6 +26,17 @@ html, body {
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior: none;
   user-select: none;
+}
+
+button { touch-action: manipulation; }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .app {
@@ -73,8 +85,9 @@ html, body {
   font-family: inherit;
   font-weight: 700;
   font-size: 0.95rem;
-  padding: 8px 14px;
-  border-radius: 20px;
+  min-height: 44px;
+  padding: 8px 16px;
+  border-radius: 22px;
   cursor: pointer;
   box-shadow: 0 4px 0 rgba(0, 0, 0, 0.08);
 }
@@ -90,10 +103,9 @@ html, body {
   align-items: center;
   gap: 2px;
   align-self: center;
-  width: calc(100% - 40px);
-  max-width: 560px;
+  width: 100%;
   box-sizing: border-box;
-  margin: 4px 20px 0;
+  margin: 0 0 14px;
   padding: 10px 18px;
   border-radius: 16px;
   background: #fff4cc;
@@ -107,11 +119,9 @@ html, body {
 }
 
 .focus-callout-label {
-  font-size: 0.72rem;
+  font-size: 0.9rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  opacity: 0.7;
+  color: var(--muted-ink);
 }
 
 .focus-callout-text {
@@ -158,29 +168,85 @@ html, body {
   gap: 6px;
 }
 
+/* Each word is an egg: still whole until the word is spelled, then it
+   hatches (cracked top). Colour and shape both carry the result. */
 .dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--accent-soft);
+  width: 16px;
+  height: 21px;
+  border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
+  background: #fff;
+  border: 2px solid #6b9a82;
 }
 
 .dot-current {
-  background: var(--tile-bg-2);
-  box-shadow: 0 0 0 3px rgba(255, 183, 3, 0.3);
+  background: #fff4cc;
+  border-color: #b97a00;
+  animation: egg-wobble 1.6s ease-in-out infinite;
 }
 
-.dot-first {
-  background: var(--correct-glow);
-}
-
-.dot-retry {
-  background: var(--tile-bg-2);
-}
-
+.dot-first,
+.dot-retry,
 .dot-skipped {
-  background: var(--wrong-ink);
-  opacity: 0.7;
+  border: none;
+  clip-path: polygon(0 36%, 16% 18%, 32% 38%, 50% 14%, 68% 38%, 84% 18%, 100% 36%, 100% 100%, 0 100%);
+}
+
+.dot-first { background: var(--correct-glow); }
+.dot-retry { background: var(--tile-bg-2); }
+.dot-skipped { background: #c98c8c; }
+
+@keyframes egg-wobble {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(-8deg); }
+  75% { transform: rotate(8deg); }
+}
+
+.dino {
+  font-size: 3rem;
+  line-height: 1;
+  transform-origin: 50% 100%;
+  margin-bottom: -8px;
+}
+
+.dino-munch { animation: dino-munch 0.25s ease-out; }
+.dino-cheer { animation: dino-cheer 0.9s cubic-bezier(0.22, 1, 0.36, 1); }
+.dino-oops { animation: dino-oops 0.6s ease-out; }
+
+@keyframes dino-munch {
+  0% { transform: scale(1, 1); }
+  40% { transform: scale(1.18, 0.86); }
+  100% { transform: scale(1, 1); }
+}
+@keyframes dino-cheer {
+  0% { transform: translateY(0) rotate(0); }
+  30% { transform: translateY(-26px) rotate(-10deg); }
+  60% { transform: translateY(0) rotate(6deg); }
+  80% { transform: translateY(-10px) rotate(-4deg); }
+  100% { transform: translateY(0) rotate(0); }
+}
+@keyframes dino-oops {
+  0%, 100% { transform: rotate(0); }
+  30% { transform: rotate(-14deg) translateY(2px); }
+  60% { transform: rotate(-9deg) translateY(2px); }
+}
+
+.cheer {
+  min-height: 2.4rem;
+  font-size: clamp(1.6rem, 7vw, 2.2rem);
+  font-weight: 800;
+  color: var(--accent);
+  opacity: 0;
+  margin: 0;
+}
+
+.cheer-show { animation: cheer-in 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+@keyframes cheer-in {
+  0% { opacity: 0; transform: translateY(14px) scale(0.8); }
+  25% { opacity: 1; transform: translateY(0) scale(1.08); }
+  40% { transform: scale(1); }
+  85% { opacity: 1; }
+  100% { opacity: 0.0; }
 }
 
 .hear-btn {
@@ -211,6 +277,7 @@ html, body {
   font-family: inherit;
   font-weight: 700;
   font-size: clamp(0.95rem, 3.4vw, 1.1rem);
+  min-height: 44px;
   padding: 10px 22px;
   border-radius: 22px;
   cursor: pointer;
@@ -238,7 +305,7 @@ html, body {
 
 .blank-box {
   width: clamp(34px, 9vw, 48px);
-  height: clamp(40px, 10vw, 56px);
+  height: clamp(44px, 11vw, 56px);
   border: none;
   border-bottom: 4px solid var(--accent);
   background: var(--card);
@@ -261,7 +328,14 @@ html, body {
 .blanks-row.blanks-correct .blank-box {
   border-bottom-color: var(--correct-glow);
   box-shadow: 0 0 0 3px var(--correct-glow);
-  animation: pop 0.5s ease;
+  animation: blank-hop 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+@keyframes blank-hop {
+  0% { transform: translateY(0); }
+  40% { transform: translateY(-16px) scale(1.08); }
+  100% { transform: translateY(0) scale(1); }
 }
 
 .blanks-row.blanks-wrong .blank-box.blank-filled {
@@ -318,13 +392,14 @@ html, body {
   flex-wrap: nowrap;
   align-items: center;
   gap: 8px;
-  width: 100%;
+  width: calc(100% + 16px);
+  margin-inline: -8px;
 }
 
 .key-row {
   display: flex;
   justify-content: center;
-  gap: clamp(4px, 1.2vw, 8px);
+  gap: clamp(3px, 1vw, 8px);
   width: 100%;
 }
 
@@ -375,9 +450,10 @@ html, body {
   color: var(--ink);
   font-family: inherit;
   font-weight: 700;
-  font-size: 0.9rem;
-  padding: 8px 16px;
-  border-radius: 16px;
+  font-size: 1rem;
+  min-height: 44px;
+  padding: 8px 20px;
+  border-radius: 18px;
   cursor: pointer;
   touch-action: manipulation;
 }
@@ -390,7 +466,7 @@ html, body {
 .check-btn {
   border: none;
   background: var(--tile-bg-2);
-  color: white;
+  color: var(--ink);
   font-family: inherit;
   font-weight: 700;
   font-size: clamp(1rem, 4vw, 1.2rem);
@@ -407,8 +483,8 @@ html, body {
 }
 
 .check-btn:disabled {
-  background: #cfd8dc;
-  color: #78909c;
+  background: #e3e9ec;
+  color: #50636b;
   cursor: default;
   box-shadow: 0 5px 0 rgba(0, 0, 0, 0.08);
 }
@@ -441,7 +517,11 @@ html, body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .wrong-feedback { animation: none; }
+  .wrong-feedback,
+  .dino,
+  .dot-current,
+  .blanks-row.blanks-correct .blank-box { animation: none !important; }
+  .cheer-show { animation: none; opacity: 1; }
 }
 
 .wrong-feedback-label {
@@ -465,15 +545,31 @@ html, body {
   gap: 12px;
 }
 
+.wrong-feedback-actions {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 18px;
+}
+
 .try-again-btn,
 .skip-word-btn {
   border: none;
   font-family: inherit;
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 1.1rem;
+  min-height: 48px;
   padding: 12px 20px;
   border-radius: 18px;
   cursor: pointer;
+}
+
+/* Skipping logs the word as missed, so it is quieter and set apart from
+   the retry button a small finger is likely to hit. */
+.skip-word-btn {
+  font-size: 0.95rem;
+  background: transparent !important;
+  color: var(--muted-ink) !important;
+  text-decoration: underline;
 }
 
 .try-again-btn {
@@ -503,15 +599,17 @@ html, body {
 }
 
 .parent-link {
-  font-size: 0.75rem;
-  color: #6f8f7c;
+  font-size: 0.9rem;
+  color: var(--muted-ink);
   text-decoration: none;
-  opacity: 0.7;
-  padding: 6px 10px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 6px 14px;
 }
 
 .parent-link:active {
-  opacity: 1;
+  text-decoration: underline;
 }
 
 /* --- Round complete --- */
@@ -580,7 +678,7 @@ html, body {
 .result-word-chip {
   background: var(--accent-soft);
   color: var(--ink);
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   font-weight: 600;
   padding: 5px 12px;
   border-radius: 12px;
@@ -615,7 +713,11 @@ html, body {
 .back-home-link {
   color: var(--accent);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 12px;
 }
 
 /* --- Week picker modal --- */
@@ -663,8 +765,8 @@ html, body {
   right: 14px;
   border: none;
   background: var(--accent-soft);
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   font-size: 1rem;
   cursor: pointer;
@@ -684,6 +786,8 @@ html, body {
 
 .week-option {
   text-align: left;
+  font-family: inherit;
+  color: var(--ink);
   border: none;
   background: var(--card);
   border-radius: 16px;
@@ -704,9 +808,38 @@ html, body {
 }
 
 .week-option-words {
-  font-size: 0.78rem;
-  opacity: 0.7;
+  font-size: 0.9rem;
+  color: var(--muted-ink);
   line-height: 1.4;
+}
+
+.week-option[hidden] { display: none; }
+
+.week-more-btn {
+  border: 2px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-weight: 700;
+  min-height: 44px;
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+.grownups-streak {
+  text-align: center;
+  font-weight: 700;
+  margin: 0 0 16px;
+}
+
+.grownups-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.grownups-actions .week-pill {
+  justify-content: center;
 }
 
 @media (min-width: 560px) {
@@ -753,8 +886,8 @@ html, body {
 }
 
 .history-meta span {
-  font-size: 0.8rem;
-  opacity: 0.7;
+  font-size: 0.9rem;
+  color: var(--muted-ink);
 }
 
 .history-chip-first {

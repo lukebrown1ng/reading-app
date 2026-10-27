@@ -41,6 +41,44 @@ var SpellDen = window.SpellDen || {};
     return copy;
   }
 
+  // --- Reactions: dino, cheer, chime, screen-reader status ----------------
+
+  var CHEERS = ["You got it!", "Brilliant!", "Spot on!", "Yes!", "Well done!"];
+  var audioCtx = null;
+
+  function dinoDo(cls) {
+    els.dino.className = "dino";
+    void els.dino.offsetWidth; // restart the animation if it is already running
+    if (cls) els.dino.classList.add(cls);
+  }
+
+  // A rising two-note chime, made with the Web Audio API so no clip is needed.
+  function chime() {
+    try {
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if (!Ctx) return;
+      audioCtx = audioCtx || new Ctx();
+      [660, 880].forEach(function (freq, i) {
+        var osc = audioCtx.createOscillator();
+        var gain = audioCtx.createGain();
+        var t = audioCtx.currentTime + i * 0.14;
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.0001, t);
+        gain.gain.exponentialRampToValueAtTime(0.18, t + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(t);
+        osc.stop(t + 0.32);
+      });
+    } catch (e) { /* sound is a bonus */ }
+  }
+
+  function announce(text) {
+    els.liveStatus.textContent = "";
+    setTimeout(function () { els.liveStatus.textContent = text; }, 30);
+  }
+
   // --- Round / word setup -----------------------------------------------
 
   var PRACTICE_ID = "practice";
@@ -88,6 +126,8 @@ var SpellDen = window.SpellDen || {};
     buildBlanks();
     els.wrongFeedback.hidden = true;
     els.blanksRow.classList.remove("blanks-correct", "blanks-wrong");
+    els.cheer.classList.remove("cheer-show");
+    dinoDo("");
     renderProgress();
 
     els.hearSentenceBtn.hidden = !SpellDen.speech.hasSentence(currentWord);
@@ -180,6 +220,7 @@ var SpellDen = window.SpellDen || {};
     var nextEmpty = blanks.indexOf(null);
     if (nextEmpty === -1) return;
     blanks[nextEmpty] = { ch: ch, tileId: null };
+    dinoDo("dino-munch");
     renderBlanks();
   }
 
@@ -220,7 +261,7 @@ var SpellDen = window.SpellDen || {};
   }
 
   function onPhysicalKey(e) {
-    if (!els.roundComplete.hidden || !els.weekPickerModal.hidden || !els.historyModal.hidden) return;
+    if (!els.roundComplete.hidden || !els.weekPickerModal.hidden || !els.historyModal.hidden || !els.grownupsModal.hidden) return;
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     if (e.key === "Enter") {
       var tag = e.target && e.target.tagName;
@@ -247,7 +288,9 @@ var SpellDen = window.SpellDen || {};
       box.className = "blank-box" + (slot ? " blank-filled" : "");
       box.textContent = slot ? slot.ch : "";
       box.disabled = !slot || wrongLocked || animating;
-      box.setAttribute("aria-label", slot ? "Remove letter" : "Empty space");
+      box.style.setProperty("--i", i);
+      box.setAttribute("aria-label", "Letter " + (i + 1) + " of " + blanks.length + ": " +
+        (slot ? slot.ch + ", tap to remove" : "empty"));
       box.addEventListener("click", function () {
         removeLetter(i);
       });
@@ -297,6 +340,7 @@ var SpellDen = window.SpellDen || {};
 
     blanks[nextEmpty] = { ch: tile.ch, tileId: tile.id };
     tile.used = true;
+    dinoDo("dino-munch");
     renderTray();
     renderBlanks();
   }
@@ -331,11 +375,17 @@ var SpellDen = window.SpellDen || {};
     renderProgress();
 
     els.blanksRow.classList.add("blanks-correct");
+    var cheer = CHEERS[Math.floor(Math.random() * CHEERS.length)];
+    els.cheer.textContent = cheer;
+    els.cheer.classList.add("cheer-show");
+    dinoDo("dino-cheer");
+    chime();
+    announce("Correct! " + cheer);
 
     setTimeout(function () {
       animating = false;
       nextWord();
-    }, 1100);
+    }, 1700);
   }
 
   function handleWrong() {
@@ -347,6 +397,8 @@ var SpellDen = window.SpellDen || {};
     els.blanksRow.classList.add("blanks-wrong");
     els.correctSpellingWord.textContent = currentWord;
     els.wrongFeedback.hidden = false;
+    dinoDo("dino-oops");
+    announce("Not quite. It is spelled " + currentWord.split("").join(" ") + ".");
     renderTray();
     renderBlanks();
   }
@@ -434,36 +486,61 @@ var SpellDen = window.SpellDen || {};
 
   // --- Week picker ------------------------------------------------------
 
+  // Each option names the week's theme and word count, never the words
+  // themselves, so a child can't read the answers before playing.
+  function weekOption(label, detail, active, onPick) {
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "week-option" + (active ? " week-option-active" : "");
+    var l = document.createElement("span");
+    l.className = "week-option-label";
+    l.textContent = label;
+    var d = document.createElement("span");
+    d.className = "week-option-words";
+    d.textContent = detail;
+    btn.appendChild(l);
+    btn.appendChild(d);
+    btn.addEventListener("click", function () {
+      closeWeekPicker();
+      onPick();
+    });
+    return btn;
+  }
+
+  var RECENT_WEEKS = 3;
+
   function renderWeekPicker() {
     els.weekPickerList.innerHTML = "";
     var tricky = trickyWords();
     if (tricky.length > 0) {
-      var practiceBtn = document.createElement("button");
-      practiceBtn.type = "button";
-      practiceBtn.className = "week-option" + (currentWeek && currentWeek.label === "Tricky words" ? " week-option-active" : "");
-      practiceBtn.innerHTML =
-        '<span class="week-option-label">🌱 Tricky words</span>' +
-        '<span class="week-option-words"></span>';
-      practiceBtn.lastChild.textContent = tricky.join(", ");
-      practiceBtn.addEventListener("click", function () {
-        closeWeekPicker();
-        loadWeek(PRACTICE_ID);
-      });
-      els.weekPickerList.appendChild(practiceBtn);
+      els.weekPickerList.appendChild(weekOption(
+        "🌱 Tricky words", tricky.length + " words to practise",
+        currentWeek && currentWeek.label === "Tricky words",
+        function () { loadWeek(PRACTICE_ID); }));
     }
-    SpellDen.getWeeksForYear(activeYear).slice().reverse().forEach(function (week) {
-      var btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "week-option" + (currentWeek && week.id === currentWeek.id ? " week-option-active" : "");
-      btn.innerHTML =
-        '<span class="week-option-label">' + week.label + "</span>" +
-        '<span class="week-option-words">' + week.words.join(", ") + "</span>";
-      btn.addEventListener("click", function () {
-        closeWeekPicker();
-        loadWeek(week.id);
-      });
+    var weeks = SpellDen.getWeeksForYear(activeYear).slice().reverse();
+    var activeIdx = weeks.findIndex(function (w) { return currentWeek && w.id === currentWeek.id; });
+    var showAll = activeIdx >= RECENT_WEEKS;
+    weeks.forEach(function (week, i) {
+      var btn = weekOption(week.label,
+        (week.focus ? week.focus + " · " : "") + week.words.length + " words",
+        currentWeek && week.id === currentWeek.id,
+        function () { loadWeek(week.id); });
+      if (i >= RECENT_WEEKS && !showAll) btn.hidden = true;
+      btn.dataset.older = i >= RECENT_WEEKS ? "1" : "";
       els.weekPickerList.appendChild(btn);
     });
+    if (weeks.length > RECENT_WEEKS && !showAll) {
+      var more = document.createElement("button");
+      more.type = "button";
+      more.className = "week-more-btn";
+      more.textContent = "Show earlier weeks";
+      more.addEventListener("click", function () {
+        els.weekPickerList.querySelectorAll("[data-older='1']").forEach(function (b) { b.hidden = false; });
+        more.remove();
+      });
+      els.weekPickerList.appendChild(more);
+    }
   }
 
   // --- History ----------------------------------------------------------
@@ -471,11 +548,11 @@ var SpellDen = window.SpellDen || {};
   function renderStreakPill() {
     var stats = SpellDen.state.getStreakStats(activeYear);
     if (stats.doneToday) {
-      els.streakPillLabel.textContent = "✅ " + stats.streak + (stats.streak === 1 ? " day" : " days");
+      els.streakPillLabel.textContent = "✅ " + stats.streak + (stats.streak === 1 ? " day" : " days") + " in a row, played today";
     } else {
       els.streakPillLabel.textContent = stats.streak > 0
-        ? "🔥 " + stats.streak + (stats.streak === 1 ? " day" : " days") + " · not yet today"
-        : "📅 not yet today";
+        ? "🔥 " + stats.streak + (stats.streak === 1 ? " day" : " days") + " in a row, not played yet today"
+        : "📅 Not played yet today";
     }
   }
 
@@ -544,6 +621,7 @@ var SpellDen = window.SpellDen || {};
   }
 
   function openHistory() {
+    closeGrownups();
     els.historyHeading.textContent = "My scores · Year " + activeYear;
     renderHistory();
     els.historyModal.hidden = false;
@@ -553,7 +631,11 @@ var SpellDen = window.SpellDen || {};
     els.historyModal.hidden = true;
   }
 
+  function openGrownups() { els.grownupsModal.hidden = false; }
+  function closeGrownups() { els.grownupsModal.hidden = true; }
+
   function openWeekPicker() {
+    closeGrownups();
     renderWeekPicker();
     els.weekPickerModal.hidden = false;
   }
@@ -565,7 +647,12 @@ var SpellDen = window.SpellDen || {};
   // --- Init ---------------------------------------------------------------
 
   function init() {
-    els.streakPill = document.getElementById("streakPill");
+    els.grownupsBtn = document.getElementById("grownupsBtn");
+    els.grownupsModal = document.getElementById("grownupsModal");
+    els.grownupsCloseBtn = document.getElementById("grownupsCloseBtn");
+    els.dino = document.getElementById("dino");
+    els.cheer = document.getElementById("cheer");
+    els.liveStatus = document.getElementById("liveStatus");
     els.streakPillLabel = document.getElementById("streakPillLabel");
     els.historyBtn = document.getElementById("historyBtn");
     els.historyModal = document.getElementById("historyModal");
@@ -609,7 +696,11 @@ var SpellDen = window.SpellDen || {};
     els.practiceWordsBlock = document.getElementById("practiceWordsBlock");
     els.practiceWordList = document.getElementById("practiceWordList");
 
-    els.streakPill.addEventListener("click", openHistory);
+    els.grownupsBtn.addEventListener("click", openGrownups);
+    els.grownupsCloseBtn.addEventListener("click", closeGrownups);
+    els.grownupsModal.addEventListener("click", function (e) {
+      if (e.target === els.grownupsModal) closeGrownups();
+    });
     els.historyBtn.addEventListener("click", openHistory);
     els.historyCloseBtn.addEventListener("click", closeHistory);
     els.historyModal.addEventListener("click", function (e) {

@@ -13,6 +13,7 @@ var Den = window.Den || {};
   // --- Design variants (preview): ?theme=candy|jungle|space|none ------
 
   (function () {
+    if (typeof location === "undefined" || !document.head) return; // tests run without a page
     var me = document.currentScript, base = me ? me.src.replace(/js\/common\.js.*$/, "") : "";
     var q = /[?&]theme=(\w+)/.exec(location.search), t = q && q[1];
     try { if (t) localStorage.setItem("denTheme", t); else t = localStorage.getItem("denTheme"); } catch (e) { /* ignore */ }
