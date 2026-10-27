@@ -10,7 +10,7 @@ var Den = window.Den || {};
   // Every key the app keeps in localStorage — what backup/restore covers.
   Den.STORAGE_KEYS = ["wordDenState.v1", "readDenState.v1", "spellDenState.v1"];
 
-  // --- Design variants (preview): ?theme=candy|jungle|space|none ------
+  // --- Design variants: ?theme=candy|jungle|space|none (jungle by default) ---
 
   (function () {
     if (typeof location === "undefined" || !document.head) return; // tests run without a page
@@ -20,11 +20,14 @@ var Den = window.Den || {};
     var link = document.createElement("link");
     link.rel = "stylesheet"; link.href = base + "css/themes.css";
     document.head.appendChild(link);
-    document.documentElement.setAttribute("data-theme", t || "none");
+    t = t || "jungle";
+    document.documentElement.setAttribute("data-theme", t);
+    var themeColor = { candy: "#fff3c4", jungle: "#0f5a3c", space: "#1b1464" }[t], meta = document.querySelector('meta[name="theme-color"]');
+    if (themeColor && meta) meta.setAttribute("content", themeColor);
     var bar = document.createElement("div"); bar.className = "den-themes";
     ["candy", "jungle", "space", "none"].forEach(function (n) {
       var b = document.createElement("button"); b.textContent = n === "none" ? "old" : n;
-      b.setAttribute("aria-pressed", String((t || "none") === n));
+      b.setAttribute("aria-pressed", String(t === n));
       b.onclick = function () { try { localStorage.setItem("denTheme", n); } catch (e) { /* ignore */ } location.reload(); };
       bar.appendChild(b);
     });
@@ -243,14 +246,14 @@ var Den = window.Den || {};
   // Every `.progress-modal` / `.week-picker-modal` becomes a proper dialog:
   // role + aria-modal, focus moves in when it opens and back out when it
   // closes, Tab stays inside, and Escape closes it (via its ✕ button, so
-  // each mode's own close logic runs). A modal with no ✕, like game over,
-  // ignores Escape.
+  // each mode's own close logic runs). A modal with no ✕ can mark its safe
+  // exit with data-escape; one with neither, like game over, ignores Escape.
   var FOCUSABLE = "button:not([disabled]), a[href], input:not([disabled]), select:not([disabled])";
 
   function enhanceModal(modal) {
     var card = modal.firstElementChild;
     var heading = modal.querySelector("h2, h3, .modal-title");
-    var closeBtn = modal.querySelector(".modal-close-btn");
+    var closeBtn = modal.querySelector(".modal-close-btn, [data-escape]");
     var opener = null;
 
     modal.setAttribute("role", "dialog");

@@ -445,8 +445,20 @@ var SpellDen = window.SpellDen || {};
     renderStreakPill();
 
     var firstTryCount = results.filter(function (r) { return r.status === "first"; }).length;
-    els.roundCompleteScore.textContent =
-      firstTryCount + " out of " + results.length + " spelled right first time!";
+    els.roundCompleteScore.textContent = firstTryCount + " / " + results.length;
+    els.roundCompleteCaption.textContent = firstTryCount === results.length ? "all spelled right first time!"
+      : firstTryCount === 0 ? "tricky ones today - let's practise!" : "spelled right first time!";
+
+    els.roundCompleteEggs.innerHTML = "";
+    results.forEach(function (r, i) {
+      var egg = document.createElement("span");
+      egg.className = "dot dot-" + r.status;
+      egg.style.setProperty("--i", i);
+      els.roundCompleteEggs.appendChild(egg);
+    });
+    els.roundCompleteDino.className = "round-complete-dino";
+    void els.roundCompleteDino.offsetWidth; // replay the cheer on every round
+    els.roundCompleteDino.classList.add("dino-cheer");
 
     var correctWords = results.filter(function (r) {
       return r.status === "first";
@@ -687,6 +699,9 @@ var SpellDen = window.SpellDen || {};
 
     els.roundComplete = document.getElementById("roundComplete");
     els.roundCompleteScore = document.getElementById("roundCompleteScore");
+    els.roundCompleteCaption = document.getElementById("roundCompleteCaption");
+    els.roundCompleteEggs = document.getElementById("roundCompleteEggs");
+    els.roundCompleteDino = document.getElementById("roundCompleteDino");
     els.playAgainBtn = document.getElementById("playAgainBtn");
     els.practiceTrickyBtn = document.getElementById("practiceTrickyBtn");
     els.correctWordsBlock = document.getElementById("correctWordsBlock");

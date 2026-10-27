@@ -11,6 +11,24 @@
   --wrong-soft: #ffe1e1;
   --wrong-ink: #a13c3c;
   --muted-ink: #4a6657;
+  /* Text on the page background, on an accent fill, and the accent used as
+     text on a card. themes.css re-points them where the theme flips light/dark. */
+  --page-ink: var(--ink);
+  --on-accent: #ffffff;
+  --accent-ink: var(--accent);
+  --accent-page: var(--accent);
+  --tile-ink: #16301f;
+  --callout-ink: #3a2a05;
+  --ring-in: #ffffff;
+  --ring-out: #16301f;
+}
+
+/* Keyboard focus: a two-tone ring so it reads on light cards and dark
+   backgrounds alike. !important because themes.css sets box-shadow (the
+   chunky lift) at a higher specificity, and a focus ring must win. */
+:is(button, a, summary):focus-visible {
+  outline: 3px solid transparent; /* shows in forced-colors mode */
+  box-shadow: 0 0 0 3px var(--ring-in), 0 0 0 6px var(--ring-out) !important;
 }
 
 * {
@@ -72,7 +90,7 @@ button { touch-action: manipulation; }
   align-items: center;
   gap: 8px;
   text-decoration: none;
-  color: var(--ink);
+  color: var(--page-ink);
 }
 
 .week-pill {
@@ -110,7 +128,7 @@ button { touch-action: manipulation; }
   border-radius: 16px;
   background: #fff4cc;
   border: 2px solid var(--tile-bg-2);
-  color: var(--ink);
+  color: var(--callout-ink);
   text-align: center;
 }
 
@@ -121,7 +139,7 @@ button { touch-action: manipulation; }
 .focus-callout-label {
   font-size: 0.9rem;
   font-weight: 800;
-  color: var(--muted-ink);
+  color: var(--callout-ink);
 }
 
 .focus-callout-text {
@@ -234,7 +252,7 @@ button { touch-action: manipulation; }
   min-height: 2.4rem;
   font-size: clamp(1.6rem, 7vw, 2.2rem);
   font-weight: 800;
-  color: var(--accent);
+  color: var(--accent-page);
   opacity: 0;
   margin: 0;
 }
@@ -252,7 +270,7 @@ button { touch-action: manipulation; }
 .hear-btn {
   border: none;
   background: var(--accent);
-  color: white;
+  color: var(--on-accent);
   font-family: inherit;
   font-weight: 700;
   font-size: clamp(1.1rem, 4vw, 1.4rem);
@@ -271,9 +289,9 @@ button { touch-action: manipulation; }
 }
 
 .hear-sentence-btn {
-  border: 2px solid var(--accent);
+  border: 2px solid var(--accent-page);
   background: transparent;
-  color: var(--accent);
+  color: var(--accent-page);
   font-family: inherit;
   font-weight: 700;
   font-size: clamp(0.95rem, 3.4vw, 1.1rem);
@@ -364,7 +382,8 @@ button { touch-action: manipulation; }
   border: none;
   border-radius: 14px;
   background: var(--tile-bg);
-  color: white;
+  color: var(--tile-ink);
+  text-shadow: none;
   font-size: clamp(1.2rem, 5vw, 1.6rem);
   font-weight: 700;
   text-transform: lowercase;
@@ -410,7 +429,8 @@ button { touch-action: manipulation; }
   border: none;
   border-radius: 10px;
   background: var(--tile-bg);
-  color: white;
+  color: var(--tile-ink);
+  text-shadow: none;
   font-family: inherit;
   font-size: clamp(1.15rem, 4.8vw, 1.5rem);
   font-weight: 700;
@@ -433,7 +453,7 @@ button { touch-action: manipulation; }
 .key-back {
   max-width: 76px;
   flex-grow: 1.5;
-  background: #b9b3a9;
+  background: #d8d2c6;
 }
 
 .mode-toggle {
@@ -459,14 +479,14 @@ button { touch-action: manipulation; }
 }
 
 .mode-btn[aria-pressed="true"] {
-  background: white;
+  background: var(--card);
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.1);
 }
 
 .check-btn {
   border: none;
   background: var(--tile-bg-2);
-  color: var(--ink);
+  color: var(--tile-ink);
   font-family: inherit;
   font-weight: 700;
   font-size: clamp(1rem, 4vw, 1.2rem);
@@ -502,6 +522,7 @@ button { touch-action: manipulation; }
 
 .wrong-feedback {
   background: var(--card);
+  color: var(--ink);
   border-radius: 28px;
   padding: 28px 26px 24px;
   text-align: center;
@@ -520,7 +541,9 @@ button { touch-action: manipulation; }
   .wrong-feedback,
   .dino,
   .dot-current,
-  .blanks-row.blanks-correct .blank-box { animation: none !important; }
+  .blanks-row.blanks-correct .blank-box,
+  .round-complete-dino,
+  .round-complete-eggs .dot { animation: none !important; }
   .cheer-show { animation: none; opacity: 1; }
 }
 
@@ -533,7 +556,7 @@ button { touch-action: manipulation; }
 .correct-spelling-word {
   font-size: clamp(2rem, 10vw, 3rem);
   font-weight: 700;
-  color: var(--accent);
+  color: var(--accent-ink);
   letter-spacing: 0.06em;
   margin-bottom: 16px;
 }
@@ -574,7 +597,7 @@ button { touch-action: manipulation; }
 
 .try-again-btn {
   background: var(--accent);
-  color: white;
+  color: var(--on-accent);
   box-shadow: 0 4px 0 rgba(0, 0, 0, 0.12);
 }
 
@@ -600,7 +623,8 @@ button { touch-action: manipulation; }
 
 .parent-link {
   font-size: 0.9rem;
-  color: var(--muted-ink);
+  color: var(--page-ink);
+  opacity: 0.85;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
@@ -632,8 +656,9 @@ button { touch-action: manipulation; }
 
 .round-complete-card {
   background: var(--card);
+  color: var(--ink);
   border-radius: 28px;
-  padding: 36px 32px;
+  padding: 28px 28px 20px;
   text-align: center;
   box-shadow: 0 6px 0 rgba(0, 0, 0, 0.06);
   width: 100%;
@@ -648,10 +673,77 @@ button { touch-action: manipulation; }
   margin-bottom: 12px;
 }
 
+/* The ending is the dino and the eggs it hatched: the score and one big
+   button come next, the word lists stay folded away. */
+.round-complete-dino {
+  font-size: 5rem;
+  line-height: 1;
+  transform-origin: 50% 100%;
+}
+
+.round-complete-eggs {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 14px 0 6px;
+}
+
+.round-complete-eggs .dot {
+  width: 22px;
+  height: 29px;
+  animation: egg-hatch 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: calc(0.5s + var(--i, 0) * 110ms);
+}
+
+@keyframes egg-hatch {
+  from { opacity: 0; transform: scale(0.5) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
 .round-complete-score {
-  font-size: 1.3rem;
-  font-weight: 700;
   margin-bottom: 22px;
+}
+
+.round-complete-number {
+  display: block;
+  font-size: 3.4rem;
+  line-height: 1.1;
+  font-weight: 800;
+}
+
+.round-complete-caption {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--muted-ink);
+}
+
+.result-details {
+  text-align: left;
+  margin: 4px 0 8px;
+}
+
+.result-details summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  font-weight: 700;
+  color: var(--muted-ink);
+  cursor: pointer;
+  border-radius: 12px;
+}
+
+.result-details summary::after {
+  content: "▾";
+  margin-left: 8px;
+}
+
+.result-details[open] summary::after {
+  content: "▴";
+}
+
+.result-details[open] summary {
+  margin-bottom: 10px;
 }
 
 .result-block {
@@ -692,7 +784,7 @@ button { touch-action: manipulation; }
 .play-again-btn {
   border: none;
   background: var(--accent);
-  color: white;
+  color: var(--on-accent);
   font-family: inherit;
   font-weight: 700;
   font-size: 1rem;
@@ -711,7 +803,7 @@ button { touch-action: manipulation; }
 }
 
 .back-home-link {
-  color: var(--accent);
+  color: var(--accent-ink);
   text-decoration: none;
   font-size: 1rem;
   display: inline-flex;
@@ -861,7 +953,8 @@ button { touch-action: manipulation; }
 }
 
 .history-round {
-  background: white;
+  background: var(--card);
+  color: var(--ink);
   border-radius: 18px;
   padding: 14px 16px;
   box-shadow: 0 3px 0 rgba(0, 0, 0, 0.06);
@@ -907,6 +1000,7 @@ button { touch-action: manipulation; }
 
 .history-summary {
   background: var(--accent-soft);
+  color: var(--ink);
   border-radius: 18px;
   padding: 14px 18px;
   font-weight: 700;
@@ -936,6 +1030,7 @@ button { touch-action: manipulation; }
 
 .year-select-card {
   background: var(--card);
+  color: var(--ink);
   border-radius: 28px;
   padding: 36px 32px;
   text-align: center;
@@ -961,7 +1056,7 @@ button { touch-action: manipulation; }
 
 .year-select-btn-alt {
   background: var(--tile-bg-2);
-  color: var(--ink);
+  color: var(--tile-ink);
 }
 
 .play-again-btn[hidden] {

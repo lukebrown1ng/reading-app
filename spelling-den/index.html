@@ -53,26 +53,34 @@
 
     <div id="roundComplete" class="round-complete" hidden>
       <div class="round-complete-card">
-        <div class="round-complete-emoji">🎉🦕🎉</div>
-        <div id="roundCompleteScore" class="round-complete-score"></div>
-
-        <div id="correctWordsBlock" class="result-block" hidden>
-          <p class="result-block-label">✅ Right first time</p>
-          <div id="correctWordList" class="result-word-list"></div>
-        </div>
-
-        <div id="retryWordsBlock" class="result-block" hidden>
-          <p class="result-block-label">🔁 Wrong at first, then got it</p>
-          <div id="retryWordList" class="result-word-list"></div>
-        </div>
-
-        <div id="practiceWordsBlock" class="result-block" hidden>
-          <p class="result-block-label">🌱 To practise next time</p>
-          <div id="practiceWordList" class="result-word-list"></div>
+        <div id="roundCompleteDino" class="round-complete-dino" aria-hidden="true">🦖</div>
+        <div id="roundCompleteEggs" class="progress-dots round-complete-eggs" aria-hidden="true"></div>
+        <div class="round-complete-score">
+          <strong id="roundCompleteScore" class="round-complete-number"></strong>
+          <span id="roundCompleteCaption" class="round-complete-caption"></span>
         </div>
 
         <button id="playAgainBtn" class="play-again-btn" type="button">Play this week again</button>
         <button id="practiceTrickyBtn" class="play-again-btn year-select-btn-alt practice-tricky-btn" type="button" hidden>🌱 Practise my tricky words</button>
+
+        <details class="result-details">
+          <summary>See my words</summary>
+          <div id="correctWordsBlock" class="result-block" hidden>
+            <p class="result-block-label">✅ Right first time</p>
+            <div id="correctWordList" class="result-word-list"></div>
+          </div>
+
+          <div id="retryWordsBlock" class="result-block" hidden>
+            <p class="result-block-label">🔁 Wrong at first, then got it</p>
+            <div id="retryWordList" class="result-word-list"></div>
+          </div>
+
+          <div id="practiceWordsBlock" class="result-block" hidden>
+            <p class="result-block-label">🌱 To practise next time</p>
+            <div id="practiceWordList" class="result-word-list"></div>
+          </div>
+        </details>
+
         <a class="back-home-link" href="../index.html">&larr; back home</a>
       </div>
     </div>
@@ -98,7 +106,7 @@
       <p class="wrong-feedback-label modal-title">That's a tricky one! It's spelled:</p>
       <div id="correctSpellingWord" class="correct-spelling-word"></div>
       <div class="wrong-feedback-actions">
-        <button id="tryAgainBtn" class="try-again-btn" type="button">Try again</button>
+        <button id="tryAgainBtn" class="try-again-btn" data-escape type="button">Try again</button>
         <button id="skipWordBtn" class="skip-word-btn" type="button">Next word →</button>
       </div>
     </div>

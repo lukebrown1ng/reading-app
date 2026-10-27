@@ -9,6 +9,7 @@ html[data-theme="candy"] {
   --option-bg: #ff4f8b; --option-bg-2: #ff9f1c; --option-bg-3: #2ec4f1; --option-bg-4: #8d5cf6;
   --tile-bg: #2ec4f1; --tile-bg-2: #ff9f1c; --correct-glow: #2fd67b;
   --edge: 4px solid #2b1b4a; --lift: 0 6px 0 #2b1b4a;
+  --on-accent: #2b1b4a; --accent-ink: #c4165a; --accent-page: #c4165a;
   --font: ui-rounded, "SF Pro Rounded", "Arial Rounded MT Bold", "Nunito", "Segoe UI", system-ui, sans-serif;
   --radius: 30px;
 }
@@ -19,6 +20,8 @@ html[data-theme="jungle"] {
   --option-bg: #f2782a; --option-bg-2: #e0502f; --option-bg-3: #2aa6a0; --option-bg-4: #8cbf2f;
   --tile-bg: #2aa6a0; --tile-bg-2: #f2782a; --correct-glow: #b6f23a;
   --edge: 0 solid transparent; --lift: 0 8px 0 rgba(0, 0, 0, 0.28);
+  --page-ink: #fff7e0; --on-accent: #3a2410; --accent-ink: #8a4b00;
+  --muted-ink: #5b4a1e; --ring-in: #fff7e0; --ring-out: #3a2410;
   --font: "Chalkboard SE", "Marker Felt", ui-rounded, "Trebuchet MS", system-ui, sans-serif;
   --radius: 36px;
 }
@@ -29,6 +32,7 @@ html[data-theme="space"] {
   --option-bg: #ff5fa2; --option-bg-2: #ffb23f; --option-bg-3: #4ac8ff; --option-bg-4: #a86bff;
   --tile-bg: #4ac8ff; --tile-bg-2: #ffb23f; --correct-glow: #6ef3d6;
   --edge: 3px solid rgba(255, 255, 255, 0.35); --lift: 0 0 22px rgba(110, 243, 214, 0.35);
+  --on-accent: #14104a; --muted-ink: #cfc8ff; --ring-in: #14104a; --ring-out: #ffffff;
   --font: ui-rounded, "SF Pro Rounded", "Avenir Next Rounded", "Nunito", system-ui, sans-serif;
   --radius: 34px;
 }
@@ -43,6 +47,8 @@ html[data-theme]:not([data-theme="none"]) :is(.option-btn, .letter-tile, .key, .
   border: var(--edge); box-shadow: var(--lift); border-radius: calc(var(--radius) * 0.7);
   font-weight: 800; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.18);
 }
+/* these carry dark ink now, so the white-text drop shadow would only blur it */
+html[data-theme]:not([data-theme="none"]) :is(.check-btn, .play-again-btn, .letter-tile, .key) { text-shadow: none; }
 html[data-theme]:not([data-theme="none"]) :is(.tile, .option-btn, .letter-tile, .key):active {
   transform: translateY(6px) scale(0.98); box-shadow: 0 0 0 #000;
 }
