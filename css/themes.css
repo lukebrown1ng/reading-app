@@ -1,0 +1,110 @@
+/* Design variants for the whole app. Chosen with ?theme=candy|jungle|space
+   (remembered; ?theme=none returns to the original look). Token overrides
+   restyle every mode; the rules below add shape, texture and motion. */
+
+/* ---------- 1. Candy Pop: sticker sheet, inky outlines, hard shadows ---------- */
+html[data-theme="candy"] {
+  --bg: #fff3c4; --bg-deep: #ffd6e8; --ink: #2b1b4a; --accent: #ff4f8b;
+  --accent-soft: #ffe0ee; --card: #ffffff; --highlight: #7ef0d0;
+  --option-bg: #ff4f8b; --option-bg-2: #ff9f1c; --option-bg-3: #2ec4f1; --option-bg-4: #8d5cf6;
+  --tile-bg: #2ec4f1; --tile-bg-2: #ff9f1c; --correct-glow: #2fd67b;
+  --edge: 4px solid #2b1b4a; --lift: 0 6px 0 #2b1b4a;
+  --font: ui-rounded, "SF Pro Rounded", "Arial Rounded MT Bold", "Nunito", "Segoe UI", system-ui, sans-serif;
+  --radius: 30px;
+}
+/* ---------- 2. Jungle Den: drenched deep green, warm sun accents ---------- */
+html[data-theme="jungle"] {
+  --bg: #0f5a3c; --bg-deep: #07382a; --ink: #3a2410; --accent: #ffb200;
+  --accent-soft: #fff0c2; --card: #fff7e0; --highlight: #ffd23f;
+  --option-bg: #f2782a; --option-bg-2: #e0502f; --option-bg-3: #2aa6a0; --option-bg-4: #8cbf2f;
+  --tile-bg: #2aa6a0; --tile-bg-2: #f2782a; --correct-glow: #b6f23a;
+  --edge: 0 solid transparent; --lift: 0 8px 0 rgba(0, 0, 0, 0.28);
+  --font: "Chalkboard SE", "Marker Felt", ui-rounded, "Trebuchet MS", system-ui, sans-serif;
+  --radius: 36px;
+}
+/* ---------- 3. Starry Den: night sky, glowing neon candy ---------- */
+html[data-theme="space"] {
+  --bg: #1b1464; --bg-deep: #0b0830; --ink: #f4efff; --accent: #6ef3d6;
+  --accent-soft: #3a2f97; --card: #2c2390; --highlight: #ffe66d;
+  --option-bg: #ff5fa2; --option-bg-2: #ffb23f; --option-bg-3: #4ac8ff; --option-bg-4: #a86bff;
+  --tile-bg: #4ac8ff; --tile-bg-2: #ffb23f; --correct-glow: #6ef3d6;
+  --edge: 3px solid rgba(255, 255, 255, 0.35); --lift: 0 0 22px rgba(110, 243, 214, 0.35);
+  --font: ui-rounded, "SF Pro Rounded", "Avenir Next Rounded", "Nunito", system-ui, sans-serif;
+  --radius: 34px;
+}
+
+/* ---------- shared structure (any theme) ---------- */
+html[data-theme]:not([data-theme="none"]) body { font-family: var(--font); letter-spacing: 0.01em; }
+html[data-theme]:not([data-theme="none"]) :is(.tile, .prompt-card, .page-card, .book-tile, .resume-tile,
+  .round-complete-card, .level-up-card, .progress-modal-card, .wrong-feedback) {
+  border-radius: var(--radius); border: var(--edge); box-shadow: var(--lift);
+}
+html[data-theme]:not([data-theme="none"]) :is(.option-btn, .letter-tile, .key, .check-btn, .nav-btn, .play-again-btn, .restart-btn) {
+  border: var(--edge); box-shadow: var(--lift); border-radius: calc(var(--radius) * 0.7);
+  font-weight: 800; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.18);
+}
+html[data-theme]:not([data-theme="none"]) :is(.tile, .option-btn, .letter-tile, .key):active {
+  transform: translateY(6px) scale(0.98); box-shadow: 0 0 0 #000;
+}
+html[data-theme]:not([data-theme="none"]) :is(.level-pill, .week-pill, .mode-btn, .icon-link) { border-radius: 999px; }
+html[data-theme]:not([data-theme="none"]) .brand,
+html[data-theme]:not([data-theme="none"]) .home-brand { font-weight: 900; }
+
+/* home: big, bouncy, each tile its own colour */
+html[data-theme]:not([data-theme="none"]) .home-brand { font-size: clamp(2.2rem, 9vw, 3.2rem); }
+html[data-theme]:not([data-theme="none"]) .tile { padding: 36px 24px; position: relative; overflow: hidden; }
+html[data-theme]:not([data-theme="none"]) .tile-emoji { font-size: clamp(3.4rem, 16vw, 5.4rem); animation: den-bob 2.6s ease-in-out infinite; }
+html[data-theme]:not([data-theme="none"]) .tile-label { font-size: clamp(1.6rem, 7vw, 2.3rem); font-weight: 900; }
+html[data-theme]:not([data-theme="none"]) .tile-game { animation-delay: .2s; }
+html[data-theme]:not([data-theme="none"]) .tile-game .tile-emoji { animation-delay: .4s; }
+html[data-theme]:not([data-theme="none"]) .tile-spelling .tile-emoji { animation-delay: .8s; }
+@keyframes den-bob { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-8px) rotate(3deg); } }
+
+/* candy: confetti-dot paper, a different candy colour per tile */
+html[data-theme="candy"] body, html[data-theme="candy"] .home, html[data-theme="candy"] .app {
+  background:
+    radial-gradient(circle at 20% 30%, #ff9f1c33 0 14px, transparent 15px) 0 0 / 120px 120px,
+    radial-gradient(circle at 70% 70%, #2ec4f133 0 18px, transparent 19px) 0 0 / 150px 150px,
+    linear-gradient(180deg, var(--bg), var(--bg-deep));
+}
+html[data-theme="candy"] .tile-book { background: #2ec4f1; }
+html[data-theme="candy"] .tile-game { background: #ff9f1c; transform: rotate(1.2deg); }
+html[data-theme="candy"] .tile-spelling { background: #ff4f8b; transform: rotate(-1.2deg); }
+html[data-theme="candy"] .tile-label { color: #fff; text-shadow: 0 3px 0 #2b1b4a; -webkit-text-stroke: 1px #2b1b4a; }
+
+/* jungle: leafy vignette, cream cards on deep green */
+html[data-theme="jungle"] body { color: #fff7e0; }
+html[data-theme="jungle"] :is(.tile, .prompt-card, .page-card, .book-tile, .resume-tile, .round-complete-card, .progress-modal-card) { color: var(--ink); }
+html[data-theme="jungle"] body, html[data-theme="jungle"] .home, html[data-theme="jungle"] .app {
+  background:
+    radial-gradient(ellipse 120% 60% at 50% -10%, #1f8a5a 0 40%, transparent 41%),
+    radial-gradient(ellipse 90% 40% at 0% 100%, #0b4a33 0 50%, transparent 51%),
+    radial-gradient(ellipse 90% 40% at 100% 100%, #0b4a33 0 50%, transparent 51%),
+    linear-gradient(180deg, var(--bg), var(--bg-deep));
+}
+html[data-theme="jungle"] .tile { border-bottom: 10px solid #e9d9a6; }
+html[data-theme="jungle"] .tile-book .tile-label::after { content: " 🌿"; }
+html[data-theme="jungle"] .tile-game .tile-label::after { content: " 🥭"; }
+html[data-theme="jungle"] .tile-spelling .tile-label::after { content: " 🍃"; }
+
+/* space: twinkling star field, glowing cards */
+html[data-theme="space"] body { color: var(--ink); }
+html[data-theme="space"] body, html[data-theme="space"] .home, html[data-theme="space"] .app {
+  background:
+    radial-gradient(1.5px 1.5px at 12% 18%, #fff 50%, transparent 51%) 0 0 / 180px 160px,
+    radial-gradient(2px 2px at 63% 42%, #ffe66d 50%, transparent 51%) 0 0 / 220px 200px,
+    radial-gradient(1px 1px at 38% 80%, #fff 50%, transparent 51%) 0 0 / 130px 140px,
+    linear-gradient(180deg, var(--bg), var(--bg-deep));
+}
+html[data-theme="space"] :is(.tile, .prompt-card, .page-card, .book-tile, .resume-tile) { background: linear-gradient(160deg, #3a2fb0, #241b7c); }
+html[data-theme="space"] .tile-book { box-shadow: 0 0 28px #4ac8ff66; }
+html[data-theme="space"] .tile-game { box-shadow: 0 0 28px #ffb23f66; }
+html[data-theme="space"] .tile-spelling { box-shadow: 0 0 28px #ff5fa266; }
+html[data-theme="space"] .option-btn { color: #14104a; text-shadow: none; }
+html[data-theme="space"] .tile-label { color: #fff; }
+
+/* floating picker so the three can be compared on any page */
+.den-themes { position: fixed; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); z-index: 99; display: flex; gap: 6px; font: 700 12px system-ui, sans-serif; }
+.den-themes button { border: 2px solid #222; background: #fff; color: #222; border-radius: 999px; padding: 6px 10px; cursor: pointer; }
+.den-themes button[aria-pressed="true"] { background: #222; color: #fff; }
+@media (prefers-reduced-motion: reduce) { .tile-emoji { animation: none !important; } }

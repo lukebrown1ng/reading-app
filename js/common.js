@@ -10,6 +10,26 @@ var Den = window.Den || {};
   // Every key the app keeps in localStorage — what backup/restore covers.
   Den.STORAGE_KEYS = ["wordDenState.v1", "readDenState.v1", "spellDenState.v1"];
 
+  // --- Design variants (preview): ?theme=candy|jungle|space|none ------
+
+  (function () {
+    var me = document.currentScript, base = me ? me.src.replace(/js\/common\.js.*$/, "") : "";
+    var q = /[?&]theme=(\w+)/.exec(location.search), t = q && q[1];
+    try { if (t) localStorage.setItem("denTheme", t); else t = localStorage.getItem("denTheme"); } catch (e) { /* ignore */ }
+    var link = document.createElement("link");
+    link.rel = "stylesheet"; link.href = base + "css/themes.css";
+    document.head.appendChild(link);
+    document.documentElement.setAttribute("data-theme", t || "none");
+    var bar = document.createElement("div"); bar.className = "den-themes";
+    ["candy", "jungle", "space", "none"].forEach(function (n) {
+      var b = document.createElement("button"); b.textContent = n === "none" ? "old" : n;
+      b.setAttribute("aria-pressed", String((t || "none") === n));
+      b.onclick = function () { try { localStorage.setItem("denTheme", n); } catch (e) { /* ignore */ } location.reload(); };
+      bar.appendChild(b);
+    });
+    document.body.appendChild(bar);
+  })();
+
   // --- Storage / dates ------------------------------------------------
 
   Den.storage = {
