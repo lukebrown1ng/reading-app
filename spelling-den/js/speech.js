@@ -14,6 +14,7 @@ var SpellDen = window.SpellDen || {};
   // played from a tap before — so one shared element is reused for every
   // clip, and unlocked by the first touch anywhere on the page. That's what
   // lets the next word auto-play after the "correct!" delay.
+  var audioBase = document.currentScript.src.replace(/js\/speech\.js.*$/, "audio/");
   var player = new Audio();
   player.preload = "auto";
   var unlocked = false;
@@ -80,7 +81,7 @@ var SpellDen = window.SpellDen || {};
       player.addEventListener("ended", onEnded);
       player.addEventListener("error", fallBack);
 
-      player.src = "audio/" + encodeURIComponent(step.clip) + ".mp3";
+      player.src = audioBase + encodeURIComponent(step.clip) + ".mp3";
       var p = player.play();
       if (p && p.catch) {
         p.catch(function (e) {

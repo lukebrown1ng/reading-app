@@ -377,14 +377,14 @@ button { touch-action: manipulation; }
 }
 
 .letter-tile {
-  width: clamp(44px, 11vw, 56px);
-  height: clamp(44px, 11vw, 56px);
+  width: clamp(52px, 13vw, 66px);
+  height: clamp(52px, 13vw, 66px);
   border: none;
   border-radius: 14px;
   background: var(--tile-bg);
   color: var(--tile-ink);
   text-shadow: none;
-  font-size: clamp(1.2rem, 5vw, 1.6rem);
+  font-size: clamp(1.4rem, 5.6vw, 1.8rem);
   font-weight: 700;
   text-transform: lowercase;
   cursor: pointer;
@@ -424,15 +424,15 @@ button { touch-action: manipulation; }
 
 .key {
   flex: 1 1 0;
-  max-width: 54px;
-  height: clamp(46px, 12vw, 58px);
+  max-width: 62px;
+  height: clamp(54px, 14vw, 68px);
   border: none;
   border-radius: 10px;
   background: var(--tile-bg);
   color: var(--tile-ink);
   text-shadow: none;
   font-family: inherit;
-  font-size: clamp(1.15rem, 4.8vw, 1.5rem);
+  font-size: clamp(1.3rem, 5.4vw, 1.7rem);
   font-weight: 700;
   text-transform: lowercase;
   cursor: pointer;
@@ -451,7 +451,7 @@ button { touch-action: manipulation; }
 }
 
 .key-back {
-  max-width: 76px;
+  max-width: 88px;
   flex-grow: 1.5;
   background: #d8d2c6;
 }
@@ -957,8 +957,8 @@ button { touch-action: manipulation; }
   }
 
   .letter-tile {
-    width: 58px;
-    height: 58px;
+    width: 68px;
+    height: 68px;
   }
 }
 

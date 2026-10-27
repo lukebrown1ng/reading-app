@@ -22,7 +22,7 @@ html[data-theme="jungle"] {
   --edge: 0 solid transparent; --lift: 0 8px 0 rgba(0, 0, 0, 0.28);
   --page-ink: #fff7e0; --on-accent: #3a2410; --accent-ink: #8a4b00;
   --muted-ink: #5b4a1e; --ring-in: #fff7e0; --ring-out: #3a2410;
-  --font: "Chalkboard SE", "Marker Felt", ui-rounded, "Trebuchet MS", system-ui, sans-serif;
+  --font: ui-rounded, "SF Pro Rounded", "Arial Rounded MT Bold", "Nunito", "Segoe UI", system-ui, sans-serif;
   --radius: 36px;
 }
 /* ---------- 3. Starry Den: night sky, glowing neon candy ---------- */

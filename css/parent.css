@@ -302,6 +302,9 @@ body.parent-body {
   font-weight: 600;
 }
 
+.cluster-row button.word-chip { border: none; font-family: inherit; cursor: pointer; min-height: 36px; }
+.cluster-row .sentence-chip { background: #e5e5e5; margin-left: -4px; }
+
 .status-new { background: #e5e5e5; color: #555; }
 .status-shaky { background: #ffe1e1; color: #a13c3c; }
 .status-learning { background: #fff3cd; color: #8a6d1d; }

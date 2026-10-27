@@ -5,7 +5,7 @@
 // The VERSION and PRECACHE lines are rewritten by `node scripts/build-sw.js`
 // — run it after adding or changing files so a new device can install the
 // whole app (including all the audio) in one go.
-const VERSION = "247e9970f4";
+const VERSION = "5ac6a9fe5b";
 const PRECACHE = [
   "./",
   "./css/home.css",
