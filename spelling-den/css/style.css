@@ -1092,3 +1092,36 @@ button { touch-action: manipulation; }
   .top-bar .week-pill { padding: 8px 12px; font-size: 0.85rem; }
   .top-bar .mode-btn { padding: 8px 12px; font-size: 0.9rem; }
 }
+
+/* Wrappers are invisible in portrait: the game stays one column. */
+.play-left, .play-right { display: contents; }
+
+/* Tablets on their side: the word, dino and buttons on the left, the
+   answer and letters on the right, so nothing scrolls off the bottom. */
+@media (orientation: landscape) and (min-width: 700px) and (min-height: 480px) {
+  .game-area {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    grid-template-rows: auto 1fr;
+    column-gap: clamp(24px, 5vw, 64px);
+    row-gap: 12px;
+    padding: 8px clamp(20px, 4vw, 48px) 20px;
+  }
+  .game-area::before, .game-area::after { display: none; }
+  .focus-callout { grid-column: 1 / -1; margin: 0; }
+  .play-left, .play-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    margin-block: auto; /* centres when there's room, scrolls when not */
+  }
+  .play-right { gap: 20px; }
+  .dino { font-size: clamp(5.5rem, 14vh, 8rem); }
+  .blanks-row { flex-wrap: nowrap; gap: 6px; width: 100%; }
+  .blank-box { flex: 0 1 56px; width: auto; min-width: 0; height: 64px; font-size: 1.9rem; }
+  .letter-tile { width: 72px; height: 72px; font-size: 2rem; }
+  .letter-tray, .blanks-row { max-width: 100%; }
+  .key { max-width: 72px; height: clamp(54px, 9vh, 72px); }
+  .key-back { max-width: 100px; }
+}
