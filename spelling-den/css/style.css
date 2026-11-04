@@ -1101,11 +1101,11 @@ button { touch-action: manipulation; }
 @media (orientation: landscape) and (min-width: 700px) and (min-height: 480px) {
   .game-area {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    grid-template-columns: minmax(230px, 0.6fr) minmax(0, 2fr);
     grid-template-rows: auto 1fr;
-    column-gap: clamp(24px, 5vw, 64px);
+    column-gap: clamp(16px, 3vw, 40px);
     row-gap: 12px;
-    padding: 8px clamp(20px, 4vw, 48px) 20px;
+    padding: 8px clamp(16px, 3vw, 32px) 20px;
   }
   .game-area::before, .game-area::after { display: none; }
   .focus-callout { grid-column: 1 / -1; margin: 0; }
@@ -1120,7 +1120,8 @@ button { touch-action: manipulation; }
   .dino { font-size: clamp(5.5rem, 14vh, 8rem); }
   .blanks-row { flex-wrap: nowrap; gap: 6px; width: 100%; }
   .blank-box { flex: 0 1 56px; width: auto; min-width: 0; height: 64px; font-size: 1.9rem; }
-  .letter-tile { width: 72px; height: 72px; font-size: 2rem; }
+  .letter-tray { flex-wrap: nowrap; gap: 6px; width: 100%; }
+  .letter-tile { flex: 0 1 72px; width: auto; min-width: 0; aspect-ratio: 1; height: auto; font-size: 2rem; }
   .letter-tray, .blanks-row { max-width: 100%; }
   .key { max-width: 72px; height: clamp(54px, 9vh, 72px); }
   .key-back { max-width: 100px; }
