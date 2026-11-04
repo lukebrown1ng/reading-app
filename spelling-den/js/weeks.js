@@ -72,6 +72,15 @@ var SpellDen = window.SpellDen || {};
         "berry", "bury", "brake", "break", "meet",
         "meat", "ball", "bawl", "fair", "fare"
       ]
+    },
+    {
+      id: "week7",
+      label: "Week 7",
+      focus: "Adverbs formed with the suffix -ly",
+      words: [
+        "kindly", "quickly", "safely", "rudely", "sweetly",
+        "strongly", "bravely", "secretly", "finally", "usually"
+      ]
     }
   ];
 

@@ -147,7 +147,19 @@ SpellDen.SENTENCES = {
   led: "The guide led us through the forest.",
   lead: "The pipe was made of heavy lead.",
   mourning: "They were in mourning for their old friend.",
-  morning: "I eat breakfast every morning."
+  morning: "I eat breakfast every morning.",
+
+  // Week 7
+  kindly: "The old man kindly helped us carry the bags.",
+  quickly: "She ran quickly to catch the bus.",
+  safely: "We crossed the road safely.",
+  rudely: "He rudely pushed past the queue.",
+  sweetly: "The little bird sang sweetly in the tree.",
+  strongly: "The wind blew strongly all night.",
+  bravely: "The firefighter bravely climbed the ladder.",
+  secretly: "They secretly planned a surprise party.",
+  finally: "After a long wait, the bus finally came.",
+  usually: "I usually walk to school with my friend."
 };
 
 window.SpellDen = SpellDen;
