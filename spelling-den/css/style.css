@@ -1126,3 +1126,9 @@ button { touch-action: manipulation; }
   .key { max-width: 72px; height: clamp(54px, 9vh, 72px); }
   .key-back { max-width: 100px; }
 }
+
+/* iPad (touch, tablet width): nudge the header down so it clears the
+   translucent status area. */
+@media (hover: none) and (pointer: coarse) and (min-width: 700px) {
+  .top-bar { padding-top: calc(24px + env(safe-area-inset-top, 0px)); }
+}
