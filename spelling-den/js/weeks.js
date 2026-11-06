@@ -140,6 +140,15 @@ var SpellDen = window.SpellDen || {};
         "farther", "father", "guessed", "guest", "heard",
         "herd", "led", "lead", "mourning", "morning"
       ]
+    },
+    {
+      id: "y5week7",
+      label: "Year 5 · Week 7",
+      focus: "Words with silent letters",
+      words: [
+        "doubt", "lamb", "debt", "thumb", "solemn",
+        "autumn", "column", "knight", "knuckle", "knot"
+      ]
     }
   ];
 

@@ -159,7 +159,18 @@ SpellDen.SENTENCES = {
   bravely: "The firefighter bravely climbed the ladder.",
   secretly: "They secretly planned a surprise party.",
   finally: "After a long wait, the bus finally came.",
-  usually: "I usually walk to school with my friend."
+  usually: "I usually walk to school with my friend.",
+
+  // Year 5 · Week 7
+  doubt: "I have no doubt that she will win the race.",
+  lamb: "The little lamb followed its mother across the field.",
+  debt: "He worked hard to pay off his debt.",
+  thumb: "I hit my thumb with the hammer.",
+  solemn: "The room was silent and everyone looked solemn.",
+  autumn: "Leaves turn red and gold in autumn.",
+  column: "The soldiers marched in a long column.",
+  knight: "The knight rode a white horse to the castle.",
+  knuckle: "He bumped his knuckle on the door."
 };
 
 window.SpellDen = SpellDen;
