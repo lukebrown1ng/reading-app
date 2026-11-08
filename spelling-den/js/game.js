@@ -779,7 +779,8 @@ var SpellDen = window.SpellDen || {};
         applyYear();
       }
       renderStreakPill();
-      loadWeek(SpellDen.state.getActiveWeekId());
+      // Always start on the newest week; older weeks are still in the picker.
+      loadWeek(SpellDen.getLatestWeek(activeYear).id);
     }
     // Direct links skip the start page: spelling-den/?year=3 or ?year=5.
     var linkedYear = (window.location.search.match(/[?&]year=([35])\b/) || [])[1];
