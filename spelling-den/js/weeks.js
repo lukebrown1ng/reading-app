@@ -81,6 +81,15 @@ var SpellDen = window.SpellDen || {};
         "kindly", "quickly", "safely", "rudely", "sweetly",
         "strongly", "bravely", "secretly", "finally", "usually"
       ]
+    },
+    {
+      id: "week8",
+      label: "Week 8",
+      focus: "Adverbs formed with the suffix -ly",
+      words: [
+        "happily", "angrily", "lazily", "easily", "busily",
+        "greedily", "messily", "wearily", "cheekily", "clumsily"
+      ]
     }
   ];
 

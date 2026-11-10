@@ -161,6 +161,18 @@ SpellDen.SENTENCES = {
   finally: "After a long wait, the bus finally came.",
   usually: "I usually walk to school with my friend.",
 
+  // Week 8
+  happily: "The children played happily in the garden.",
+  angrily: "He slammed the door angrily.",
+  lazily: "The cat stretched lazily in the sun.",
+  easily: "She solved the puzzle easily.",
+  busily: "The bees buzzed busily around the flowers.",
+  greedily: "The puppy gobbled up its dinner greedily.",
+  messily: "He ate his spaghetti messily.",
+  wearily: "The tired walker wearily climbed the hill.",
+  cheekily: "She cheekily stuck out her tongue.",
+  clumsily: "He clumsily knocked over the glass of milk.",
+
   // Year 5 · Week 7
   doubt: "I have no doubt that she will win the race.",
   lamb: "The little lamb followed its mother across the field.",
