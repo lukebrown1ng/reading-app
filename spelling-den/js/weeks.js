@@ -85,7 +85,7 @@ var SpellDen = window.SpellDen || {};
     {
       id: "week8",
       label: "Week 8",
-      focus: "Adverbs formed with the suffix -ly",
+      focus: "Create adverbs using the suffix -ily",
       words: [
         "happily", "angrily", "lazily", "easily", "busily",
         "greedily", "messily", "wearily", "cheekily", "clumsily"
