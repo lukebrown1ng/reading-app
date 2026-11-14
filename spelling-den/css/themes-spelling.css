@@ -364,3 +364,7 @@
   :root[data-theme="rainbow"] body .play-left { padding-top: 22px; }
 }
 :root[data-theme="space"] body .progress-row .dot-current::after { transform: translate(0, -50%); }
+
+/* Pixel: inserted letters beat the generic filled-slot rule (0,5,1); no white borders on buttons. */
+:root[data-theme="pixel"][data-theme] body .blank-box.blank-filled { background: #ffe14d; border-color: #ffe14d; color: #14052e; }
+:root[data-theme="pixel"] body :is(.check-btn, .hear-btn, .hear-sentence-btn, .week-pill, .mode-toggle, .focus-callout, .play-again-btn) { border: 0; }
