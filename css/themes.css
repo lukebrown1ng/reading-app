@@ -1,6 +1,16 @@
 /* Design variants for the whole app. Chosen with ?theme=candy|jungle|space
    (remembered; ?theme=none returns to the original look). Token overrides
    restyle every mode; the rules below add shape, texture and motion. */
+/* Self-hosted fonts (SIL OFL), latin subset - the themes use them offline. */
+@font-face { font-family: "Fredoka"; font-style: normal; font-weight: 500 700; font-display: swap; src: url("../fonts/fredoka.woff2") format("woff2"); }
+@font-face { font-family: "Lilita One"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/lilita-one.woff2") format("woff2"); }
+@font-face { font-family: "Baloo 2"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("../fonts/baloo-2.woff2") format("woff2"); }
+@font-face { font-family: "Chewy"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/chewy.woff2") format("woff2"); }
+@font-face { font-family: "Press Start 2P"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/press-start-2p.woff2") format("woff2"); }
+@font-face { font-family: "Rubik"; font-style: normal; font-weight: 700 900; font-display: swap; src: url("../fonts/rubik.woff2") format("woff2"); }
+@font-face { font-family: "Luckiest Guy"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/luckiest-guy.woff2") format("woff2"); }
+@font-face { font-family: "Bangers"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/bangers.woff2") format("woff2"); }
+
 
 /* ---------- 1. Candy Pop: sticker sheet, inky outlines, hard shadows ---------- */
 [data-theme="candy"] {
@@ -10,7 +20,7 @@
   --tile-bg: #2ec4f1; --tile-bg-2: #ff9f1c; --correct-glow: #2fd67b;
   --edge: 4px solid #2b1b4a; --lift: 0 6px 0 #2b1b4a;
   --on-accent: #2b1b4a; --accent-ink: #c4165a; --accent-page: #c4165a;
-  --font: ui-rounded, "SF Pro Rounded", "Arial Rounded MT Bold", "Nunito", "Segoe UI", system-ui, sans-serif;
+  --font: "Fredoka", ui-rounded, system-ui, sans-serif;
   --radius: 30px;
 }
 /* ---------- 2. Jungle Den: drenched deep green, warm sun accents ---------- */
@@ -22,7 +32,7 @@
   --edge: 0 solid transparent; --lift: 0 8px 0 rgba(0, 0, 0, 0.28);
   --page-ink: #fff7e0; --on-accent: #3a2410; --accent-ink: #8a4b00;
   --muted-ink: #5b4a1e; --ring-in: #fff7e0; --ring-out: #3a2410;
-  --font: ui-rounded, "SF Pro Rounded", "Arial Rounded MT Bold", "Nunito", "Segoe UI", system-ui, sans-serif;
+  --font: "Lilita One", ui-rounded, system-ui, sans-serif;
   --radius: 36px;
 }
 /* ---------- 3. Starry Den: night sky, glowing neon candy ---------- */
@@ -33,7 +43,7 @@
   --tile-bg: #4ac8ff; --tile-bg-2: #ffb23f; --correct-glow: #6ef3d6;
   --edge: 3px solid rgba(255, 255, 255, 0.35); --lift: 0 0 22px rgba(110, 243, 214, 0.35);
   --on-accent: #14104a; --muted-ink: #cfc8ff; --ring-in: #14104a; --ring-out: #ffffff;
-  --font: ui-rounded, "SF Pro Rounded", "Avenir Next Rounded", "Nunito", system-ui, sans-serif;
+  --font: "Baloo 2", ui-rounded, system-ui, sans-serif;
   --radius: 34px;
 }
 
@@ -122,7 +132,7 @@ html[data-theme="space"] .tile-label { color: #fff; }
   --tile-bg: #4dd2ff; --tile-bg-2: #ff4d6d; --tile-ink: #111111; --correct-glow: #2bd67b;
   --edge: 5px solid #111111; --lift: 6px 6px 0 #111111; --radius: 16px;
   --on-accent: #111111; --accent-ink: #b3002b; --accent-page: #b3002b; --t1: #4dd2ff; --t2: #ff4d6d; --t3: #7cf29a; --tt: #111111;
-  --font: "Chalkboard SE", "Marker Felt", ui-rounded, "Arial Rounded MT Bold", system-ui, sans-serif;
+  --font: "Chewy", "Marker Felt", system-ui, sans-serif;
 }
 [data-theme="ocean"] {
   --bg: #0b6fd0; --bg-deep: #032a6b; --ink: #03386b; --accent: #ffd23f; --accent-soft: #d9f3ff; --card: #e9faff;
@@ -131,6 +141,7 @@ html[data-theme="space"] .tile-label { color: #fff; }
   --edge: 3px solid rgba(255, 255, 255, 0.7); --lift: 0 8px 0 #011b3d; --radius: 40px;
   --page-ink: #ffffff; --on-accent: #03386b; --accent-ink: #0a5ea8; --muted-ink: #2a5b8a; --ring-in: #ffffff; --ring-out: #03386b;
   --t1: #aef0ff; --t2: #ffe9a8; --t3: #ffc2dc; --tt: #03386b;
+  --font: "Baloo 2", ui-rounded, system-ui, sans-serif;
 }
 [data-theme="pixel"] {
   --bg: #14052e; --bg-deep: #0a0218; --ink: #ffffff; --accent: #ff3df2; --accent-soft: #3a1a7a; --card: #241058;
@@ -139,7 +150,7 @@ html[data-theme="space"] .tile-label { color: #fff; }
   --edge: 4px solid #ffffff; --lift: 0 6px 0 #000000; --radius: 4px;
   --on-accent: #14052e; --muted-ink: #cdb8ff; --accent-ink: #ff7bf6; --accent-page: #ff7bf6; --ring-in: #14052e; --ring-out: #ffffff;
   --t1: #00e5ff; --t2: #ffe14d; --t3: #ff3df2; --tt: #14052e;
-  --font: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --font: "Press Start 2P", ui-monospace, monospace;
 }
 [data-theme="rainbow"] {
   --bg: #ffffff; --bg-deep: #eef0fb; --ink: #111111; --accent: #2e9bff; --accent-soft: #e0efff; --card: #ffffff;
@@ -147,6 +158,7 @@ html[data-theme="space"] .tile-label { color: #fff; }
   --tile-bg: #ff9f1c; --tile-bg-2: #2ed573; --tile-ink: #111111; --correct-glow: #2ed573;
   --edge: 4px solid #111111; --lift: 0 6px 0 #111111; --radius: 14px;
   --on-accent: #111111; --accent-ink: #0b5fb8; --accent-page: #0b5fb8; --t1: #ff9f1c; --t2: #2ed573; --t3: #ffe14d; --tt: #111111;
+  --font: "Rubik", system-ui, sans-serif;
 }
 [data-theme="lava"] {
   --bg: #1a0d0a; --bg-deep: #7a1d00; --ink: #ffe9c0; --accent: #ff7a00; --accent-soft: #5a3a2e; --card: #3d2a24;
@@ -155,6 +167,7 @@ html[data-theme="space"] .tile-label { color: #fff; }
   --edge: 0 solid transparent; --lift: 0 8px 0 #120a08; --radius: 24px;
   --on-accent: #1a0d0a; --muted-ink: #e0bfa0; --accent-ink: #ffb36b; --accent-page: #ffb36b; --ring-in: #1a0d0a; --ring-out: #ffd166;
   --t1: #ffd166; --t2: #ff9f45; --t3: #ff7a7a; --tt: #1a0d0a;
+  --font: "Luckiest Guy", "Arial Black", system-ui, sans-serif;
 }
 [data-theme="comic"] {
   --bg: #ffd400; --bg-deep: #ffb800; --ink: #111111; --accent: #e4002b; --accent-soft: #ffe0e0; --card: #ffffff;
@@ -162,7 +175,7 @@ html[data-theme="space"] .tile-label { color: #fff; }
   --tile-bg: #00b4ff; --tile-bg-2: #ffd400; --tile-ink: #111111; --correct-glow: #00c853;
   --edge: 5px solid #111111; --lift: 6px 6px 0 #111111; --radius: 6px;
   --on-accent: #ffffff; --accent-ink: #b3001f; --accent-page: #b3001f; --t1: #00b4ff; --t2: #ffffff; --t3: #00c853; --tt: #111111;
-  --font: "Chalkboard SE", "Marker Felt", "Comic Sans MS", ui-rounded, system-ui, sans-serif;
+  --font: "Bangers", "Comic Sans MS", system-ui, sans-serif;
 }
 [data-theme="split"] {
   --bg: #ff5fb0; --bg-deep: #00d9ff; --ink: #1a1a40; --accent: #1a1a40; --accent-soft: #c9f5ff; --card: #ffffff;
@@ -170,6 +183,7 @@ html[data-theme="space"] .tile-label { color: #fff; }
   --tile-bg: #ffe600; --tile-bg-2: #7cff6b; --tile-ink: #1a1a40; --correct-glow: #7cff6b;
   --edge: 0 solid transparent; --lift: 0 8px 0 #1a1a40; --radius: 40px;
   --on-accent: #ffe600; --accent-ink: #b0006a; --accent-page: #1a1a40; --t1: #ffe600; --t2: #7cff6b; --t3: #ffffff; --tt: #1a1a40;
+  --font: "Baloo 2", ui-rounded, system-ui, sans-serif;
 }
 /* shared: each home tile takes the theme's three colours; dark cards keep light ink */
 html[data-theme="sticker"] .tile-book,

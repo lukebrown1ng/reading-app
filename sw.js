@@ -5,13 +5,21 @@
 // The VERSION and PRECACHE lines are rewritten by `node scripts/build-sw.js`
 // — run it after adding or changing files so a new device can install the
 // whole app (including all the audio) in one go.
-const VERSION = "38e7dc0985";
+const VERSION = "a23feaba3e";
 const PRECACHE = [
   "./",
   "./css/home.css",
   "./css/parent.css",
   "./css/themes.css",
   "./favicon.ico",
+  "./fonts/baloo-2.woff2",
+  "./fonts/bangers.woff2",
+  "./fonts/chewy.woff2",
+  "./fonts/fredoka.woff2",
+  "./fonts/lilita-one.woff2",
+  "./fonts/luckiest-guy.woff2",
+  "./fonts/press-start-2p.woff2",
+  "./fonts/rubik.woff2",
   "./icons/apple-touch-icon.png",
   "./icons/favicon-32.png",
   "./icons/icon-192.png",

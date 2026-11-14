@@ -53,6 +53,7 @@
 
 /* ===================== 2. JUNGLE ===================== */
 :root[data-theme="jungle"] { --dino-body: #b6f23a; --dino-spike: #ffb200; --blank-c: #ffd23f; --quest: "Jungle mission: "; }
+:root[data-theme="jungle"] body :is(.brand, .focus-callout, .hear-btn, .check-btn, .week-pill, .cheer) { text-transform: uppercase; letter-spacing: 0.05em; }
 :root[data-theme="jungle"] body .brand { color: #ffd23f; text-shadow: 0 3px 0 #07382a; font-size: 1.8rem; }
 :root[data-theme="jungle"] body .focus-callout { background: #ffd23f; border: 0; border-bottom: 6px solid #b38600; border-radius: 14px; transform: skew(-6deg); color: #3a2410; }
 :root[data-theme="jungle"] body .dot { width: 22px; height: 22px; border: 3px solid #b6f23a; border-radius: 0 100% 0 100%; background: #07382a; }
@@ -115,6 +116,9 @@
 
 /* ===================== 6. PIXEL QUEST ===================== */
 :root[data-theme="pixel"] { --dino-body: #00ff88; --dino-spike: #ff3df2; --blank-c: #8f7bff; --quest: "QUEST: "; }
+:root[data-theme="pixel"] body .brand { font-size: 1.1rem; }
+:root[data-theme="pixel"] body :is(.focus-callout, .hear-btn, .hear-sentence-btn, .week-pill, .mode-btn, .word-progress-label, .cheer) { font-size: 0.78rem; line-height: 1.5; }
+:root[data-theme="pixel"] body .cheer { font-size: 1.1rem; }
 :root[data-theme="pixel"] body { text-transform: uppercase; letter-spacing: 0.04em; }
 :root[data-theme="pixel"] body .brand { color: #ff3df2; text-shadow: 3px 3px 0 #00e5ff; font-size: 1.6rem; }
 :root[data-theme="pixel"] body .focus-callout { background: #ff3df2; color: #14052e; border: 0; border-radius: 0; box-shadow: 6px 6px 0 #00e5ff; align-self: flex-start; width: auto; }
@@ -127,15 +131,12 @@
 :root[data-theme="pixel"] body .dot-retry { background: #ffe14d; clip-path: none; }
 :root[data-theme="pixel"] body .dot-skipped { background: #00e5ff; clip-path: none; }
 @keyframes px-blink { 50% { opacity: 0.3; } }
-:root[data-theme="pixel"] body :is(.letter-tile, .key, .blank-box, .check-btn, .hear-btn, .hear-sentence-btn, .week-pill, .mode-toggle, .focus-callout, .week-option, .play-again-btn) {
-  clip-path: polygon(0 6px, 6px 6px, 6px 0, calc(100% - 6px) 0, calc(100% - 6px) 6px, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 6px), 0 calc(100% - 6px));
-  border-radius: 0; border-width: 0; box-shadow: none; border-bottom: 8px solid rgba(0, 0, 0, 0.45);
-}
-:root[data-theme="pixel"] body .blank-box { border: 4px dashed #8f7bff; border-bottom-width: 4px; background: #1f0b4d; }
+:root[data-theme="pixel"] body :is(.letter-tile, .key, .blank-box, .check-btn, .hear-btn, .hear-sentence-btn, .week-pill, .mode-toggle, .focus-callout, .week-option, .play-again-btn) { border-radius: 0; box-shadow: 0 6px 0 #000; }
+:root[data-theme="pixel"] body .blank-box { border: 4px dashed #8f7bff; box-shadow: none; background: #1f0b4d; }
 :root[data-theme="pixel"] body .blank-box.blank-filled { border-style: solid; background: #fff; color: #14052e; }
 :root[data-theme="pixel"] body .hear-btn { background: #00e5ff; color: #14052e; }
 :root[data-theme="pixel"] body .hear-sentence-btn { background: #ffe14d; color: #14052e; border-color: transparent; }
-:root[data-theme="pixel"] body .check-btn { background: #00ff88; color: #14052e; font-size: 1.5rem; padding: 18px 54px; }
+:root[data-theme="pixel"] body .check-btn { background: #00ff88; color: #14052e; font-size: 1.1rem; padding: 18px 54px; }
 :root[data-theme="pixel"] body .check-btn:disabled { background: #3a2a6b; color: #a79bd6; }
 :root[data-theme="pixel"] body .cheer { color: #ffe14d; text-shadow: 4px 4px 0 #ff3df2; }
 :root[data-theme="pixel"] .app::after { content: ""; left: 0; right: 0; bottom: 0; height: 26px; background: repeating-linear-gradient(90deg, #00ff88 0 32px, #00a357 32px 64px); box-shadow: 0 -6px 0 #14052e inset; }
@@ -244,3 +245,17 @@
 :root[data-theme="candy"] body .focus-callout, :root[data-theme="sticker"] body .focus-callout, :root[data-theme="lava"] body .focus-callout,
 :root[data-theme="jungle"] body .focus-callout { width: auto; align-self: center; justify-self: center; padding-inline: 40px; }
 :root[data-theme="pixel"] body .focus-callout { justify-self: start; }
+
+/* Display fonts (Bangers, Luckiest Guy) run small for their size: scale them up. */
+:root[data-theme="comic"] body .brand { font-size: 2.6rem; }
+:root[data-theme="comic"] body :is(.focus-callout, .word-progress-label, .week-pill, .mode-btn, .hear-btn, .hear-sentence-btn) { font-size: 1.3rem; }
+:root[data-theme="comic"] body :is(.letter-tile, .key, .blank-box) { font-size: 2.1rem; }
+:root[data-theme="comic"] body .check-btn { font-size: 2.4rem; }
+:root[data-theme="lava"] body .brand { font-size: 2.2rem; }
+:root[data-theme="lava"] body :is(.focus-callout, .word-progress-label, .week-pill, .mode-btn, .hear-btn, .hear-sentence-btn) { font-size: 1.2rem; font-weight: 400; }
+:root[data-theme="lava"] body :is(.letter-tile, .key, .blank-box) { font-size: 1.9rem; font-weight: 400; }
+:root[data-theme="lava"] body .check-btn { font-size: 2rem; font-weight: 400; }
+:root[data-theme="sticker"] body :is(.focus-callout, .word-progress-label, .week-pill, .mode-btn, .hear-btn, .hear-sentence-btn) { font-size: 1.2rem; }
+:root[data-theme="sticker"] body :is(.letter-tile, .key) { font-size: 2rem; }
+:root[data-theme="comic"] body :is(.focus-callout-label, .focus-callout-text), :root[data-theme="lava"] body :is(.focus-callout-label, .focus-callout-text) { font-size: 1.25rem; font-weight: 400; }
+:root[data-theme="sticker"] body :is(.focus-callout-label, .focus-callout-text) { font-size: 1.15rem; }
