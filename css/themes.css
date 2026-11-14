@@ -3,7 +3,7 @@
    restyle every mode; the rules below add shape, texture and motion. */
 
 /* ---------- 1. Candy Pop: sticker sheet, inky outlines, hard shadows ---------- */
-html[data-theme="candy"] {
+[data-theme="candy"] {
   --bg: #fff3c4; --bg-deep: #ffd6e8; --ink: #2b1b4a; --accent: #ff4f8b;
   --accent-soft: #ffe0ee; --card: #ffffff; --highlight: #7ef0d0;
   --option-bg: #ff4f8b; --option-bg-2: #ff9f1c; --option-bg-3: #2ec4f1; --option-bg-4: #8d5cf6;
@@ -14,7 +14,7 @@ html[data-theme="candy"] {
   --radius: 30px;
 }
 /* ---------- 2. Jungle Den: drenched deep green, warm sun accents ---------- */
-html[data-theme="jungle"] {
+[data-theme="jungle"] {
   --bg: #0f5a3c; --bg-deep: #07382a; --ink: #3a2410; --accent: #ffb200;
   --accent-soft: #fff0c2; --card: #fff7e0; --highlight: #ffd23f;
   --option-bg: #f2782a; --option-bg-2: #e0502f; --option-bg-3: #2aa6a0; --option-bg-4: #8cbf2f;
@@ -26,7 +26,7 @@ html[data-theme="jungle"] {
   --radius: 36px;
 }
 /* ---------- 3. Starry Den: night sky, glowing neon candy ---------- */
-html[data-theme="space"] {
+[data-theme="space"] {
   --bg: #1b1464; --bg-deep: #0b0830; --ink: #f4efff; --accent: #6ef3d6;
   --accent-soft: #3a2f97; --card: #2c2390; --highlight: #ffe66d;
   --option-bg: #ff5fa2; --option-bg-2: #ffb23f; --option-bg-3: #4ac8ff; --option-bg-4: #a86bff;
@@ -35,6 +35,12 @@ html[data-theme="space"] {
   --on-accent: #14104a; --muted-ink: #cfc8ff; --ring-in: #14104a; --ring-out: #ffffff;
   --font: ui-rounded, "SF Pro Rounded", "Avenir Next Rounded", "Nunito", system-ui, sans-serif;
   --radius: 34px;
+}
+
+/* Original look: explicit tokens so its picker preview does not inherit the page's theme */
+[data-theme="none"] {
+  --bg: #eafaf0; --bg-deep: #cdf0da; --tile-bg: #8ecae6; --tile-bg-2: #ffb703; --tile-ink: #16301f;
+  --edge: 0 solid transparent; --lift: 0 5px 0 rgba(0, 0, 0, 0.15); --radius: 14px; --accent: #2f9e6b; --on-accent: #ffffff;
 }
 
 /* ---------- shared structure (any theme) ---------- */
@@ -109,8 +115,157 @@ html[data-theme="space"] .tile-spelling { box-shadow: 0 0 28px #ff5fa266; }
 html[data-theme="space"] .option-btn { color: #14104a; text-shadow: none; }
 html[data-theme="space"] .tile-label { color: #fff; }
 
-/* floating picker so the three can be compared on any page */
-.den-themes { position: fixed; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); z-index: 99; display: flex; gap: 6px; font: 700 12px system-ui, sans-serif; }
-.den-themes button { border: 2px solid #222; background: #fff; color: #222; border-radius: 999px; padding: 6px 10px; cursor: pointer; }
-.den-themes button[aria-pressed="true"] { background: #222; color: #fff; }
+/* ---------- 4-10. More themes: token sets, then a little texture each ---------- */
+[data-theme="sticker"] {
+  --bg: #ffe14d; --bg-deep: #ffd000; --ink: #111111; --accent: #ff4d6d; --accent-soft: #ffe0e6; --card: #ffffff;
+  --highlight: #4dd2ff; --option-bg: #ff4d6d; --option-bg-2: #4dd2ff; --option-bg-3: #7cf29a; --option-bg-4: #ffb703;
+  --tile-bg: #4dd2ff; --tile-bg-2: #ff4d6d; --tile-ink: #111111; --correct-glow: #2bd67b;
+  --edge: 5px solid #111111; --lift: 6px 6px 0 #111111; --radius: 16px;
+  --on-accent: #111111; --accent-ink: #b3002b; --accent-page: #b3002b; --t1: #4dd2ff; --t2: #ff4d6d; --t3: #7cf29a; --tt: #111111;
+  --font: "Chalkboard SE", "Marker Felt", ui-rounded, "Arial Rounded MT Bold", system-ui, sans-serif;
+}
+[data-theme="ocean"] {
+  --bg: #0b6fd0; --bg-deep: #032a6b; --ink: #03386b; --accent: #ffd23f; --accent-soft: #d9f3ff; --card: #e9faff;
+  --highlight: #ffd23f; --option-bg: #ff5d8f; --option-bg-2: #ffb703; --option-bg-3: #2ec4b6; --option-bg-4: #8f7bff;
+  --tile-bg: #aef0ff; --tile-bg-2: #ffe9a8; --tile-ink: #03386b; --correct-glow: #7dffb3;
+  --edge: 3px solid rgba(255, 255, 255, 0.7); --lift: 0 8px 0 #011b3d; --radius: 40px;
+  --page-ink: #ffffff; --on-accent: #03386b; --accent-ink: #0a5ea8; --muted-ink: #2a5b8a; --ring-in: #ffffff; --ring-out: #03386b;
+  --t1: #aef0ff; --t2: #ffe9a8; --t3: #ffc2dc; --tt: #03386b;
+}
+[data-theme="pixel"] {
+  --bg: #14052e; --bg-deep: #0a0218; --ink: #ffffff; --accent: #ff3df2; --accent-soft: #3a1a7a; --card: #241058;
+  --highlight: #ffe14d; --option-bg: #ff3df2; --option-bg-2: #00e5ff; --option-bg-3: #ffe14d; --option-bg-4: #00ff88;
+  --tile-bg: #00e5ff; --tile-bg-2: #ffe14d; --tile-ink: #14052e; --correct-glow: #00ff88;
+  --edge: 4px solid #ffffff; --lift: 0 6px 0 #000000; --radius: 4px;
+  --on-accent: #14052e; --muted-ink: #cdb8ff; --accent-ink: #ff7bf6; --accent-page: #ff7bf6; --ring-in: #14052e; --ring-out: #ffffff;
+  --t1: #00e5ff; --t2: #ffe14d; --t3: #ff3df2; --tt: #14052e;
+  --font: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+}
+[data-theme="rainbow"] {
+  --bg: #ffffff; --bg-deep: #eef0fb; --ink: #111111; --accent: #2e9bff; --accent-soft: #e0efff; --card: #ffffff;
+  --highlight: #ffe14d; --option-bg: #ff3b3b; --option-bg-2: #ff9f1c; --option-bg-3: #2ed573; --option-bg-4: #a55eea;
+  --tile-bg: #ff9f1c; --tile-bg-2: #2ed573; --tile-ink: #111111; --correct-glow: #2ed573;
+  --edge: 4px solid #111111; --lift: 0 6px 0 #111111; --radius: 14px;
+  --on-accent: #111111; --accent-ink: #0b5fb8; --accent-page: #0b5fb8; --t1: #ff9f1c; --t2: #2ed573; --t3: #ffe14d; --tt: #111111;
+}
+[data-theme="lava"] {
+  --bg: #1a0d0a; --bg-deep: #7a1d00; --ink: #ffe9c0; --accent: #ff7a00; --accent-soft: #5a3a2e; --card: #3d2a24;
+  --highlight: #ffd166; --option-bg: #ff7a00; --option-bg-2: #ffd166; --option-bg-3: #ff4d4d; --option-bg-4: #ffb347;
+  --tile-bg: #ffd166; --tile-bg-2: #ff9f45; --tile-ink: #1a0d0a; --correct-glow: #b6f23a;
+  --edge: 0 solid transparent; --lift: 0 8px 0 #120a08; --radius: 24px;
+  --on-accent: #1a0d0a; --muted-ink: #e0bfa0; --accent-ink: #ffb36b; --accent-page: #ffb36b; --ring-in: #1a0d0a; --ring-out: #ffd166;
+  --t1: #ffd166; --t2: #ff9f45; --t3: #ff7a7a; --tt: #1a0d0a;
+}
+[data-theme="comic"] {
+  --bg: #ffd400; --bg-deep: #ffb800; --ink: #111111; --accent: #e4002b; --accent-soft: #ffe0e0; --card: #ffffff;
+  --highlight: #00b4ff; --option-bg: #e4002b; --option-bg-2: #00b4ff; --option-bg-3: #00c853; --option-bg-4: #9b30ff;
+  --tile-bg: #00b4ff; --tile-bg-2: #ffd400; --tile-ink: #111111; --correct-glow: #00c853;
+  --edge: 5px solid #111111; --lift: 6px 6px 0 #111111; --radius: 6px;
+  --on-accent: #ffffff; --accent-ink: #b3001f; --accent-page: #b3001f; --t1: #00b4ff; --t2: #ffffff; --t3: #00c853; --tt: #111111;
+  --font: "Chalkboard SE", "Marker Felt", "Comic Sans MS", ui-rounded, system-ui, sans-serif;
+}
+[data-theme="split"] {
+  --bg: #ff5fb0; --bg-deep: #00d9ff; --ink: #1a1a40; --accent: #1a1a40; --accent-soft: #c9f5ff; --card: #ffffff;
+  --highlight: #ffe600; --option-bg: #ff5fb0; --option-bg-2: #00d9ff; --option-bg-3: #ffe600; --option-bg-4: #7cff6b;
+  --tile-bg: #ffe600; --tile-bg-2: #7cff6b; --tile-ink: #1a1a40; --correct-glow: #7cff6b;
+  --edge: 0 solid transparent; --lift: 0 8px 0 #1a1a40; --radius: 40px;
+  --on-accent: #ffe600; --accent-ink: #b0006a; --accent-page: #1a1a40; --t1: #ffe600; --t2: #7cff6b; --t3: #ffffff; --tt: #1a1a40;
+}
+/* shared: each home tile takes the theme's three colours; dark cards keep light ink */
+html[data-theme="sticker"] .tile-book,
+html[data-theme="ocean"] .tile-book,
+html[data-theme="pixel"] .tile-book,
+html[data-theme="rainbow"] .tile-book,
+html[data-theme="lava"] .tile-book,
+html[data-theme="comic"] .tile-book,
+html[data-theme="split"] .tile-book { background: var(--t1); }
+html[data-theme="sticker"] .tile-game,
+html[data-theme="ocean"] .tile-game,
+html[data-theme="pixel"] .tile-game,
+html[data-theme="rainbow"] .tile-game,
+html[data-theme="lava"] .tile-game,
+html[data-theme="comic"] .tile-game,
+html[data-theme="split"] .tile-game { background: var(--t2); }
+html[data-theme="sticker"] .tile-spelling,
+html[data-theme="ocean"] .tile-spelling,
+html[data-theme="pixel"] .tile-spelling,
+html[data-theme="rainbow"] .tile-spelling,
+html[data-theme="lava"] .tile-spelling,
+html[data-theme="comic"] .tile-spelling,
+html[data-theme="split"] .tile-spelling { background: var(--t3); }
+html[data-theme="sticker"] .tile,
+html[data-theme="ocean"] .tile,
+html[data-theme="pixel"] .tile,
+html[data-theme="rainbow"] .tile,
+html[data-theme="lava"] .tile,
+html[data-theme="comic"] .tile,
+html[data-theme="split"] .tile { color: var(--tt); }
+html[data-theme="sticker"] .tile-label,
+html[data-theme="ocean"] .tile-label,
+html[data-theme="pixel"] .tile-label,
+html[data-theme="rainbow"] .tile-label,
+html[data-theme="lava"] .tile-label,
+html[data-theme="comic"] .tile-label,
+html[data-theme="split"] .tile-label { color: var(--tt); }
+html[data-theme="sticker"] :is(.prompt-card, .page-card, .book-tile, .resume-tile, .round-complete-card, .progress-modal-card),
+html[data-theme="ocean"] :is(.prompt-card, .page-card, .book-tile, .resume-tile, .round-complete-card, .progress-modal-card),
+html[data-theme="pixel"] :is(.prompt-card, .page-card, .book-tile, .resume-tile, .round-complete-card, .progress-modal-card),
+html[data-theme="rainbow"] :is(.prompt-card, .page-card, .book-tile, .resume-tile, .round-complete-card, .progress-modal-card),
+html[data-theme="lava"] :is(.prompt-card, .page-card, .book-tile, .resume-tile, .round-complete-card, .progress-modal-card),
+html[data-theme="comic"] :is(.prompt-card, .page-card, .book-tile, .resume-tile, .round-complete-card, .progress-modal-card),
+html[data-theme="split"] :is(.prompt-card, .page-card, .book-tile, .resume-tile, .round-complete-card, .progress-modal-card) { color: var(--ink); }
+html[data-theme="sticker"] body, html[data-theme="sticker"] .home, html[data-theme="sticker"] .app {
+  background: radial-gradient(#f2c500 3px, transparent 3px) 0 0 / 28px 28px, var(--bg);
+}
+html[data-theme="sticker"] .tile { box-shadow: 8px 8px 0 #111; transform: rotate(-1deg); }
+html[data-theme="sticker"] .tile-game { transform: rotate(1.2deg); }
+html[data-theme="ocean"] body { color: #ffffff; }
+html[data-theme="ocean"] body, html[data-theme="ocean"] .home, html[data-theme="ocean"] .app {
+  background:
+    radial-gradient(circle at 12% 30%, transparent 0 18px, #ffffff44 19px 21px, transparent 22px) 0 0 / 220px 260px,
+    radial-gradient(circle at 80% 60%, transparent 0 28px, #ffffff44 29px 31px, transparent 32px) 0 0 / 300px 340px,
+    linear-gradient(180deg, #27c6ff 0%, var(--bg) 40%, var(--bg-deep) 100%);
+}
+html[data-theme="pixel"] body, html[data-theme="pixel"] .home, html[data-theme="pixel"] .app {
+  background: linear-gradient(#1f0b4d 2px, transparent 2px) 0 0 / 32px 32px, linear-gradient(90deg, #1f0b4d 2px, transparent 2px) 0 0 / 32px 32px, var(--bg);
+}
+html[data-theme="pixel"] :is(.brand, .home-brand, .tile-label, .check-btn) { text-transform: uppercase; letter-spacing: 0.06em; }
+html[data-theme="rainbow"] body::before {
+  content: ""; position: fixed; top: 0; left: 0; right: 0; height: 14px; z-index: 50;
+  background: linear-gradient(90deg, #ff3b3b 0 16.6%, #ff9f1c 0 33.3%, #ffe14d 0 50%, #2ed573 0 66.6%, #2e9bff 0 83.3%, #a55eea 0);
+}
+html[data-theme="lava"] body { color: var(--ink); }
+html[data-theme="lava"] body, html[data-theme="lava"] .home, html[data-theme="lava"] .app {
+  background:
+    linear-gradient(180deg, transparent 70%, #ff4d0066 100%),
+    linear-gradient(180deg, var(--bg) 0%, #2c120a 60%, var(--bg-deep) 100%);
+}
+html[data-theme="comic"] body, html[data-theme="comic"] .home, html[data-theme="comic"] .app {
+  background: radial-gradient(#ff9d00 22%, transparent 24%) 0 0 / 22px 22px, var(--bg);
+}
+html[data-theme="comic"] :is(.brand, .home-brand, .tile-label) { text-transform: uppercase; }
+html[data-theme="split"] body, html[data-theme="split"] .home, html[data-theme="split"] .app {
+  background: linear-gradient(115deg, var(--bg) 0 42%, var(--bg-deep) 42% 100%);
+}
+
+/* "select theme" dialog on the home page (neutral colours so it reads in every theme) */
+.den-theme-open { background: none; border: 0; font: inherit; cursor: pointer; text-decoration: underline; margin-right: 18px; }
+.den-theme-dialog { border: 4px solid #222; border-radius: 24px; padding: 20px; width: min(560px, calc(100vw - 32px)); background: #fff; color: #222; font-family: system-ui, sans-serif; }
+.den-theme-dialog::backdrop { background: rgba(0, 0, 0, 0.55); }
+.den-theme-dialog h2 { margin: 0 0 14px; font-size: 1.4rem; text-align: center; }
+.den-theme-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.den-theme-grid button { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 8px; border: 3px solid #222; border-radius: 16px; background: #fff; color: #222; font: 700 15px system-ui, sans-serif; cursor: pointer; }
+.den-theme-grid button[aria-pressed="true"] { background: #222; color: #fff; }
+.den-mini-wrap { display: flex; justify-content: center; align-items: center; width: 100%; height: 84px; border-radius: 12px; overflow: hidden;
+  background: linear-gradient(180deg, var(--bg, #eafaf0), var(--bg-deep, #cdf0da)); font-family: var(--font, system-ui, sans-serif); }
+.den-mini { zoom: 0.5; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.den-mini-row { display: flex; gap: 10px; }
+.den-mini b { width: 52px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800;
+  background: var(--tile-bg, #8ecae6); color: var(--tile-ink, #16301f); border: var(--edge, 0 solid transparent); box-shadow: var(--lift, 0 5px 0 rgba(0,0,0,.15));
+  border-radius: calc(var(--radius, 14px) * 0.5); box-sizing: border-box; }
+.den-mini b:nth-child(2) { background: var(--tile-bg-2, #ffb703); }
+.den-mini b.den-blank { background: transparent; border: 4px dashed var(--tile-bg-2, #ffb703); box-shadow: none; }
+.den-mini-check { padding: 8px 40px; font-size: 24px; font-weight: 800; background: var(--accent, #2f9e6b); color: var(--on-accent, #fff);
+  border: var(--edge, 0 solid transparent); box-shadow: var(--lift, 0 5px 0 rgba(0,0,0,.15)); border-radius: 999px; }
+.den-theme-close { display: block; margin: 14px auto 0; border: 3px solid #222; background: #fff; color: #222; border-radius: 999px; padding: 8px 28px; font: 700 16px system-ui, sans-serif; cursor: pointer; }
 @media (prefers-reduced-motion: reduce) { .tile-emoji { animation: none !important; } }

@@ -10,12 +10,12 @@ var Den = window.Den || {};
   // Every key the app keeps in localStorage — what backup/restore covers.
   Den.STORAGE_KEYS = ["wordDenState.v1", "readDenState.v1", "spellDenState.v1"];
 
-  // --- Design variants: ?theme=candy|jungle|space|none (jungle by default) ---
+  // --- Design variants: ?theme=<name>|none (jungle by default); names in NAMES below ---
 
   (function () {
     if (typeof location === "undefined" || !document.head) return; // tests run without a page
     var me = document.currentScript, base = me ? me.src.replace(/js\/common\.js.*$/, "") : "";
-    var NAMES = ["candy", "jungle", "space", "none"];
+    var NAMES = ["candy", "jungle", "space", "sticker", "ocean", "pixel", "rainbow", "lava", "comic", "split", "none"];
     var q = /[?&]theme=(\w+)/.exec(location.search), t = q && q[1];
     if (NAMES.indexOf(t) === -1) t = null;
     try { if (t) localStorage.setItem("denTheme", t); else t = localStorage.getItem("denTheme"); } catch (e) { /* ignore */ }
@@ -23,18 +23,42 @@ var Den = window.Den || {};
     link.rel = "stylesheet"; link.href = base + "css/themes.css";
     document.head.appendChild(link);
     t = t || "jungle";
-    document.documentElement.setAttribute("data-theme", t);
-    var themeColor = { candy: "#fff3c4", jungle: "#0f5a3c", space: "#1b1464" }[t], meta = document.querySelector('meta[name="theme-color"]');
-    if (themeColor && meta) meta.setAttribute("content", themeColor);
+    var COLORS = { candy: "#fff3c4", jungle: "#0f5a3c", space: "#1b1464", sticker: "#ffe14d", ocean: "#0b6fd0", pixel: "#14052e", rainbow: "#ffffff", lava: "#1a0d0a", comic: "#ffd400", split: "#ff5fb0" };
+    function apply(n) {
+      t = n;
+      document.documentElement.setAttribute("data-theme", n);
+      var meta = document.querySelector('meta[name="theme-color"]');
+      if (COLORS[n] && meta) meta.setAttribute("content", COLORS[n]);
+    }
+    apply(t);
     if (!document.body.hasAttribute("data-theme-picker")) return; // only the home page offers the picker
-    var bar = document.createElement("div"); bar.className = "den-themes";
+    // "Select theme" button in the footer opens a dialog of swatch buttons.
+    var LABELS = { candy: "Candy Pop", jungle: "Jungle", space: "Space", sticker: "Sticker Book", ocean: "Ocean", pixel: "Pixel Quest",
+      rainbow: "Rainbow", lava: "Lava Rock", comic: "Comic Pow", split: "Split Screen", none: "Original" };
+    var dlg = document.createElement("dialog"); dlg.className = "den-theme-dialog"; dlg.setAttribute("aria-label", "Select theme");
+    dlg.innerHTML = '<h2>Pick a theme</h2><div class="den-theme-grid"></div><button type="button" class="den-theme-close">Close</button>';
+    var grid = dlg.querySelector(".den-theme-grid");
     NAMES.forEach(function (n) {
-      var b = document.createElement("button"); b.textContent = n === "none" ? "old" : n;
+      var b = document.createElement("button"); b.type = "button";
       b.setAttribute("aria-pressed", String(t === n));
-      b.onclick = function () { try { localStorage.setItem("denTheme", n); } catch (e) { /* ignore */ } location.reload(); };
-      bar.appendChild(b);
+      // A tiny word-game scene, drawn with the theme's own tokens (data-theme on the wrapper).
+      b.innerHTML = '<span class="den-mini-wrap" data-theme="' + n + '"><span class="den-mini"><span class="den-mini-row">' +
+        "<b>i</b><b>s</b><b>l</b><b class=\"den-blank\"></b></span><span class=\"den-mini-check\">Check</span></span></span>" + LABELS[n];
+      b.onclick = function () {
+        try { localStorage.setItem("denTheme", n); } catch (e) { /* ignore */ }
+        apply(n);
+        grid.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
+        dlg.close();
+      };
+      grid.appendChild(b);
     });
-    document.body.appendChild(bar);
+    dlg.querySelector(".den-theme-close").onclick = function () { dlg.close(); };
+    dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); }); // tap the backdrop
+    var open = document.createElement("button"); open.type = "button"; open.className = "parent-link den-theme-open"; open.textContent = "select theme";
+    open.onclick = function () { dlg.showModal(); };
+    var footer = document.querySelector(".home-footer");
+    (footer || document.body).insertBefore(open, footer && footer.firstChild);
+    document.body.appendChild(dlg);
   })();
 
   // --- Storage / dates ------------------------------------------------
