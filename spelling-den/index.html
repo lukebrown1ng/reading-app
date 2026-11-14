@@ -16,9 +16,29 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+  <!-- Dino art for the themes: coloured per theme with --dino-body / --dino-spike / --dino-line. -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <symbol id="dino-sym" viewBox="0 0 120 120">
+      <g style="stroke:var(--dino-line,none);stroke-width:3;stroke-linejoin:round">
+        <path d="M6 96 Q22 92 30 78 L40 96 Z" style="fill:var(--dino-body,#2ee6c5)"/>
+        <rect x="40" y="94" width="14" height="18" rx="6" style="fill:var(--dino-body,#2ee6c5)"/>
+        <rect x="66" y="94" width="14" height="18" rx="6" style="fill:var(--dino-body,#2ee6c5)"/>
+        <ellipse cx="58" cy="78" rx="34" ry="26" style="fill:var(--dino-body,#2ee6c5)"/>
+        <circle cx="82" cy="46" r="24" style="fill:var(--dino-body,#2ee6c5)"/>
+        <path d="M40 56 L46 40 L54 54 Z M54 52 L62 34 L70 50 Z" style="fill:var(--dino-spike,#ff5fa8)"/>
+      </g>
+      <circle cx="90" cy="42" r="7" fill="#fff"/><circle cx="92" cy="42" r="3.5" fill="#111"/>
+      <path d="M84 58 Q94 64 102 56" stroke="#111" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="dino-pix" viewBox="0 0 120 120" shape-rendering="crispEdges">
+      <g style="fill:var(--dino-body,#00ff88)"><rect x="24" y="60" width="60" height="36"/><rect x="60" y="24" width="48" height="48"/><rect x="12" y="84" width="16" height="12"/><rect x="36" y="96" width="16" height="16"/><rect x="64" y="96" width="16" height="16"/></g>
+      <g style="fill:var(--dino-spike,#ff3df2)"><rect x="36" y="48" width="12" height="12"/><rect x="52" y="40" width="12" height="20"/></g>
+      <rect x="84" y="36" width="12" height="12" fill="#fff"/><rect x="90" y="40" width="6" height="6" fill="#14052e"/>
+    </symbol>
+  </svg>
   <div class="app">
     <header class="top-bar">
-      <a class="brand" href="../index.html">🦕 <span>Spelling Den</span></a>
+      <a class="brand" href="../index.html"><span class="brand-dino"><span class="dino-emoji">🦕</span><svg class="dino-svg dino-smooth" aria-hidden="true"><use href="#dino-sym"/></svg><svg class="dino-svg dino-pixel" aria-hidden="true"><use href="#dino-pix"/></svg></span> <span>Spelling Den</span></a>
       <div class="top-bar-actions">
         <div id="modeToggle" class="mode-toggle" role="group" aria-label="How to enter letters">
           <button id="modeTilesBtn" class="mode-btn" type="button" aria-pressed="true">🔀 Tiles</button>
@@ -39,7 +59,7 @@
         <div id="wordProgressLabel" class="word-progress-label">Word 1 of 10</div>
         <div id="progressDots" class="progress-dots"></div>
       </div>
-      <div id="dino" class="dino" aria-hidden="true">🦖</div>
+      <div id="dino" class="dino" aria-hidden="true"><span class="dino-emoji">🦖</span><svg class="dino-svg dino-smooth" aria-hidden="true"><use href="#dino-sym"/></svg><svg class="dino-svg dino-pixel" aria-hidden="true"><use href="#dino-pix"/></svg></div>
       <div id="cheer" class="cheer" aria-hidden="true"></div>
       <p id="liveStatus" class="sr-only" role="status" aria-live="polite"></p>
       <button id="hearBtn" class="hear-btn" type="button" aria-label="Hear the word">
@@ -61,7 +81,7 @@
 
     <div id="roundComplete" class="round-complete" hidden>
       <div class="round-complete-card">
-        <div id="roundCompleteDino" class="round-complete-dino" aria-hidden="true">🦖</div>
+        <div id="roundCompleteDino" class="round-complete-dino" aria-hidden="true"><span class="dino-emoji">🦖</span><svg class="dino-svg dino-smooth" aria-hidden="true"><use href="#dino-sym"/></svg><svg class="dino-svg dino-pixel" aria-hidden="true"><use href="#dino-pix"/></svg></div>
         <div id="roundCompleteEggs" class="progress-dots round-complete-eggs" aria-hidden="true"></div>
         <div class="round-complete-score">
           <strong id="roundCompleteScore" class="round-complete-number"></strong>
@@ -96,7 +116,7 @@
 
   <div id="yearSelect" class="year-select">
     <div class="year-select-card">
-      <div class="round-complete-emoji">🦕</div>
+      <div class="round-complete-emoji"><span class="dino-emoji">🦕</span><svg class="dino-svg dino-smooth" aria-hidden="true"><use href="#dino-sym"/></svg><svg class="dino-svg dino-pixel" aria-hidden="true"><use href="#dino-pix"/></svg></div>
       <h2 class="year-select-heading">Spelling Den</h2>
       <p class="year-select-sub">Which spellings today?</p>
       <button id="year3Btn" class="play-again-btn year-select-btn" type="button">Year 3</button>
@@ -146,6 +166,7 @@
     </div>
   </div>
 
+  <link rel="stylesheet" href="css/themes-spelling.css">
   <script src="../js/common.js"></script>
   <script src="js/weeks.js"></script>
   <script src="js/sentences.js"></script>

@@ -1,0 +1,246 @@
+/* Spelling Den: full theme treatments (dino art, progress shapes, quest banner,
+   buttons, backdrops). The colour tokens live in ../../css/themes.css; this file
+   is linked after it so equal-specificity rules here win. Selectors start with
+   `:root[data-theme="x"] body` (specificity 0,3,1) to match the shared rules. */
+
+/* ---------- every theme: swap the emoji dino for the SVG one ---------- */
+:root[data-theme]:not([data-theme="none"]) .dino-emoji { display: none; }
+:root[data-theme]:not([data-theme="none"]) .dino-smooth { display: block; }
+:root[data-theme="pixel"] .dino-smooth { display: none !important; }
+:root[data-theme="pixel"] .dino-pixel { display: block; }
+.dino-svg { display: none; width: 1em; height: 1em; }
+.brand-dino { display: inline-flex; font-size: 2.4rem; line-height: 1; }
+.round-complete-emoji { line-height: 1; }
+:root[data-theme]:not([data-theme="none"]) .round-complete-emoji { font-size: 4rem; display: flex; justify-content: center; }
+:root[data-theme]:not([data-theme="none"]) .dino { font-size: 7rem; margin-bottom: 0; }
+:root[data-theme]:not([data-theme="none"]) .round-complete-dino { font-size: 7rem; display: flex; justify-content: center; }
+@media (orientation: landscape) and (min-width: 700px) and (min-height: 480px) {
+  :root[data-theme]:not([data-theme="none"]) .dino { font-size: clamp(7rem, 20vh, 11rem); }
+}
+
+/* Backdrop layers sit under the content. */
+:root[data-theme]:not([data-theme="none"]) .app { position: relative; }
+:root[data-theme]:not([data-theme="none"]) .top-bar,
+:root[data-theme]:not([data-theme="none"]) .game-area { position: relative; z-index: 1; }
+:root[data-theme]:not([data-theme="none"]) .app::before,
+:root[data-theme]:not([data-theme="none"]) .app::after { position: absolute; pointer-events: none; z-index: 0; }
+
+/* Blank slots: dashed outline in every theme, solid once a letter lands. */
+:root[data-theme]:not([data-theme="none"]) body .blank-box {
+  border: 4px dashed var(--blank-c, var(--accent)); background: rgba(255, 255, 255, 0.22);
+  border-radius: calc(var(--radius) * 0.5); box-shadow: none; color: var(--ink);
+}
+:root[data-theme]:not([data-theme="none"]) body .blank-box.blank-filled {
+  border-style: solid; border-color: var(--blank-c, var(--accent)); background: var(--card); box-shadow: var(--lift);
+}
+:root[data-theme]:not([data-theme="none"]) body .blanks-row.blanks-correct .blank-box { border-color: var(--correct-glow); box-shadow: 0 0 0 3px var(--correct-glow); }
+
+/* Quest banner prefix on the focus line. */
+:root[data-theme]:not([data-theme="none"]) body .focus-callout-text::before { content: var(--quest, ""); }
+
+/* ===================== 1. CANDY POP ===================== */
+:root[data-theme="candy"] { --dino-body: #2ee6c5; --dino-spike: #ff4f8b; --blank-c: #2b1b4a; --quest: "Sweet mission: "; }
+:root[data-theme="candy"] body .brand { background: #fff; border: 4px solid #2b1b4a; border-radius: 20px; padding: 4px 16px; box-shadow: 0 5px 0 #2b1b4a; color: #2b1b4a; }
+:root[data-theme="candy"] body .focus-callout { background: #ffd23f; border: 4px solid #2b1b4a; border-radius: 999px; box-shadow: 0 6px 0 #2b1b4a; transform: rotate(-1.5deg); }
+:root[data-theme="candy"] body .week-pill, :root[data-theme="candy"] body .mode-toggle { background: #fff; border: 4px solid #2b1b4a; box-shadow: 0 5px 0 #2b1b4a; color: #2b1b4a; }
+:root[data-theme="candy"] body .dot { border: 3px solid #2b1b4a; border-radius: 50%; width: 22px; height: 28px; }
+:root[data-theme="candy"] body .dot-first, :root[data-theme="candy"] body .dot-retry, :root[data-theme="candy"] body .dot-skipped { clip-path: none; border: 3px solid #2b1b4a; }
+:root[data-theme="candy"] body .letter-tile { border-radius: 24px; }
+:root[data-theme="candy"] body .hear-btn { background: #ff4f8b; color: #2b1b4a; border: 4px solid #2b1b4a; box-shadow: 0 6px 0 #2b1b4a; border-radius: 999px; }
+:root[data-theme="candy"] body .check-btn { background: #2b1b4a; color: #ffd23f; border-radius: 999px; font-size: 1.6rem; padding: 16px 60px; box-shadow: 0 8px 0 #12081f; }
+:root[data-theme="candy"] .app::before { content: ""; right: -90px; top: -90px; width: 280px; height: 280px; border-radius: 50%; background: #ffd23f; }
+:root[data-theme="candy"] .app::after { content: ""; left: -70px; bottom: -70px; width: 230px; height: 230px; border-radius: 50%; background: #2ee6c5; }
+
+/* ===================== 2. JUNGLE ===================== */
+:root[data-theme="jungle"] { --dino-body: #b6f23a; --dino-spike: #ffb200; --blank-c: #ffd23f; --quest: "Jungle mission: "; }
+:root[data-theme="jungle"] body .brand { color: #ffd23f; text-shadow: 0 3px 0 #07382a; font-size: 1.8rem; }
+:root[data-theme="jungle"] body .focus-callout { background: #ffd23f; border: 0; border-bottom: 6px solid #b38600; border-radius: 14px; transform: skew(-6deg); color: #3a2410; }
+:root[data-theme="jungle"] body .dot { width: 22px; height: 22px; border: 3px solid #b6f23a; border-radius: 0 100% 0 100%; background: #07382a; }
+:root[data-theme="jungle"] body .dot-current { background: #ffd23f; border-color: #ffd23f; }
+:root[data-theme="jungle"] body .dot-first, :root[data-theme="jungle"] body .dot-retry, :root[data-theme="jungle"] body .dot-skipped { clip-path: none; border: 0; border-radius: 0 100% 0 100%; }
+:root[data-theme="jungle"] body .letter-tile { border-radius: 50%; }
+:root[data-theme="jungle"] body .hear-btn { background: #ffb200; color: #3a2410; border-radius: 18px; box-shadow: 0 8px 0 #b36d00; }
+:root[data-theme="jungle"] body .check-btn { background: #b6f23a; color: #07382a; border-radius: 18px; font-size: 1.6rem; padding: 16px 60px; box-shadow: 0 8px 0 #5e8a00; }
+:root[data-theme="jungle"] .app::after { content: ""; left: 0; right: 0; bottom: 0; height: 90px; background:
+    radial-gradient(ellipse 40px 70px at 8% 100%, #0b4a33 98%, transparent), radial-gradient(ellipse 50px 90px at 18% 100%, #1f8a5a 98%, transparent),
+    radial-gradient(ellipse 40px 80px at 84% 100%, #1f8a5a 98%, transparent), radial-gradient(ellipse 50px 70px at 94% 100%, #0b4a33 98%, transparent); }
+
+/* ===================== 3. SPACE ===================== */
+:root[data-theme="space"] { --dino-body: #7dffb3; --dino-spike: #ff5fa2; --blank-c: #8f7bff; --quest: "Mission: "; }
+:root[data-theme="space"] body .brand { color: #fff; font-size: 1.7rem; }
+:root[data-theme="space"] body .brand span:last-child::after { content: " in space"; color: #ffe66d; }
+:root[data-theme="space"] body .focus-callout { background: #ff5fa2; color: #fff; border: 0; border-radius: 999px; box-shadow: 0 0 26px #ff5fa288; }
+:root[data-theme="space"] body .focus-callout-label { color: #fff; }
+:root[data-theme="space"] body .dot { width: 24px; height: 24px; border: 0; border-radius: 0; background: #4a35b8; clip-path: polygon(50% 0, 62% 36%, 98% 38%, 69% 60%, 80% 96%, 50% 74%, 20% 96%, 31% 60%, 2% 38%, 38% 36%); animation: none; }
+:root[data-theme="space"] body .dot-current { background: #fff; filter: drop-shadow(0 0 6px #ffe66d); }
+:root[data-theme="space"] body .dot-first { background: #ffe66d; filter: drop-shadow(0 0 6px #ffe66d); }
+:root[data-theme="space"] body .dot-retry { background: #ffb23f; }
+:root[data-theme="space"] body .dot-skipped { background: #4ac8ff; }
+:root[data-theme="space"] body .letter-tile, :root[data-theme="space"] body .key { border-radius: 50%; box-shadow: inset -10px -10px 0 rgba(0, 0, 0, 0.18), 0 0 26px rgba(255, 255, 255, 0.22); }
+:root[data-theme="space"] body .blank-box { border-radius: 50%; }
+:root[data-theme="space"] body .hear-btn { background: transparent; color: #ffe66d; border: 3px solid #ffe66d; box-shadow: none; text-shadow: none; }
+:root[data-theme="space"] body .check-btn { background: #ffe66d; color: #1b1464; border-radius: 999px; font-size: 1.6rem; padding: 14px 64px; box-shadow: 0 0 36px #ffe66d99; }
+:root[data-theme="space"] .app::after { content: ""; right: 40px; top: 90px; width: 74px; height: 74px; border-radius: 50%; background: radial-gradient(circle at 30% 30%, #ff9f45, #c4501b); box-shadow: inset -12px -8px 0 rgba(0, 0, 0, 0.2); }
+
+/* ===================== 4. STICKER BOOK ===================== */
+:root[data-theme="sticker"] { --dino-body: #7cf29a; --dino-spike: #ff4d6d; --dino-line: #111; --blank-c: #111; --quest: "Sticker quest: "; }
+:root[data-theme="sticker"] body .brand { background: #ff4d6d; color: #111; border: 5px solid #111; border-radius: 14px; padding: 2px 18px; box-shadow: 6px 6px 0 #111; transform: rotate(-2deg); font-size: 1.7rem; }
+:root[data-theme="sticker"] body .focus-callout { background: #4dd2ff; border: 5px solid #111; border-radius: 14px; box-shadow: 6px 6px 0 #111; transform: rotate(1.2deg); color: #111; }
+:root[data-theme="sticker"] body .week-pill, :root[data-theme="sticker"] body .mode-toggle { background: #fff; border: 5px solid #111; border-radius: 14px; box-shadow: 5px 5px 0 #111; color: #111; }
+:root[data-theme="sticker"] body .dot { width: 26px; height: 26px; border: 4px solid #111; border-radius: 50%; background: #fff; }
+:root[data-theme="sticker"] body .dot-current { background: #ffe14d; }
+:root[data-theme="sticker"] body .dot-first, :root[data-theme="sticker"] body .dot-retry, :root[data-theme="sticker"] body .dot-skipped { clip-path: none; border: 4px solid #111; }
+:root[data-theme="sticker"] body .letter-tile:nth-child(odd) { transform: rotate(-3deg); }
+:root[data-theme="sticker"] body .letter-tile:nth-child(even) { transform: rotate(3deg); }
+:root[data-theme="sticker"] body .hear-btn { background: #fff; color: #111; border-radius: 14px; box-shadow: 6px 6px 0 #111; }
+:root[data-theme="sticker"] body .check-btn { background: #2bd67b; color: #111; border-radius: 14px; font-size: 1.8rem; padding: 14px 56px; box-shadow: 8px 8px 0 #111; }
+:root[data-theme="sticker"] body .check-btn:disabled { background: #fff8c7; color: #555; box-shadow: 6px 6px 0 #111; }
+
+/* ===================== 5. OCEAN ===================== */
+:root[data-theme="ocean"] { --dino-body: #7dffb3; --dino-spike: #ff5d8f; --blank-c: #ffffff; --quest: "Treasure: "; }
+:root[data-theme="ocean"] body .brand { color: #fff; text-shadow: 0 4px 0 #0a4d9a; font-size: 1.8rem; }
+:root[data-theme="ocean"] body .focus-callout { background: #ff5d8f; color: #fff; border: 0; border-radius: 999px; }
+:root[data-theme="ocean"] body .focus-callout-label { color: #fff; }
+:root[data-theme="ocean"] body .week-pill, :root[data-theme="ocean"] body .mode-toggle { background: #ffffffee; color: #03386b; box-shadow: 0 5px 0 #0a6fb8; }
+:root[data-theme="ocean"] body .dot { width: 24px; height: 24px; border: 3px solid #ffffffaa; border-radius: 50%; background: #ffffff33; }
+:root[data-theme="ocean"] body .dot-current { background: #ffd23f; border-color: #fff; }
+:root[data-theme="ocean"] body .dot-first, :root[data-theme="ocean"] body .dot-retry, :root[data-theme="ocean"] body .dot-skipped { clip-path: none; border: 3px solid #fff; }
+:root[data-theme="ocean"] body .letter-tile, :root[data-theme="ocean"] body .key { border-radius: 50%; border: 3px solid #ffffffaa;
+  background: radial-gradient(circle at 30% 28%, #fff 0 12%, #aef0ff 13%, #3fc8f0 70%, #1698d0); }
+:root[data-theme="ocean"] body .letter-tile:nth-child(even) { background: radial-gradient(circle at 30% 28%, #fff 0 12%, #ffe9a8 13%, #ffd23f 70%, #e0a800); }
+:root[data-theme="ocean"] body .blank-box { border-radius: 50%; }
+:root[data-theme="ocean"] body .hear-btn { background: #ffffffee; color: #03386b; box-shadow: 0 6px 0 #0a6fb8; }
+:root[data-theme="ocean"] body .check-btn { background: #03386b; color: #fff; border: 4px solid #fff; border-radius: 999px; font-size: 1.6rem; padding: 12px 60px; box-shadow: 0 8px 0 #011b3d; }
+:root[data-theme="ocean"] .app::after { content: ""; left: 0; right: 0; bottom: 0; height: 90px; background: #ff9f45; border-radius: 50% 50% 0 0 / 34px 34px 0 0; }
+
+/* ===================== 6. PIXEL QUEST ===================== */
+:root[data-theme="pixel"] { --dino-body: #00ff88; --dino-spike: #ff3df2; --blank-c: #8f7bff; --quest: "QUEST: "; }
+:root[data-theme="pixel"] body { text-transform: uppercase; letter-spacing: 0.04em; }
+:root[data-theme="pixel"] body .brand { color: #ff3df2; text-shadow: 3px 3px 0 #00e5ff; font-size: 1.6rem; }
+:root[data-theme="pixel"] body .focus-callout { background: #ff3df2; color: #14052e; border: 0; border-radius: 0; box-shadow: 6px 6px 0 #00e5ff; align-self: flex-start; width: auto; }
+:root[data-theme="pixel"] body .focus-callout-label, :root[data-theme="pixel"] body .focus-callout-text { color: #14052e; }
+:root[data-theme="pixel"] body .week-pill, :root[data-theme="pixel"] body .mode-toggle { background: #00e5ff; color: #14052e; border-radius: 0; box-shadow: 0 5px 0 #007f8f; border: 0; }
+:root[data-theme="pixel"] body .mode-btn[aria-pressed="true"] { background: #ffe14d; border-radius: 0; }
+:root[data-theme="pixel"] body .dot { width: 20px; height: 20px; border: 0; border-radius: 0; background: #3a2a6b; clip-path: none; animation: none; }
+:root[data-theme="pixel"] body .dot-current { background: #ffe14d; animation: px-blink 0.8s steps(2) infinite; }
+:root[data-theme="pixel"] body .dot-first { background: #00ff88; clip-path: none; }
+:root[data-theme="pixel"] body .dot-retry { background: #ffe14d; clip-path: none; }
+:root[data-theme="pixel"] body .dot-skipped { background: #00e5ff; clip-path: none; }
+@keyframes px-blink { 50% { opacity: 0.3; } }
+:root[data-theme="pixel"] body :is(.letter-tile, .key, .blank-box, .check-btn, .hear-btn, .hear-sentence-btn, .week-pill, .mode-toggle, .focus-callout, .week-option, .play-again-btn) {
+  clip-path: polygon(0 6px, 6px 6px, 6px 0, calc(100% - 6px) 0, calc(100% - 6px) 6px, 100% 6px, 100% calc(100% - 6px), calc(100% - 6px) calc(100% - 6px), calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 6px), 0 calc(100% - 6px));
+  border-radius: 0; border-width: 0; box-shadow: none; border-bottom: 8px solid rgba(0, 0, 0, 0.45);
+}
+:root[data-theme="pixel"] body .blank-box { border: 4px dashed #8f7bff; border-bottom-width: 4px; background: #1f0b4d; }
+:root[data-theme="pixel"] body .blank-box.blank-filled { border-style: solid; background: #fff; color: #14052e; }
+:root[data-theme="pixel"] body .hear-btn { background: #00e5ff; color: #14052e; }
+:root[data-theme="pixel"] body .hear-sentence-btn { background: #ffe14d; color: #14052e; border-color: transparent; }
+:root[data-theme="pixel"] body .check-btn { background: #00ff88; color: #14052e; font-size: 1.5rem; padding: 18px 54px; }
+:root[data-theme="pixel"] body .check-btn:disabled { background: #3a2a6b; color: #a79bd6; }
+:root[data-theme="pixel"] body .cheer { color: #ffe14d; text-shadow: 4px 4px 0 #ff3df2; }
+:root[data-theme="pixel"] .app::after { content: ""; left: 0; right: 0; bottom: 0; height: 26px; background: repeating-linear-gradient(90deg, #00ff88 0 32px, #00a357 32px 64px); box-shadow: 0 -6px 0 #14052e inset; }
+
+/* ===================== 7. RAINBOW BLOCKS ===================== */
+:root[data-theme="rainbow"] { --dino-body: #2ed573; --dino-spike: #ff9f1c; --blank-c: #c9c9d6; --quest: "Colour challenge: "; }
+:root[data-theme="rainbow"] body .brand { background: #111; color: #fff; padding: 4px 18px; border-radius: 12px; font-size: 1.6rem; }
+:root[data-theme="rainbow"] body .focus-callout { background: #ffe14d; border: 0; border-radius: 12px; color: #111; }
+:root[data-theme="rainbow"] body .week-pill, :root[data-theme="rainbow"] body .mode-toggle { background: #111; color: #fff; box-shadow: 0 5px 0 #2e9bff; }
+:root[data-theme="rainbow"] body .mode-toggle .mode-btn { color: #fff; }
+:root[data-theme="rainbow"] body .mode-btn[aria-pressed="true"] { background: #ffe14d; color: #111; }
+:root[data-theme="rainbow"] body .dot { width: 34px; height: 14px; border: 0; border-radius: 4px; background: #d9dbe8; clip-path: none; animation: none; }
+:root[data-theme="rainbow"] body .dot-current { background: #ffe14d; outline: 3px solid #111; }
+:root[data-theme="rainbow"] body .dot-first { background: #2ed573; clip-path: none; }
+:root[data-theme="rainbow"] body .dot-retry { background: #ff9f1c; clip-path: none; }
+:root[data-theme="rainbow"] body .dot-skipped { background: #2e9bff; clip-path: none; }
+:root[data-theme="rainbow"] body .letter-tile:nth-child(6n+1) { background: #ff3b3b; color: #fff; }
+:root[data-theme="rainbow"] body .letter-tile:nth-child(6n+2) { background: #ff9f1c; }
+:root[data-theme="rainbow"] body .letter-tile:nth-child(6n+3) { background: #ffe14d; }
+:root[data-theme="rainbow"] body .letter-tile:nth-child(6n+4) { background: #2ed573; }
+:root[data-theme="rainbow"] body .letter-tile:nth-child(6n+5) { background: #2e9bff; }
+:root[data-theme="rainbow"] body .letter-tile:nth-child(6n) { background: #a55eea; color: #fff; }
+:root[data-theme="rainbow"] body .hear-btn { background: #2e9bff; color: #111; border-radius: 12px; box-shadow: 0 6px 0 #111; }
+:root[data-theme="rainbow"] body .check-btn { background: #111; color: #fff; border-radius: 14px; font-size: 1.7rem; padding: 16px 60px; box-shadow: 8px 8px 0 #2e9bff; }
+:root[data-theme="rainbow"] .app::before { content: ""; left: 0; right: 0; top: 0; height: 14px;
+  background: linear-gradient(90deg, #ff3b3b 0 16.6%, #ff9f1c 0 33.3%, #ffe14d 0 50%, #2ed573 0 66.6%, #2e9bff 0 83.3%, #a55eea 0); }
+:root[data-theme="rainbow"] .app::after { content: ""; left: 0; right: 0; bottom: 0; height: 10px;
+  background: linear-gradient(90deg, #ff3b3b 0 16.6%, #ff9f1c 0 33.3%, #ffe14d 0 50%, #2ed573 0 66.6%, #2e9bff 0 83.3%, #a55eea 0); }
+
+/* ===================== 8. LAVA ROCK ===================== */
+:root[data-theme="lava"] { --dino-body: #ff7a00; --dino-spike: #ffd166; --blank-c: #ff7a00; --quest: "Volcano quest: "; }
+:root[data-theme="lava"] body .brand { color: #ffb300; text-shadow: 0 4px 0 #a33f00; font-size: 1.8rem; }
+:root[data-theme="lava"] body .focus-callout { background: #ffd166; color: #1a0d0a; border: 0; border-radius: 12px; transform: rotate(-1deg); }
+:root[data-theme="lava"] body .focus-callout-label { color: #1a0d0a; }
+:root[data-theme="lava"] body .week-pill, :root[data-theme="lava"] body .mode-toggle { background: #ff7a00; color: #1a0d0a; box-shadow: 0 5px 0 #a33f00; }
+:root[data-theme="lava"] body .mode-btn[aria-pressed="true"] { background: #ffd166; }
+:root[data-theme="lava"] body .dot { width: 22px; height: 28px; border: 0; border-radius: 0; background: #5a4640; animation: none;
+  clip-path: polygon(50% 0, 70% 28%, 96% 48%, 88% 80%, 50% 100%, 12% 80%, 4% 48%, 30% 28%); }
+:root[data-theme="lava"] body .dot-current { background: #ffd166; animation: lava-flicker 0.9s ease-in-out infinite; }
+:root[data-theme="lava"] body .dot-first { background: linear-gradient(0deg, #ff4d00, #ffd166); clip-path: polygon(50% 0, 70% 28%, 96% 48%, 88% 80%, 50% 100%, 12% 80%, 4% 48%, 30% 28%); }
+:root[data-theme="lava"] body .dot-retry { background: #ff9f45; clip-path: polygon(50% 0, 70% 28%, 96% 48%, 88% 80%, 50% 100%, 12% 80%, 4% 48%, 30% 28%); }
+:root[data-theme="lava"] body .dot-skipped { background: #8a6a5e; clip-path: polygon(50% 0, 70% 28%, 96% 48%, 88% 80%, 50% 100%, 12% 80%, 4% 48%, 30% 28%); }
+@keyframes lava-flicker { 50% { transform: scale(1.18) rotate(-6deg); filter: brightness(1.3); } }
+:root[data-theme="lava"] body .letter-tile, :root[data-theme="lava"] body .key { background: linear-gradient(160deg, #6b5a54, #3d312d); color: #ffd166; text-shadow: 0 0 16px #ff7a00;
+  border-radius: 22px 30px 18px 28px; border-bottom: 8px solid #1f1715; box-shadow: none; }
+:root[data-theme="lava"] body .letter-tile:nth-child(even) { background: linear-gradient(160deg, #75625b, #433631); }
+:root[data-theme="lava"] body .blank-box { background: #2a1b17; border-radius: 22px 30px 18px 28px; }
+:root[data-theme="lava"] body .blank-box.blank-filled { background: linear-gradient(160deg, #6b5a54, #3d312d); color: #ffd166; }
+:root[data-theme="lava"] body .hear-btn { background: #ff7a00; color: #1a0d0a; box-shadow: 0 6px 0 #a33f00; }
+:root[data-theme="lava"] body .check-btn { background: #1a0d0a; color: #ffd166; border: 5px solid #ffd166; border-radius: 16px; font-size: 1.7rem; padding: 12px 60px; box-shadow: 0 8px 0 #7a1d00; }
+:root[data-theme="lava"] body .check-btn:disabled { background: #3d2a24; color: #b89a86; border-color: #6b5a54; }
+:root[data-theme="lava"] .app::after { content: ""; left: 0; right: 0; bottom: 0; height: 120px; animation: lava-glow 3s ease-in-out infinite;
+  background: linear-gradient(180deg, #ff4d00, #ffb300);
+  clip-path: polygon(0 40%, 8% 20%, 16% 38%, 25% 15%, 34% 36%, 44% 12%, 54% 34%, 64% 14%, 74% 36%, 84% 18%, 92% 38%, 100% 22%, 100% 100%, 0 100%); }
+@keyframes lava-glow { 50% { filter: brightness(1.25); } }
+@media (prefers-reduced-motion: reduce) { :root[data-theme="lava"] .app::after, :root[data-theme="pixel"] body .dot-current, :root[data-theme="lava"] body .dot-current { animation: none; } }
+
+/* ===================== 9. COMIC POW ===================== */
+:root[data-theme="comic"] { --dino-body: #00c853; --dino-spike: #e4002b; --dino-line: #111; --blank-c: #111; --quest: "Mission: "; }
+:root[data-theme="comic"] body { text-transform: uppercase; letter-spacing: 0.03em; }
+:root[data-theme="comic"] body .brand { color: #e4002b; -webkit-text-stroke: 2px #111; paint-order: stroke fill; text-shadow: 4px 4px 0 #111; font-size: 2rem; }
+:root[data-theme="comic"] body .focus-callout { background: #fff; border: 6px solid #111; border-radius: 6px; box-shadow: 6px 6px 0 #111; color: #111; }
+:root[data-theme="comic"] body .focus-callout-label { color: #e4002b; }
+:root[data-theme="comic"] body .week-pill, :root[data-theme="comic"] body .mode-toggle { background: #fff; border: 5px solid #111; border-radius: 4px; box-shadow: 5px 5px 0 #111; color: #111; }
+:root[data-theme="comic"] body .mode-btn[aria-pressed="true"] { background: #00b4ff; border-radius: 2px; }
+:root[data-theme="comic"] body .dot { width: 26px; height: 26px; border: 4px solid #111; border-radius: 4px; background: #fff; animation: none; transform: rotate(8deg); }
+:root[data-theme="comic"] body .dot-current { background: #ffd400; }
+:root[data-theme="comic"] body .dot-first, :root[data-theme="comic"] body .dot-retry, :root[data-theme="comic"] body .dot-skipped { clip-path: none; border: 4px solid #111; }
+:root[data-theme="comic"] body .play-left, :root[data-theme="comic"] body .play-right { background: #fff; border: 6px solid #111; box-shadow: 8px 8px 0 #111; padding: 18px; border-radius: 4px; }
+:root[data-theme="comic"] body .play-left { background: #fff8c7; }
+:root[data-theme="comic"] body .letter-tile, :root[data-theme="comic"] body .key { border-radius: 2px; }
+:root[data-theme="comic"] body .letter-tile:nth-child(odd) { background: #e4002b; color: #fff; transform: rotate(-3deg); }
+:root[data-theme="comic"] body .letter-tile:nth-child(even) { background: #00b4ff; transform: rotate(3deg); }
+:root[data-theme="comic"] body .hear-btn { background: #e4002b; color: #fff; border-radius: 2px; box-shadow: 5px 5px 0 #111; text-shadow: 2px 2px 0 #111; }
+:root[data-theme="comic"] body .hear-sentence-btn { background: #fff; color: #111; border: 5px solid #111; border-radius: 2px; box-shadow: 4px 4px 0 #111; }
+:root[data-theme="comic"] body .check-btn { background: #e4002b; color: #ffd400; font-size: 2rem; -webkit-text-stroke: 2px #111; paint-order: stroke fill; text-shadow: 3px 3px 0 #111;
+  border: 0; box-shadow: none; padding: 46px 66px; border-radius: 0; margin: -20px 0;
+  clip-path: polygon(50% 0, 60% 18%, 82% 6%, 78% 30%, 100% 38%, 80% 54%, 96% 76%, 70% 72%, 64% 98%, 50% 78%, 34% 100%, 30% 72%, 4% 78%, 20% 54%, 0 36%, 22% 30%, 18% 6%, 40% 18%); }
+:root[data-theme="comic"] body .check-btn:disabled { background: #c9c9c9; color: #666; -webkit-text-stroke: 0; text-shadow: none; }
+:root[data-theme="comic"] body .check-btn::after { content: "!"; }
+:root[data-theme="comic"] body .cheer { background: #fff; border: 5px solid #111; border-radius: 50%; padding: 6px 28px; color: #111; box-shadow: 4px 4px 0 #111; }
+:root[data-theme="comic"] .app::before { content: ""; inset: 0; background: radial-gradient(#ff9d00 22%, transparent 24%) 0 0 / 22px 22px; opacity: 0.55; }
+
+/* ===================== 10. SPLIT SCREEN ===================== */
+:root[data-theme="split"] { --dino-body: #ffe600; --dino-spike: #1a1a40; --blank-c: #1a1a40; --quest: "Focus: "; }
+:root[data-theme="split"] body .brand { color: #1a1a40; font-size: 1.8rem; line-height: 1; }
+:root[data-theme="split"] body .focus-callout { background: #ffe600; color: #1a1a40; border: 0; border-radius: 18px; }
+:root[data-theme="split"] body .focus-callout-label { color: #1a1a40; }
+:root[data-theme="split"] body .week-pill, :root[data-theme="split"] body .mode-toggle { background: #1a1a40; color: #fff; }
+:root[data-theme="split"] body .mode-toggle .mode-btn { color: #fff; }
+:root[data-theme="split"] body .mode-btn[aria-pressed="true"] { background: #fff; color: #1a1a40; }
+:root[data-theme="split"] body .dot { width: 26px; height: 26px; border: 0; border-radius: 50%; background: #ffffff77; animation: none; clip-path: none; }
+:root[data-theme="split"] body .dot-current { background: #1a1a40; }
+:root[data-theme="split"] body .dot-first { background: #ffe600; clip-path: none; }
+:root[data-theme="split"] body .dot-retry { background: #7cff6b; clip-path: none; }
+:root[data-theme="split"] body .dot-skipped { background: #fff; clip-path: none; }
+:root[data-theme="split"] body .letter-tile, :root[data-theme="split"] body .key { border-radius: 50% / 42%; }
+:root[data-theme="split"] body .blank-box { border-radius: 50% / 42%; }
+:root[data-theme="split"] body .hear-btn { background: #1a1a40; color: #fff; box-shadow: none; }
+:root[data-theme="split"] body .check-btn { background: #1a1a40; color: #ffe600; border-radius: 999px; font-size: 1.7rem; padding: 12px 70px; box-shadow: 0 8px 0 #000; }
+@media (orientation: landscape) and (min-width: 700px) and (min-height: 480px) {
+  :root[data-theme="split"] body .play-right { background: #00d9ff; border-radius: 40px; padding: 28px; align-self: stretch; margin-block: 0; justify-content: center; }
+}
+
+/* Tilted banners shrink to their text so they do not run off the screen edges. */
+:root[data-theme="candy"] body .focus-callout, :root[data-theme="sticker"] body .focus-callout, :root[data-theme="lava"] body .focus-callout,
+:root[data-theme="jungle"] body .focus-callout { width: auto; align-self: center; justify-self: center; padding-inline: 40px; }
+:root[data-theme="pixel"] body .focus-callout { justify-self: start; }
