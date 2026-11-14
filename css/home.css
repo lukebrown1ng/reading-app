@@ -95,3 +95,10 @@ html, body {
 .parent-link:active {
   opacity: 1;
 }
+
+/* iPad sideways: the three choices sit in a row */
+@media (orientation: landscape) and (min-width: 700px) {
+  .tile-area { flex-direction: row; gap: 28px; padding: 20px 36px; }
+  .tile { flex: 1 1 0; width: auto; max-width: 340px; }
+  .home-footer { align-items: center; padding-bottom: 28px; }
+}

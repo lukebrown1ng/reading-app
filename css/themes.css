@@ -263,7 +263,14 @@ html[data-theme="split"] body, html[data-theme="split"] .home, html[data-theme="
 }
 
 /* "select theme" gallery on the home page (neutral colours so it reads in every theme) */
-.den-theme-open { background: none; border: 0; font: inherit; cursor: pointer; text-decoration: underline; margin-right: 18px; }
+.den-theme-open { border: 0; padding: 4px; border-radius: 999px; cursor: pointer; margin-right: 16px; box-shadow: 0 5px 0 rgba(0, 0, 0, 0.22);
+  background: linear-gradient(120deg, #ff4f8b, #ff9f1c, #ffe14d, #2ed573, #2e9bff, #a55eea, #ff4f8b); background-size: 300% 100%; animation: den-shimmer 6s linear infinite; }
+.den-theme-open:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0, 0, 0, 0.22); }
+.den-theme-open-in { display: flex; align-items: center; gap: 10px; background: #fff; color: #231a4a; border-radius: 999px; padding: 12px 26px; font: 800 1.1rem system-ui, sans-serif; }
+.den-theme-spark { display: inline-block; font-size: 1.5rem; animation: den-wiggle 2.4s ease-in-out infinite; }
+@keyframes den-shimmer { to { background-position: 300% 0; } }
+@keyframes den-wiggle { 0%, 100% { transform: rotate(-12deg); } 50% { transform: rotate(12deg) scale(1.1); } }
+@media (prefers-reduced-motion: reduce) { .den-theme-open, .den-theme-spark { animation: none; } }
 .den-theme-dialog { border: 4px solid #222; border-radius: 24px; padding: 16px; width: min(900px, calc(100vw - 24px)); background: #fff; color: #222; font-family: system-ui, sans-serif; }
 .den-theme-dialog::backdrop { background: rgba(0, 0, 0, 0.6); }
 .den-theme-stage { display: flex; align-items: center; gap: 6px; }
@@ -281,3 +288,6 @@ html[data-theme="split"] body, html[data-theme="split"] .home, html[data-theme="
 .den-theme-close { display: block; margin: 8px auto 0; border: 3px solid #222; background: #fff; color: #222; border-radius: 999px; padding: 8px 28px; font: 700 16px system-ui, sans-serif; cursor: pointer; }
 @media (max-width: 520px) { .den-theme-nav { display: none; } }
 @media (prefers-reduced-motion: reduce) { .tile-emoji { animation: none !important; } }
+/* pixel font is wide: keep the home labels inside their tiles */
+html[data-theme="pixel"] .tile-label { font-size: clamp(0.8rem, 2.6vw, 1.15rem); text-align: center; line-height: 1.5; }
+html[data-theme="pixel"] .tile { min-width: 0; }

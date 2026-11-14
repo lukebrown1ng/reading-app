@@ -63,7 +63,8 @@ var Den = window.Den || {};
     });
     dlg.querySelector(".den-theme-close").onclick = function () { dlg.close(); };
     dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); }); // tap the backdrop
-    var open = document.createElement("button"); open.type = "button"; open.className = "parent-link den-theme-open"; open.textContent = "select theme";
+    var open = document.createElement("button"); open.type = "button"; open.className = "den-theme-open";
+    open.innerHTML = '<span class="den-theme-open-in"><span class="den-theme-spark" aria-hidden="true">🎨</span> Pick a theme</span>';
     open.onclick = function () {
       mark(); dlg.showModal();
       track.scrollLeft = NAMES.indexOf(t) * track.clientWidth; showDot(); // start on the theme in use
