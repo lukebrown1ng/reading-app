@@ -24,6 +24,7 @@ html, body {
 
 .home {
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   background: linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
@@ -100,7 +101,9 @@ html, body {
 @media (orientation: landscape) and (min-width: 700px) {
   .tile-area { flex-direction: row; gap: 28px; padding: 20px 36px; }
   .tile { flex: 1 1 0; width: auto; max-width: 340px; }
-  .home-footer { align-items: center; padding-bottom: 28px; }
+  .home-footer { align-items: center; padding: 0 20px calc(10px + env(safe-area-inset-bottom, 0px)); }
+  .tile-area { padding-bottom: 8px; }
+  .home-header { padding-top: calc(16px + env(safe-area-inset-top, 0px)); }
 }
 .tile-emoji { display: flex; align-items: center; justify-content: center; min-height: 1.3em; line-height: 1; }
 @media (orientation: landscape) and (min-width: 700px) {
