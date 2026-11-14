@@ -368,3 +368,17 @@
 /* Pixel: inserted letters beat the generic filled-slot rule (0,5,1); no white borders on buttons. */
 :root[data-theme="pixel"][data-theme] body .blank-box.blank-filled { background: #ffe14d; border-color: #ffe14d; color: #14052e; }
 :root[data-theme="pixel"] body :is(.check-btn, .hear-btn, .hear-sentence-btn, .week-pill, .mode-toggle, .focus-callout, .play-again-btn) { border: 0; }
+
+/* ---- iPad (1024px landscape) fixes ---- */
+:root[data-theme]:not([data-theme="none"]) body .progress-dots { flex-wrap: wrap; justify-content: center; }
+@media (orientation: landscape) and (min-width: 700px) and (min-height: 480px) {
+  :root[data-theme]:not([data-theme="none"]) body .game-area { grid-template-columns: minmax(290px, 0.7fr) minmax(0, 2fr); }
+}
+:root[data-theme="sticker"] body .progress-row .dot, :root[data-theme="comic"] body .progress-row .dot { width: 20px; height: 20px; }
+:root[data-theme="sticker"] body .progress-row .progress-dots, :root[data-theme="comic"] body .progress-row .progress-dots { gap: 4px; }
+:root[data-theme="ocean"] .app::after { height: 56px; }
+@media (orientation: landscape) and (min-width: 700px) and (min-height: 480px) {
+  :root[data-theme="rainbow"] body .progress-row, :root[data-theme="rainbow"] body .progress-row .progress-dots { width: 100%; }
+  :root[data-theme="rainbow"] body .progress-row .dot { flex: 1 1 0; width: auto; min-width: 0; }
+}
+:root[data-theme="ocean"] body .progress-row .dot { width: 20px; height: 20px; }

@@ -42,7 +42,7 @@ var Den = window.Den || {};
     var track = dlg.querySelector(".den-theme-track"), dots = dlg.querySelector(".den-theme-dots"), picks = [];
     NAMES.forEach(function (n) {
       var slide = document.createElement("figure"); slide.className = "den-theme-slide";
-      slide.innerHTML = '<img src="' + base + "theme-previews/" + n + '.jpg" alt="Preview of the ' + LABELS[n] + ' theme" loading="lazy">' +
+      slide.innerHTML = '<img src="' + base + "theme-previews/" + n + '-ipad.jpg" alt="Preview of the ' + LABELS[n] + ' theme" loading="lazy">' +
         "<figcaption>" + LABELS[n] + '</figcaption><button type="button" class="den-theme-use"></button>';
       var use = slide.querySelector(".den-theme-use"); picks.push({ name: n, btn: use });
       use.onclick = function () {

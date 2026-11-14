@@ -270,7 +270,7 @@ html[data-theme="split"] body, html[data-theme="split"] .home, html[data-theme="
 .den-theme-track { flex: 1; min-width: 0; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; border-radius: 14px; }
 .den-theme-track::-webkit-scrollbar { display: none; }
 .den-theme-slide { flex: 0 0 100%; scroll-snap-align: center; scroll-snap-stop: always; margin: 0; display: flex; flex-direction: column; align-items: center; gap: 10px; }
-.den-theme-slide img { width: 100%; aspect-ratio: 1568 / 713; object-fit: cover; border: 3px solid #222; border-radius: 14px; background: #eee; display: block; }
+.den-theme-slide img { width: auto; max-width: 100%; max-height: 56vh; aspect-ratio: 4 / 3; object-fit: cover; border: 3px solid #222; border-radius: 14px; background: #eee; display: block; }
 .den-theme-slide figcaption { font-size: 1.4rem; font-weight: 800; }
 .den-theme-use { border: 3px solid #222; background: #222; color: #fff; border-radius: 999px; padding: 10px 30px; font: 800 17px system-ui, sans-serif; cursor: pointer; }
 .den-theme-use:disabled { background: #fff; color: #555; cursor: default; }
