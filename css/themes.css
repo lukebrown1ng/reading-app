@@ -289,5 +289,6 @@ html[data-theme="split"] body, html[data-theme="split"] .home, html[data-theme="
 @media (max-width: 520px) { .den-theme-nav { display: none; } }
 @media (prefers-reduced-motion: reduce) { .tile-emoji { animation: none !important; } }
 /* pixel font is wide: keep the home labels inside their tiles */
-html[data-theme="pixel"] .tile-label { font-size: clamp(0.8rem, 2.6vw, 1.15rem); text-align: center; line-height: 1.5; }
 html[data-theme="pixel"] .tile { min-width: 0; }
+html[data-theme="pixel"] .tile { padding-left: 12px; padding-right: 12px; }
+html[data-theme="pixel"]:not([data-x]) .tile .tile-label { font-size: clamp(0.8rem, 2.4vw, 1.3rem); max-width: 100%; overflow-wrap: anywhere; text-align: center; line-height: 1.5; }

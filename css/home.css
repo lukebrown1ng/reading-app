@@ -102,3 +102,8 @@ html, body {
   .tile { flex: 1 1 0; width: auto; max-width: 340px; }
   .home-footer { align-items: center; padding-bottom: 28px; }
 }
+.tile-emoji { display: flex; align-items: center; justify-content: center; min-height: 1.3em; line-height: 1; }
+@media (orientation: landscape) and (min-width: 700px) {
+  .tile-area { align-items: stretch; }
+  .tile { justify-content: center; }
+}

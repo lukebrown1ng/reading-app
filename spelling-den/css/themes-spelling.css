@@ -382,3 +382,22 @@
   :root[data-theme="rainbow"] body .progress-row .dot { flex: 1 1 0; width: auto; min-width: 0; }
 }
 :root[data-theme="ocean"] body .progress-row .dot { width: 20px; height: 20px; }
+
+/* ======== One style and size for the two left-hand buttons in every theme ======== */
+:root[data-theme="candy"]   { --hb-bg: #ff4f8b; --hb-ink: #2b1b4a; --hs-bg: #ffd23f; --hs-ink: #2b1b4a; --hb-border: 4px solid #2b1b4a; --hb-radius: 999px; --hb-shadow: 0 6px 0 #2b1b4a; }
+:root[data-theme="jungle"]  { --hb-bg: #ffb200; --hb-ink: #3a2410; --hs-bg: #b6f23a; --hs-ink: #07382a; --hb-radius: 18px; --hb-shadow: 0 7px 0 rgba(0, 0, 0, 0.32); }
+:root[data-theme="space"]   { --hb-bg: transparent; --hb-ink: #ffe66d; --hs-bg: transparent; --hs-ink: #6ef3d6; --hb-border: 3px solid currentColor; --hb-radius: 999px; --hb-shadow: none; }
+:root[data-theme="sticker"] { --hb-bg: #ffffff; --hb-ink: #111; --hs-bg: #4dd2ff; --hs-ink: #111; --hb-border: 4px solid #111; --hb-radius: 14px; --hb-shadow: 5px 5px 0 #111; --hb-fs: 1.2rem; }
+:root[data-theme="ocean"]   { --hb-bg: #ffffffee; --hb-ink: #03386b; --hs-bg: #ffd23f; --hs-ink: #03386b; --hb-radius: 999px; --hb-shadow: 0 6px 0 #0a6fb8; }
+:root[data-theme="pixel"]   { --hb-bg: #00e5ff; --hb-ink: #14052e; --hs-bg: #ffe14d; --hs-ink: #14052e; --hb-radius: 0; --hb-shadow: 0 6px 0 #000; --hb-fs: 0.72rem; }
+:root[data-theme="rainbow"] { --hb-bg: #2e9bff; --hb-ink: #111; --hs-bg: #ff9f1c; --hs-ink: #111; --hb-radius: 12px; --hb-shadow: 0 6px 0 #111; }
+:root[data-theme="lava"]    { --hb-bg: #ff7a00; --hb-ink: #1a0d0a; --hs-bg: #ffd166; --hs-ink: #1a0d0a; --hb-radius: 22px; --hb-shadow: 0 6px 0 rgba(0, 0, 0, 0.5); --hb-fs: 1.25rem; --hb-fw: 400; }
+:root[data-theme="comic"]   { --hb-bg: #e4002b; --hb-ink: #fff; --hs-bg: #ffffff; --hs-ink: #111; --hb-border: 5px solid #111; --hb-radius: 2px; --hb-shadow: 5px 5px 0 #111; --hb-fs: 1.35rem; --hb-fw: 400; }
+:root[data-theme="split"]   { --hb-bg: #1a1a40; --hb-ink: #fff; --hs-bg: #ffffff; --hs-ink: #1a1a40; --hb-radius: 999px; --hb-shadow: 0 6px 0 #000; }
+:root[data-theme]:not([data-theme="none"]) body :is(.hear-btn, .hear-sentence-btn) {
+  width: min(100%, 270px); min-height: 62px; box-sizing: border-box; justify-content: center; text-align: center; padding: 10px 16px;
+  font-size: var(--hb-fs, 1.05rem); font-weight: var(--hb-fw, 700); line-height: 1.25; letter-spacing: inherit; text-transform: inherit; text-shadow: none;
+  background: var(--hb-bg); color: var(--hb-ink); border: var(--hb-border, 0 solid transparent); border-radius: var(--hb-radius, 22px); box-shadow: var(--hb-shadow, 0 6px 0 rgba(0, 0, 0, 0.2));
+}
+:root[data-theme]:not([data-theme="none"]) body .hear-sentence-btn { background: var(--hs-bg); color: var(--hs-ink); }
+:root[data-theme="jungle"] body .hear-sentence-btn { text-transform: uppercase; letter-spacing: 0.05em; }
