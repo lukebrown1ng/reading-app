@@ -5,7 +5,7 @@
 // The VERSION and PRECACHE lines are rewritten by `node scripts/build-sw.js`
 // — run it after adding or changing files so a new device can install the
 // whole app (including all the audio) in one go.
-const VERSION = "76c126437b";
+const VERSION = "f00f7e4c30";
 const PRECACHE = [
   "./",
   "./css/home.css",
@@ -362,6 +362,17 @@ const PRECACHE = [
   "./spelling-den/js/speech.js",
   "./spelling-den/js/state.js",
   "./spelling-den/js/weeks.js",
+  "./theme-previews/candy.jpg",
+  "./theme-previews/comic.jpg",
+  "./theme-previews/jungle.jpg",
+  "./theme-previews/lava.jpg",
+  "./theme-previews/none.jpg",
+  "./theme-previews/ocean.jpg",
+  "./theme-previews/pixel.jpg",
+  "./theme-previews/rainbow.jpg",
+  "./theme-previews/space.jpg",
+  "./theme-previews/split.jpg",
+  "./theme-previews/sticker.jpg",
   "./word-den/audio/a.mp3",
   "./word-den/audio/about.mp3",
   "./word-den/audio/all.mp3",

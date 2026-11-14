@@ -262,24 +262,22 @@ html[data-theme="split"] body, html[data-theme="split"] .home, html[data-theme="
   background: linear-gradient(115deg, var(--bg) 0 42%, var(--bg-deep) 42% 100%);
 }
 
-/* "select theme" dialog on the home page (neutral colours so it reads in every theme) */
+/* "select theme" gallery on the home page (neutral colours so it reads in every theme) */
 .den-theme-open { background: none; border: 0; font: inherit; cursor: pointer; text-decoration: underline; margin-right: 18px; }
-.den-theme-dialog { border: 4px solid #222; border-radius: 24px; padding: 20px; width: min(560px, calc(100vw - 32px)); background: #fff; color: #222; font-family: system-ui, sans-serif; }
-.den-theme-dialog::backdrop { background: rgba(0, 0, 0, 0.55); }
-.den-theme-dialog h2 { margin: 0 0 14px; font-size: 1.4rem; text-align: center; }
-.den-theme-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
-.den-theme-grid button { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 12px 8px; border: 3px solid #222; border-radius: 16px; background: #fff; color: #222; font: 700 15px system-ui, sans-serif; cursor: pointer; }
-.den-theme-grid button[aria-pressed="true"] { background: #222; color: #fff; }
-.den-mini-wrap { display: flex; justify-content: center; align-items: center; width: 100%; height: 84px; border-radius: 12px; overflow: hidden;
-  background: linear-gradient(180deg, var(--bg, #eafaf0), var(--bg-deep, #cdf0da)); font-family: var(--font, system-ui, sans-serif); }
-.den-mini { zoom: 0.5; display: flex; flex-direction: column; align-items: center; gap: 12px; }
-.den-mini-row { display: flex; gap: 10px; }
-.den-mini b { width: 52px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 800;
-  background: var(--tile-bg, #8ecae6); color: var(--tile-ink, #16301f); border: var(--edge, 0 solid transparent); box-shadow: var(--lift, 0 5px 0 rgba(0,0,0,.15));
-  border-radius: calc(var(--radius, 14px) * 0.5); box-sizing: border-box; }
-.den-mini b:nth-child(2) { background: var(--tile-bg-2, #ffb703); }
-.den-mini b.den-blank { background: transparent; border: 4px dashed var(--tile-bg-2, #ffb703); box-shadow: none; }
-.den-mini-check { padding: 8px 40px; font-size: 24px; font-weight: 800; background: var(--accent, #2f9e6b); color: var(--on-accent, #fff);
-  border: var(--edge, 0 solid transparent); box-shadow: var(--lift, 0 5px 0 rgba(0,0,0,.15)); border-radius: 999px; }
-.den-theme-close { display: block; margin: 14px auto 0; border: 3px solid #222; background: #fff; color: #222; border-radius: 999px; padding: 8px 28px; font: 700 16px system-ui, sans-serif; cursor: pointer; }
+.den-theme-dialog { border: 4px solid #222; border-radius: 24px; padding: 16px; width: min(900px, calc(100vw - 24px)); background: #fff; color: #222; font-family: system-ui, sans-serif; }
+.den-theme-dialog::backdrop { background: rgba(0, 0, 0, 0.6); }
+.den-theme-stage { display: flex; align-items: center; gap: 6px; }
+.den-theme-track { flex: 1; min-width: 0; display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-overflow-scrolling: touch; border-radius: 14px; }
+.den-theme-track::-webkit-scrollbar { display: none; }
+.den-theme-slide { flex: 0 0 100%; scroll-snap-align: center; scroll-snap-stop: always; margin: 0; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.den-theme-slide img { width: 100%; aspect-ratio: 1568 / 713; object-fit: cover; border: 3px solid #222; border-radius: 14px; background: #eee; display: block; }
+.den-theme-slide figcaption { font-size: 1.4rem; font-weight: 800; }
+.den-theme-use { border: 3px solid #222; background: #222; color: #fff; border-radius: 999px; padding: 10px 30px; font: 800 17px system-ui, sans-serif; cursor: pointer; }
+.den-theme-use:disabled { background: #fff; color: #555; cursor: default; }
+.den-theme-nav { flex: none; width: 44px; height: 44px; border: 3px solid #222; border-radius: 50%; background: #fff; color: #222; font-size: 28px; line-height: 1; cursor: pointer; }
+.den-theme-dots { display: flex; justify-content: center; gap: 7px; margin: 12px 0 4px; }
+.den-theme-dots i { width: 9px; height: 9px; border-radius: 50%; background: #c9c9c9; }
+.den-theme-dots i.on { background: #222; }
+.den-theme-close { display: block; margin: 8px auto 0; border: 3px solid #222; background: #fff; color: #222; border-radius: 999px; padding: 8px 28px; font: 700 16px system-ui, sans-serif; cursor: pointer; }
+@media (max-width: 520px) { .den-theme-nav { display: none; } }
 @media (prefers-reduced-motion: reduce) { .tile-emoji { animation: none !important; } }

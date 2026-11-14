@@ -32,30 +32,42 @@ var Den = window.Den || {};
     }
     apply(t);
     if (!document.body.hasAttribute("data-theme-picker")) return; // only the home page offers the picker
-    // "Select theme" button in the footer opens a dialog of swatch buttons.
+    // "select theme" in the footer opens a swipeable gallery of static screenshots; "Use this theme" applies one.
     var LABELS = { candy: "Candy Pop", jungle: "Jungle", space: "Space", sticker: "Sticker Book", ocean: "Ocean", pixel: "Pixel Quest",
       rainbow: "Rainbow", lava: "Lava Rock", comic: "Comic Pow", split: "Split Screen", none: "Original" };
     var dlg = document.createElement("dialog"); dlg.className = "den-theme-dialog"; dlg.setAttribute("aria-label", "Select theme");
-    dlg.innerHTML = '<h2>Pick a theme</h2><div class="den-theme-grid"></div><button type="button" class="den-theme-close">Close</button>';
-    var grid = dlg.querySelector(".den-theme-grid");
+    dlg.innerHTML = '<div class="den-theme-stage"><button type="button" class="den-theme-nav" data-dir="-1" aria-label="Previous theme">&lsaquo;</button>' +
+      '<div class="den-theme-track" tabindex="0"></div><button type="button" class="den-theme-nav" data-dir="1" aria-label="Next theme">&rsaquo;</button></div>' +
+      '<div class="den-theme-dots" aria-hidden="true"></div><button type="button" class="den-theme-close">Close</button>';
+    var track = dlg.querySelector(".den-theme-track"), dots = dlg.querySelector(".den-theme-dots"), picks = [];
     NAMES.forEach(function (n) {
-      var b = document.createElement("button"); b.type = "button";
-      b.setAttribute("aria-pressed", String(t === n));
-      // A tiny word-game scene, drawn with the theme's own tokens (data-theme on the wrapper).
-      b.innerHTML = '<span class="den-mini-wrap" data-theme="' + n + '"><span class="den-mini"><span class="den-mini-row">' +
-        "<b>i</b><b>s</b><b>l</b><b class=\"den-blank\"></b></span><span class=\"den-mini-check\">Check</span></span></span>" + LABELS[n];
-      b.onclick = function () {
+      var slide = document.createElement("figure"); slide.className = "den-theme-slide";
+      slide.innerHTML = '<img src="' + base + "theme-previews/" + n + '.jpg" alt="Preview of the ' + LABELS[n] + ' theme" loading="lazy">' +
+        "<figcaption>" + LABELS[n] + '</figcaption><button type="button" class="den-theme-use"></button>';
+      var use = slide.querySelector(".den-theme-use"); picks.push({ name: n, btn: use });
+      use.onclick = function () {
         try { localStorage.setItem("denTheme", n); } catch (e) { /* ignore */ }
-        apply(n);
-        grid.querySelectorAll("button").forEach(function (x) { x.setAttribute("aria-pressed", String(x === b)); });
-        dlg.close();
+        apply(n); mark(); dlg.close();
       };
-      grid.appendChild(b);
+      track.appendChild(slide);
+      dots.appendChild(document.createElement("i"));
+    });
+    function mark() { // label the button on the current theme's slide
+      picks.forEach(function (p) { p.btn.textContent = p.name === t ? "Current theme" : "Use this theme"; p.btn.disabled = p.name === t; });
+    }
+    function slideIndex() { return Math.round(track.scrollLeft / track.clientWidth); }
+    function showDot() { var i = slideIndex(); Array.prototype.forEach.call(dots.children, function (d, k) { d.className = k === i ? "on" : ""; }); }
+    track.addEventListener("scroll", showDot);
+    dlg.querySelectorAll(".den-theme-nav").forEach(function (b) {
+      b.onclick = function () { track.scrollBy({ left: Number(b.dataset.dir) * track.clientWidth, behavior: "smooth" }); };
     });
     dlg.querySelector(".den-theme-close").onclick = function () { dlg.close(); };
     dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); }); // tap the backdrop
     var open = document.createElement("button"); open.type = "button"; open.className = "parent-link den-theme-open"; open.textContent = "select theme";
-    open.onclick = function () { dlg.showModal(); };
+    open.onclick = function () {
+      mark(); dlg.showModal();
+      track.scrollLeft = NAMES.indexOf(t) * track.clientWidth; showDot(); // start on the theme in use
+    };
     var footer = document.querySelector(".home-footer");
     (footer || document.body).insertBefore(open, footer && footer.firstChild);
     document.body.appendChild(dlg);
