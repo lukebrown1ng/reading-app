@@ -158,6 +158,15 @@ var SpellDen = window.SpellDen || {};
         "doubt", "lamb", "debt", "thumb", "solemn",
         "autumn", "column", "knight", "knuckle", "knot"
       ]
+    },
+    {
+      id: "y5week8",
+      label: "Year 5 · Week 8",
+      focus: "Words with silent letters",
+      words: [
+        "wrestle", "wrapper", "island", "aisle", "debris",
+        "mortgage", "christmas", "yacht", "guarantee", "guilty"
+      ]
     }
   ];
 

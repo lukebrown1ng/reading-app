@@ -182,7 +182,18 @@ SpellDen.SENTENCES = {
   autumn: "Leaves turn red and gold in autumn.",
   column: "The soldiers marched in a long column.",
   knight: "The knight rode a white horse to the castle.",
-  knuckle: "He bumped his knuckle on the door."
+  knuckle: "He bumped his knuckle on the door.",
+
+  // Year 5 · Week 8
+  wrestle: "The two brothers like to wrestle on the carpet.",
+  wrapper: "He dropped the sweet wrapper in the bin.",
+  island: "We sailed to a small island in the sea.",
+  debris: "After the storm, debris covered the road.",
+  mortgage: "They took out a mortgage to buy their house.",
+  christmas: "We open our presents on Christmas morning.",
+  yacht: "The yacht glided across the bay.",
+  guarantee: "The shop gave a guarantee that the toy would work.",
+  guilty: "He felt guilty about breaking the window."
 };
 
 window.SpellDen = SpellDen;
