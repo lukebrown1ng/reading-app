@@ -408,3 +408,24 @@
 :root[data-theme]:not([data-theme="none"]) .dino-mascot::before { content: var(--mascot-b); }
 :root[data-theme]:not([data-theme="none"]) .brand-dino .dino-mascot::before, :root[data-theme]:not([data-theme="none"]) .round-complete-emoji .dino-mascot::before { content: var(--mascot-a); }
 :root[data-theme="pixel"] .dino-mascot { display: none !important; }
+
+/* Result colours on the completion screen: right first time / got it after a retry / skipped */
+:root[data-theme="candy"] body .dot-first { background: #2ee6c5; }
+:root[data-theme="candy"] body .dot-retry { background: #ffd23f; }
+:root[data-theme="candy"] body .dot-skipped { background: #ff4f8b; }
+:root[data-theme="jungle"] body .dot-first { background: #b6f23a; }
+:root[data-theme="jungle"] body .dot-retry { background: #ffb200; }
+:root[data-theme="jungle"] body .dot-skipped { background: #4ac8ff; }
+:root[data-theme="sticker"] body .dot-first { background: #7cf29a; }
+:root[data-theme="sticker"] body .dot-retry { background: #ff4d6d; }
+:root[data-theme="sticker"] body .dot-skipped { background: #4dd2ff; }
+:root[data-theme="ocean"] body .dot-first { background: #2ed573; }
+:root[data-theme="ocean"] body .dot-retry { background: #ffd23f; }
+:root[data-theme="ocean"] body .dot-skipped { background: #ff7a8f; }
+:root[data-theme="comic"] body .dot-first { background: #00c853; }
+:root[data-theme="comic"] body .dot-retry { background: #ffd400; }
+:root[data-theme="comic"] body .dot-skipped { background: #00b4ff; }
+:root[data-theme="split"] body .round-complete .dot-skipped { background: #ff2d95; }
+:root[data-theme="split"] body .round-complete .dot { outline: 2px solid #1a1a40; }
+:root[data-theme="space"] body .dot-retry { background: #ff7ab8; }
+:root[data-theme="lava"] body .dot-retry { background: #ffe9a8; }
