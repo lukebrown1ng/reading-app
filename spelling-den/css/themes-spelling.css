@@ -401,3 +401,10 @@
 }
 :root[data-theme]:not([data-theme="none"]) body .hear-sentence-btn { background: var(--hs-bg); color: var(--hs-ink); }
 :root[data-theme="jungle"] body .hear-sentence-btn { text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* Mascot replaces the SVG dino everywhere on the spelling page */
+.dino-mascot { display: none; }
+:root[data-theme]:not([data-theme="none"]) .dino-mascot { display: block; line-height: 1; }
+:root[data-theme]:not([data-theme="none"]) .dino-mascot::before { content: var(--mascot-b); }
+:root[data-theme]:not([data-theme="none"]) .brand-dino .dino-mascot::before, :root[data-theme]:not([data-theme="none"]) .round-complete-emoji .dino-mascot::before { content: var(--mascot-a); }
+:root[data-theme="pixel"] .dino-mascot { display: none !important; }

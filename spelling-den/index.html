@@ -30,15 +30,11 @@
       <circle cx="90" cy="42" r="7" fill="#fff"/><circle cx="92" cy="42" r="3.5" fill="#111"/>
       <path d="M84 58 Q94 64 102 56" stroke="#111" stroke-width="3" fill="none" stroke-linecap="round"/>
     </symbol>
-    <symbol id="dino-pix" viewBox="0 0 120 120" shape-rendering="crispEdges">
-      <g style="fill:var(--dino-body,#00ff88)"><rect x="24" y="60" width="60" height="36"/><rect x="60" y="24" width="48" height="48"/><rect x="12" y="84" width="16" height="12"/><rect x="36" y="96" width="16" height="16"/><rect x="64" y="96" width="16" height="16"/></g>
-      <g style="fill:var(--dino-spike,#ff3df2)"><rect x="36" y="48" width="12" height="12"/><rect x="52" y="40" width="12" height="20"/></g>
-      <rect x="84" y="36" width="12" height="12" fill="#fff"/><rect x="90" y="40" width="6" height="6" fill="#14052e"/>
-    </symbol>
+    <symbol id="dino-pix" viewBox="0 0 120 120" shape-rendering="crispEdges"><g style="fill:var(--dino-body,#00ff88)"><rect x="25" y="20" width="10" height="10"/><rect x="85" y="20" width="10" height="10"/><rect x="35" y="30" width="10" height="10"/><rect x="75" y="30" width="10" height="10"/><rect x="25" y="40" width="10" height="10"/><rect x="35" y="40" width="10" height="10"/><rect x="45" y="40" width="10" height="10"/><rect x="55" y="40" width="10" height="10"/><rect x="65" y="40" width="10" height="10"/><rect x="75" y="40" width="10" height="10"/><rect x="85" y="40" width="10" height="10"/><rect x="15" y="50" width="10" height="10"/><rect x="25" y="50" width="10" height="10"/><rect x="45" y="50" width="10" height="10"/><rect x="55" y="50" width="10" height="10"/><rect x="65" y="50" width="10" height="10"/><rect x="85" y="50" width="10" height="10"/><rect x="95" y="50" width="10" height="10"/><rect x="5" y="60" width="10" height="10"/><rect x="15" y="60" width="10" height="10"/><rect x="25" y="60" width="10" height="10"/><rect x="35" y="60" width="10" height="10"/><rect x="45" y="60" width="10" height="10"/><rect x="55" y="60" width="10" height="10"/><rect x="65" y="60" width="10" height="10"/><rect x="75" y="60" width="10" height="10"/><rect x="85" y="60" width="10" height="10"/><rect x="95" y="60" width="10" height="10"/><rect x="105" y="60" width="10" height="10"/><rect x="5" y="70" width="10" height="10"/><rect x="25" y="70" width="10" height="10"/><rect x="35" y="70" width="10" height="10"/><rect x="45" y="70" width="10" height="10"/><rect x="55" y="70" width="10" height="10"/><rect x="65" y="70" width="10" height="10"/><rect x="75" y="70" width="10" height="10"/><rect x="85" y="70" width="10" height="10"/><rect x="105" y="70" width="10" height="10"/><rect x="5" y="80" width="10" height="10"/><rect x="25" y="80" width="10" height="10"/><rect x="85" y="80" width="10" height="10"/><rect x="105" y="80" width="10" height="10"/><rect x="35" y="90" width="10" height="10"/><rect x="45" y="90" width="10" height="10"/><rect x="65" y="90" width="10" height="10"/><rect x="75" y="90" width="10" height="10"/></g></symbol>
   </svg>
   <div class="app">
     <header class="top-bar">
-      <a class="brand" href="../index.html"><span class="brand-dino"><span class="dino-emoji">🦕</span><svg class="dino-svg dino-smooth" aria-hidden="true"><use href="#dino-sym"/></svg><svg class="dino-svg dino-pixel" aria-hidden="true"><use href="#dino-pix"/></svg></span> <span>Spelling Den</span></a>
+      <a class="brand" href="../index.html"><span class="brand-dino"><span class="dino-emoji">🦕</span><span class="dino-mascot" aria-hidden="true"></span><svg class="dino-svg dino-pixel" aria-hidden="true"><use href="#dino-pix"/></svg></span> <span>Spelling Den</span></a>
       <div class="top-bar-actions">
         <div id="modeToggle" class="mode-toggle" role="group" aria-label="How to enter letters">
           <button id="modeTilesBtn" class="mode-btn" type="button" aria-pressed="true">🔀 Tiles</button>
@@ -59,7 +55,7 @@
         <div id="wordProgressLabel" class="word-progress-label">Word 1 of 10</div>
         <div id="progressDots" class="progress-dots"></div>
       </div>
-      <div id="dino" class="dino" aria-hidden="true"><span class="dino-emoji">🦖</span><svg class="dino-svg dino-smooth" aria-hidden="true"><use href="#dino-sym"/></svg><svg class="dino-svg dino-pixel" aria-hidden="true"><use href="#dino-pix"/></svg></div>
+      <div id="dino" class="dino" aria-hidden="true"><span class="dino-emoji">🦖</span><span class="dino-mascot" aria-hidden="true"></span><svg class="dino-svg dino-pixel" aria-hidden="true"><use href="#dino-pix"/></svg></div>
       <div id="cheer" class="cheer" aria-hidden="true"></div>
       <p id="liveStatus" class="sr-only" role="status" aria-live="polite"></p>
       <button id="hearBtn" class="hear-btn" type="button" aria-label="Hear the word">
@@ -81,7 +77,7 @@
 
     <div id="roundComplete" class="round-complete" hidden>
       <div class="round-complete-card">
-        <div id="roundCompleteDino" class="round-complete-dino" aria-hidden="true"><span class="dino-emoji">🦖</span><svg class="dino-svg dino-smooth" aria-hidden="true"><use href="#dino-sym"/></svg><svg class="dino-svg dino-pixel" aria-hidden="true"><use href="#dino-pix"/></svg></div>
+        <div id="roundCompleteDino" class="round-complete-dino" aria-hidden="true"><span class="dino-emoji">🦖</span><span class="dino-mascot" aria-hidden="true"></span><svg class="dino-svg dino-pixel" aria-hidden="true"><use href="#dino-pix"/></svg></div>
         <div id="roundCompleteEggs" class="progress-dots round-complete-eggs" aria-hidden="true"></div>
         <div class="round-complete-score">
           <strong id="roundCompleteScore" class="round-complete-number"></strong>
@@ -116,7 +112,7 @@
 
   <div id="yearSelect" class="year-select">
     <div class="year-select-card">
-      <div class="round-complete-emoji"><span class="dino-emoji">🦕</span><svg class="dino-svg dino-smooth" aria-hidden="true"><use href="#dino-sym"/></svg><svg class="dino-svg dino-pixel" aria-hidden="true"><use href="#dino-pix"/></svg></div>
+      <div class="round-complete-emoji"><span class="dino-emoji">🦕</span><span class="dino-mascot" aria-hidden="true"></span><svg class="dino-svg dino-pixel" aria-hidden="true"><use href="#dino-pix"/></svg></div>
       <h2 class="year-select-heading">Spelling Den</h2>
       <p class="year-select-sub">Which spellings today?</p>
       <button id="year3Btn" class="play-again-btn year-select-btn" type="button">Year 3</button>

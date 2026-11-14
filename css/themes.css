@@ -292,3 +292,17 @@ html[data-theme="split"] body, html[data-theme="split"] .home, html[data-theme="
 html[data-theme="pixel"] .tile { min-width: 0; }
 html[data-theme="pixel"] .tile { padding-left: 12px; padding-right: 12px; }
 html[data-theme="pixel"]:not([data-x]) .tile .tile-label { font-size: clamp(0.8rem, 2.4vw, 1.3rem); max-width: 100%; overflow-wrap: anywhere; text-align: center; line-height: 1.5; }
+
+/* Theme mascots replace the dinosaurs (home + spelling). Hiding the dino text and showing a themed emoji via ::before. */
+html[data-theme="candy"] { --mascot-a: "🧁"; --mascot-b: "🍭"; }
+html[data-theme="jungle"] { --mascot-a: "🐒"; --mascot-b: "🦜"; }
+html[data-theme="space"] { --mascot-a: "🛸"; --mascot-b: "🚀"; }
+html[data-theme="sticker"] { --mascot-a: "⭐"; --mascot-b: "🌟"; }
+html[data-theme="ocean"] { --mascot-a: "🐙"; --mascot-b: "🐠"; }
+html[data-theme="pixel"] { --mascot-a: "👾"; --mascot-b: "👾"; }
+html[data-theme="rainbow"] { --mascot-a: "🌈"; --mascot-b: "🦄"; }
+html[data-theme="lava"] { --mascot-a: "🔥"; --mascot-b: "🌋"; }
+html[data-theme="comic"] { --mascot-a: "💥"; --mascot-b: "🤖"; }
+html[data-theme="split"] { --mascot-a: "⚡"; --mascot-b: "😎"; }
+.mascot[data-m="a"]::before { content: var(--mascot-a, "🦕"); }
+.mascot[data-m="b"]::before { content: var(--mascot-b, "🦖"); }
