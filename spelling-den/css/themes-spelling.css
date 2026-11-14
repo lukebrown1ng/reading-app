@@ -429,3 +429,37 @@
 :root[data-theme="split"] body .round-complete .dot { outline: 2px solid #1a1a40; }
 :root[data-theme="space"] body .dot-retry { background: #ff7ab8; }
 :root[data-theme="lava"] body .dot-retry { background: #ffe9a8; }
+
+/* Tracker colours everywhere: green = right first time, yellow = right after a retry, red = skipped. Tones follow each theme. */
+:root[data-theme="candy"][data-theme] body .dot-first, :root[data-theme="candy"][data-theme] body .progress-row .dot-first { background: #5fe39a; filter: none; }
+:root[data-theme="candy"][data-theme] body .dot-retry, :root[data-theme="candy"][data-theme] body .progress-row .dot-retry { background: #ffd23f; filter: none; }
+:root[data-theme="candy"][data-theme] body .dot-skipped, :root[data-theme="candy"][data-theme] body .progress-row .dot-skipped { background: #ff5a78; filter: none; }
+:root[data-theme="jungle"][data-theme] body .dot-first, :root[data-theme="jungle"][data-theme] body .progress-row .dot-first { background: #7ed957; filter: none; }
+:root[data-theme="jungle"][data-theme] body .dot-retry, :root[data-theme="jungle"][data-theme] body .progress-row .dot-retry { background: #ffc933; filter: none; }
+:root[data-theme="jungle"][data-theme] body .dot-skipped, :root[data-theme="jungle"][data-theme] body .progress-row .dot-skipped { background: #e8553d; filter: none; }
+:root[data-theme="space"][data-theme] body .dot-first, :root[data-theme="space"][data-theme] body .progress-row .dot-first { background: #4dffb0; filter: none; }
+:root[data-theme="space"][data-theme] body .dot-retry, :root[data-theme="space"][data-theme] body .progress-row .dot-retry { background: #ffd84d; filter: none; }
+:root[data-theme="space"][data-theme] body .dot-skipped, :root[data-theme="space"][data-theme] body .progress-row .dot-skipped { background: #ff5d7a; filter: none; }
+:root[data-theme="sticker"][data-theme] body .dot-first, :root[data-theme="sticker"][data-theme] body .progress-row .dot-first { background: #4ade80; filter: none; }
+:root[data-theme="sticker"][data-theme] body .dot-retry, :root[data-theme="sticker"][data-theme] body .progress-row .dot-retry { background: #ffd23f; filter: none; }
+:root[data-theme="sticker"][data-theme] body .dot-skipped, :root[data-theme="sticker"][data-theme] body .progress-row .dot-skipped { background: #ff4d6d; filter: none; }
+:root[data-theme="ocean"][data-theme] body .dot-first, :root[data-theme="ocean"][data-theme] body .progress-row .dot-first { background: #3ddc97; filter: none; }
+:root[data-theme="ocean"][data-theme] body .dot-retry, :root[data-theme="ocean"][data-theme] body .progress-row .dot-retry { background: #ffd23f; filter: none; }
+:root[data-theme="ocean"][data-theme] body .dot-skipped, :root[data-theme="ocean"][data-theme] body .progress-row .dot-skipped { background: #ff6b6b; filter: none; }
+:root[data-theme="pixel"][data-theme] body .dot-first, :root[data-theme="pixel"][data-theme] body .progress-row .dot-first { background: #00ff88; filter: none; }
+:root[data-theme="pixel"][data-theme] body .dot-retry, :root[data-theme="pixel"][data-theme] body .progress-row .dot-retry { background: #ffe14d; filter: none; }
+:root[data-theme="pixel"][data-theme] body .dot-skipped, :root[data-theme="pixel"][data-theme] body .progress-row .dot-skipped { background: #ff3d5a; filter: none; }
+:root[data-theme="rainbow"][data-theme] body .dot-first, :root[data-theme="rainbow"][data-theme] body .progress-row .dot-first { background: #2ed573; filter: none; }
+:root[data-theme="rainbow"][data-theme] body .dot-retry, :root[data-theme="rainbow"][data-theme] body .progress-row .dot-retry { background: #ffe14d; filter: none; }
+:root[data-theme="rainbow"][data-theme] body .dot-skipped, :root[data-theme="rainbow"][data-theme] body .progress-row .dot-skipped { background: #ff3b3b; filter: none; }
+:root[data-theme="lava"][data-theme] body .dot-first, :root[data-theme="lava"][data-theme] body .progress-row .dot-first { background: #8bd450; filter: none; }
+:root[data-theme="lava"][data-theme] body .dot-retry, :root[data-theme="lava"][data-theme] body .progress-row .dot-retry { background: #ffd166; filter: none; }
+:root[data-theme="lava"][data-theme] body .dot-skipped, :root[data-theme="lava"][data-theme] body .progress-row .dot-skipped { background: #e5283c; filter: none; }
+:root[data-theme="comic"][data-theme] body .dot-first, :root[data-theme="comic"][data-theme] body .progress-row .dot-first { background: #00c853; filter: none; }
+:root[data-theme="comic"][data-theme] body .dot-retry, :root[data-theme="comic"][data-theme] body .progress-row .dot-retry { background: #ffd400; filter: none; }
+:root[data-theme="comic"][data-theme] body .dot-skipped, :root[data-theme="comic"][data-theme] body .progress-row .dot-skipped { background: #e4002b; filter: none; }
+:root[data-theme="split"][data-theme] body .dot-first, :root[data-theme="split"][data-theme] body .progress-row .dot-first { background: #7cff6b; filter: none; }
+:root[data-theme="split"][data-theme] body .dot-retry, :root[data-theme="split"][data-theme] body .progress-row .dot-retry { background: #ffe600; filter: none; }
+:root[data-theme="split"][data-theme] body .dot-skipped, :root[data-theme="split"][data-theme] body .progress-row .dot-skipped { background: #ff3b5c; filter: none; }
+:root[data-theme="split"][data-theme] body .dot { outline: 2px solid #1a1a40; }
+:root[data-theme="space"][data-theme] body .progress-row :is(.dot-first,.dot-retry,.dot-skipped) { filter: none; }
