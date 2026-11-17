@@ -193,7 +193,19 @@ SpellDen.SENTENCES = {
   christmas: "We open our presents on Christmas morning.",
   yacht: "The yacht glided across the bay.",
   guarantee: "The shop gave a guarantee that the toy would work.",
-  guilty: "He felt guilty about breaking the window."
+  guilty: "He felt guilty about breaking the window.",
+
+  // Week 9
+  gently: "She stroked the kitten gently.",
+  simply: "He simply said thank you and left.",
+  humbly: "The winner humbly thanked her team.",
+  nobly: "The knight nobly saved the village.",
+  horribly: "The milk smelled horribly bad.",
+  terribly: "I am terribly sorry for being late.",
+  possibly: "We could possibly go to the park later.",
+  incredibly: "The mountain was incredibly tall.",
+  comfortably: "She sat comfortably in the big armchair.",
+  probably: "It will probably rain tomorrow."
 };
 
 window.SpellDen = SpellDen;

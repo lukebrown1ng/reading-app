@@ -90,6 +90,15 @@ var SpellDen = window.SpellDen || {};
         "happily", "angrily", "lazily", "easily", "busily",
         "greedily", "messily", "wearily", "cheekily", "clumsily"
       ]
+    },
+    {
+      id: "week9",
+      label: "Week 9",
+      focus: "Create adverbs using the suffix -ly",
+      words: [
+        "gently", "simply", "humbly", "nobly", "horribly",
+        "terribly", "possibly", "incredibly", "comfortably", "probably"
+      ]
     }
   ];
 
