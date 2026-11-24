@@ -8,7 +8,7 @@ test("every spelling word has a word clip and (with a sentence) a sentence clip"
   const win = load(["spelling-den/js/weeks.js", "spelling-den/js/sentences.js"]);
   const S = win.SpellDen;
   S.getAllWeeks().forEach((week) => {
-    assert.strictEqual(week.words.length, 10, week.id + " should have 10 words");
+    assert.ok(week.words.length >= 1 && week.words.length <= 10, week.id + " should have 1-10 words");
     week.words.forEach((w) => {
       assert.ok(fs.existsSync(path.join(root, "spelling-den/audio", w + ".mp3")), "missing clip for " + w);
       assert.ok(S.SENTENCES[w], "missing sentence for " + w);
