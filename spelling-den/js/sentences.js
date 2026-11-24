@@ -205,7 +205,14 @@ SpellDen.SENTENCES = {
   possibly: "We could possibly go to the park later.",
   incredibly: "The mountain was incredibly tall.",
   comfortably: "She sat comfortably in the big armchair.",
-  probably: "It will probably rain tomorrow."
+  probably: "It will probably rain tomorrow.",
+
+  // Week 10
+  basically: "The two games are basically the same.",
+  frantically: "She searched frantically for her lost keys.",
+  dramatically: "The weather changed dramatically overnight.",
+  magically: "The rabbit magically appeared from the hat.",
+  tragically: "The old ship tragically sank in the storm."
 };
 
 window.SpellDen = SpellDen;

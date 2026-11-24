@@ -5,7 +5,7 @@
 // The VERSION and PRECACHE lines are rewritten by `node scripts/build-sw.js`
 // — run it after adding or changing files so a new device can install the
 // whole app (including all the audio) in one go.
-const VERSION = "f15521e09a";
+const VERSION = "935d45c917";
 const PRECACHE = [
   "./",
   "./css/home.css",
@@ -64,6 +64,8 @@ const PRECACHE = [
   "./spelling-den/audio/autumn.mp3",
   "./spelling-den/audio/ball-sentence.mp3",
   "./spelling-den/audio/ball.mp3",
+  "./spelling-den/audio/basically-sentence.mp3",
+  "./spelling-den/audio/basically.mp3",
   "./spelling-den/audio/bawl-sentence.mp3",
   "./spelling-den/audio/bawl.mp3",
   "./spelling-den/audio/beige-sentence.mp3",
@@ -122,6 +124,8 @@ const PRECACHE = [
   "./spelling-den/audio/disobey.mp3",
   "./spelling-den/audio/doubt-sentence.mp3",
   "./spelling-den/audio/doubt.mp3",
+  "./spelling-den/audio/dramatically-sentence.mp3",
+  "./spelling-den/audio/dramatically.mp3",
   "./spelling-den/audio/earl-sentence.mp3",
   "./spelling-den/audio/earl.mp3",
   "./spelling-den/audio/early-sentence.mp3",
@@ -156,6 +160,8 @@ const PRECACHE = [
   "./spelling-den/audio/fictitious.mp3",
   "./spelling-den/audio/finally-sentence.mp3",
   "./spelling-den/audio/finally.mp3",
+  "./spelling-den/audio/frantically-sentence.mp3",
+  "./spelling-den/audio/frantically.mp3",
   "./spelling-den/audio/freight-sentence.mp3",
   "./spelling-den/audio/freight.mp3",
   "./spelling-den/audio/gently-sentence.mp3",
@@ -228,6 +234,8 @@ const PRECACHE = [
   "./spelling-den/audio/led.mp3",
   "./spelling-den/audio/lyrics-sentence.mp3",
   "./spelling-den/audio/lyrics.mp3",
+  "./spelling-den/audio/magically-sentence.mp3",
+  "./spelling-den/audio/magically.mp3",
   "./spelling-den/audio/mail-sentence.mp3",
   "./spelling-den/audio/mail.mp3",
   "./spelling-den/audio/main-sentence.mp3",
@@ -348,6 +356,8 @@ const PRECACHE = [
   "./spelling-den/audio/they.mp3",
   "./spelling-den/audio/thumb-sentence.mp3",
   "./spelling-den/audio/thumb.mp3",
+  "./spelling-den/audio/tragically-sentence.mp3",
+  "./spelling-den/audio/tragically.mp3",
   "./spelling-den/audio/typical-sentence.mp3",
   "./spelling-den/audio/typical.mp3",
   "./spelling-den/audio/unearth-sentence.mp3",

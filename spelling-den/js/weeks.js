@@ -99,6 +99,14 @@ var SpellDen = window.SpellDen || {};
         "gently", "simply", "humbly", "nobly", "horribly",
         "terribly", "possibly", "incredibly", "comfortably", "probably"
       ]
+    },
+    {
+      id: "week10",
+      label: "Week 10",
+      focus: "Create adverbs using the suffix -ly",
+      words: [
+        "basically", "frantically", "dramatically", "magically", "tragically"
+      ]
     }
   ];
 
